@@ -1,0 +1,20 @@
+<div style="text-align: center; border: 1px solid red; padding: 5px;">
+  <h1>Hi</h1>
+
+  <ng-template
+    *ngIf="lazyComponent"
+    [ngComponentOutlet]="lazyComponent | async"
+    [ngComponentOutletInjector]="lazyInjector"
+  >
+  </ng-template>
+
+  <h1>Fun of Heuristic</h1>
+  <a
+    href="https://github.com/funOfheuristic/lazy-loading-component"
+    target="_blank"
+    >lazy loading component</a
+  >
+  <br />
+  <br />
+  <button (click)="load()">Load</button>
+</div>

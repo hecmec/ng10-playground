@@ -15,6 +15,30 @@
     },
     {
       "path": "./e2e/tsconfig.json"
+    },
+    {
+      "path": "./projects/appSimplePage/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/appSimplePage/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/appLazyThroughRouting/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/appLazyThroughRouting/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/appLazyWithoutRouting/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/appLazyWithoutRouting/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/appComponentsAndTest/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/appComponentsAndTest/tsconfig.spec.json"
     }
 ]
 }
