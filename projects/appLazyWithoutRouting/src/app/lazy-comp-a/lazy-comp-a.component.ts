@@ -17,7 +17,7 @@ export class LazyCompAComponent implements OnInit {
   @ViewChild('child', { read: ViewContainerRef })
   childCompContainer: ViewContainerRef;
 
-  childComp: LazyChildComponent;
+  childCompOne: LazyChildComponent;
   childCompTwo: LazyChildComponent;
   inputData: string;
 
@@ -52,10 +52,10 @@ export class LazyCompAComponent implements OnInit {
     // Creates a component  on a container and returns a component Reference
     const componentReference = this.viewContainerRef.createComponent(myFactory);
 
-    this.childComp = componentReference.instance;
-    this.childComp.data = 'Data: this is set in compA on its child';
+    this.childCompOne = componentReference.instance;
+    this.childCompOne.data = 'Data: this is set in compA on its child';
 
-    this.childComp.emitter.subscribe(console.log);
+    this.childCompOne.emitter.subscribe(console.log);
   }
 
   async loadIntoContainer() {

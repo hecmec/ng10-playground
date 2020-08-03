@@ -5,16 +5,19 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { AppComponentsAndTestModule } from '../../projects/appComponentsAndTest/src/app/app.module';
+import { AppLazyWithoutRoutingModule } from '../../projects/AppLazyWithoutRouting/src/app/app.module';
+
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    AppComponentsAndTestModule.forRoot(),
+    AppLazyWithoutRoutingModule.forRoot(),
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
