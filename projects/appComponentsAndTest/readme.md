@@ -1,5 +1,13 @@
 # components and directives
 
+## Run it
+
+    ng serve appComponentsAndTest --port 4201
+
+### create new component
+
+    ng g c MaterialTestComponent --project=appComponentsAndTest --flat=false
+
 ## Material
 
 https://auth0.com/blog/creating-beautiful-apps-with-angular-material/
@@ -10,7 +18,7 @@ https://material.angular.io/
 
 npm add @angular/flex-layout
 
-https://indepth.dev/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/
+https://indepth.dev/angular-flex-layout-flexbox-and-grid-layout-for-angular/
 
 ## components tuto
 

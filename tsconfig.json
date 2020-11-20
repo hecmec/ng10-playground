@@ -39,6 +39,12 @@
     },
     {
       "path": "./projects/appComponentsAndTest/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/aaronFrostHeroApp/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/aaronFrostHeroApp/tsconfig.spec.json"
     }
 ]
 }

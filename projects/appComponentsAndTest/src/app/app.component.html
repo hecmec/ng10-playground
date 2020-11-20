@@ -6,56 +6,29 @@
       src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg=="
     />
     <span>My Application</span>
+    &nbsp;
+
+    <nav style="font-size: small;">
+      <a routerLink="/time-range-test" routerLinkActive="active">TimeRange</a>&nbsp; 
+      <a routerLink="/directives-test" routerLinkActive="active">DirectivesTest</a>&nbsp; 
+      <a routerLink="/material-test" routerLinkActive="active">MaterialTest</a>&nbsp; 
+      <a routerLink="/simple-table" routerLinkActive="active">SimpleTable</a>&nbsp;
+      <a routerLink="/dynamic-input-list" routerLinkActive="active">DynamicInputList</a>&nbsp;
+      
+    </nav>
+
   </mat-toolbar>
 </p>
 
 <div class="content" role="main">
-  <mat-slider min="1" max="100" step="1" value="1"></mat-slider>
 
-  <mat-divider></mat-divider>
-  <section>
-    <div class="example-label">Stroked</div>
-    <div class="example-button-row">
-      <button mat-stroked-button>Basic</button>
-      <button mat-stroked-button color="primary">Primary</button>
-      <button mat-stroked-button color="accent">Accent</button>
-      <button mat-stroked-button color="warn">Warn</button>
-      <button mat-stroked-button disabled>Disabled</button>
-      <a mat-stroked-button href="https://www.google.com/" target="_blank"
-        >Link</a
-      >
-    </div>
-  </section>
+  <div>
+    <small>router-outlet start</small>
+    <router-outlet></router-outlet>
+    <small>router-outlet end</small>
+  </div>        
+  <br /><br />
 
-  <mat-divider></mat-divider>
 
-  <section>
-    <div class="example-label">Flat</div>
-    <div class="example-button-row">
-      <button mat-flat-button>Basic</button>
-      <button mat-flat-button color="primary">Primary</button>
-      <button mat-flat-button color="accent">Accent</button>
-      <button mat-flat-button color="warn">Warn</button>
-      <button mat-flat-button disabled>Disabled</button>
-      <a mat-flat-button href="https://www.google.com/" target="_blank">Link</a>
-    </div>
-  </section>
 
-  <mat-divider></mat-divider>
-  <!-- Highlight Card -->
-  <mat-card>
-    <span>{{ title }} app is running!</span>
-  </mat-card>
-
-  <mat-divider></mat-divider>
-
-  <mat-card appHoverChangeColor>
-    <span
-      >there is a HoverChangeColor Directive on this card. This is clickable and
-      toggles from white to grey and vice versa</span
-    >
-  </mat-card>
-
-  <mat-divider></mat-divider>
-  <router-outlet></router-outlet>
 </div>

@@ -1,14 +1,14 @@
-<div style="text-align: center; border: 1px solid red; padding: 5px;">
-  <h1>Hi</h1>
-
+<div style="text-align: center; border: 1px solid red; padding: 5px">
+  <h1>Header of App component</h1>
+  <p>before template</p>
   <ng-template
     *ngIf="lazyComponent"
     [ngComponentOutlet]="lazyComponent | async"
     [ngComponentOutletInjector]="lazyInjector"
   >
   </ng-template>
-
-  <h1>Fun of Heuristic</h1>
+  <p>after template</p>
+  <h1>Second Header App component</h1>
   <a
     href="https://github.com/funOfheuristic/lazy-loading-component"
     target="_blank"

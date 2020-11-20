@@ -31,3 +31,8 @@ Run `ng generate component component-name` to generate a new component. You can 
 ## Adding Components or other elements to a project
 
     ng g d HoverChangeColorDirective --project=appComponentsAndTest --flat=false
+
+## Project Reactive Angular WorkShop is aaronFrost
+
+how about adding reactive workshop
+https://github.com/aaronfrost/reactive-angular-workshop

@@ -1,8 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { MatSliderModule } from '@angular/material/slider';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
@@ -12,14 +15,30 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 
-import { HoverChangeColorDirectiveDirective } from './hover-change-color-directive/hover-change-color-directive.directive';
+import { HoverChangeColorDirectiveDirective } from './hover-change-color/hover-change-color.directive';
+import { DirectivesTestComponent } from './directives-test/directives-test.component';
+import { MaterialTestComponent } from './material-test/material-test.component';
+import { SimpleTableComponent } from './simple-table/simple-table.component';
+
+import { from } from 'rxjs';
+import { DynamicInputListComponent } from './dynamic-input-list/dynamic-input-list.component';
 
 const myProviders = [];
 
 @NgModule({
-  declarations: [AppComponent, HoverChangeColorDirectiveDirective],
+  declarations: [
+    AppComponent,
+    HoverChangeColorDirectiveDirective,
+    DirectivesTestComponent,
+    MaterialTestComponent,
+    SimpleTableComponent,
+    DynamicInputListComponent,
+  ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     MatPaginatorModule,
     MatSortModule,

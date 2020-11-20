@@ -4,26 +4,26 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 
-import { SimpleTableComponentComponent } from './simple-table-component.component';
+import { SimpleTableComponent } from './simple-table.component';
 
-describe('SimpleTableComponentComponent', () => {
-  let component: SimpleTableComponentComponent;
-  let fixture: ComponentFixture<SimpleTableComponentComponent>;
+describe('SimpleTableComponent', () => {
+  let component: SimpleTableComponent;
+  let fixture: ComponentFixture<SimpleTableComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SimpleTableComponentComponent ],
+      declarations: [SimpleTableComponent],
       imports: [
         NoopAnimationsModule,
         MatPaginatorModule,
         MatSortModule,
         MatTableModule,
-      ]
+      ],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SimpleTableComponentComponent);
+    fixture = TestBed.createComponent(SimpleTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -4,7 +4,7 @@
 
 https://www.youtube.com/watch?v=1vYoCoeKLg4
 
-https://github.com/funOfheuristic/lazy-loading-component
+https://github.com/funOfheuristic/lazy-loading
 
 projects\appLazyWithoutRouting\src\app\app.component.ts
 

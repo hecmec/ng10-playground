@@ -1,0 +1,19 @@
+<p>dynamic-input-list works!</p>
+<!-- <input *ngFor="let numberVal of numberList; let i = index" type="text" [(ngModel)]="numberVal" /> -->
+<!-- <input *ngFor="let numberVal of numberList; let i = index" type="text" [value]="numberVal" /> -->
+
+<h3> Dynamic inputs using FormArray</h3>
+<form [formGroup]="ordersForm" (ngSubmit)="submit()">
+    <!-- our form array of checkboxes will go here -->
+    <div formArrayName="orders" *ngFor="let order of ordersFormArray.controls; let i = index">
+        <input  type="text" [formControlName]="i" [value]="order.name" />        
+    </div>
+    <div *ngIf="!ordersForm.valid">At least one order must be filled</div>
+    <button>submit</button>
+</form>
+  
+<h3> Other inputs</h3>
+
+<input [value]="client.userName" (input)="client.userName=$event.target.value">{{client.userName}}
+
+<input [ngModel]="client.petName" (ngModelChange)="client.petName=$event">

@@ -1,4 +1,4 @@
-import { HoverChangeColorDirectiveDirective } from './hover-change-color-directive.directive';
+import { HoverChangeColorDirectiveDirective } from './hover-change-color.directive';
 
 describe('HoverChangeColorDirectiveDirective', () => {
   it('should create an instance', () => {
