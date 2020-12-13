@@ -14,6 +14,12 @@
   
 <h3> Other inputs</h3>
 
-<input [value]="client.userName" (input)="client.userName=$event.target.value">{{client.userName}}
+<div>
+    <input [value]="client.userName" (input)="client.userName=$event.target.value"> : {{client.userName}}
 
-<input [ngModel]="client.petName" (ngModelChange)="client.petName=$event">
+</div>
+
+<div>
+    <input [ngModel]="client.petName" (ngModelChange)="client.petName=$event"> : {{client.petName}}
+
+</div>
