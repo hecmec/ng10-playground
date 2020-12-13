@@ -8,34 +8,39 @@ import {
 } from '@angular/forms';
 
 /**
- * https://appdividend.com/2018/10/03/angular-ngmodel-directive-example-tutorial/
+ * https://angular.io/guide/forms-overview
+ *
+ * I have a list of string values and want a form with an input for each
+ *
+ *
  */
-
 @Component({
   selector: 'app-dynamic-input-list',
   templateUrl: './dynamic-input-list.component.html',
   styleUrls: ['./dynamic-input-list.component.scss'],
 })
 export class DynamicInputListComponent implements OnInit {
-  ordersForm: FormGroup;
+  ordersFormGroup: FormGroup;
 
-  ordersData = [
-    { id: 1, name: 'order 1' },
-    { id: 2, name: 'order 2' },
-    { id: 3, name: 'order 3' },
-    { id: 4, name: 'order 4' },
-  ];
+  client = {
+    userName: 'toto',
+    petName: 'minou',
+    ordersData: [
+      { id: 1, name: 'order 1' },
+      { id: 2, name: 'order 2' },
+      { id: 3, name: 'order 3' },
+      { id: 4, name: 'order 4' },
+    ],
+  };
 
   /**
    * get the orders control group as a FormArray
    */
   get ordersFormArray(): FormArray {
-    return this.ordersForm.controls.orders as FormArray;
+    // return this.ordersFormGroup.controls.orders as FormArray;
+    // or by name
+    return this.ordersFormGroup.get('orders') as FormArray;
   }
-
-  numberList = ['1', '2', '3'];
-
-  client = { userName: 'toto', petName: 'minou' };
 
   /**
    *
@@ -44,7 +49,8 @@ export class DynamicInputListComponent implements OnInit {
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
-    this.ordersForm = this.formBuilder.group({
+    this.ordersFormGroup = this.formBuilder.group({
+      clientName: '',
       orders: new FormArray([]),
     });
 
@@ -52,15 +58,30 @@ export class DynamicInputListComponent implements OnInit {
   }
 
   addTextboxes() {
-    this.ordersData.forEach(() =>
+    this.client.ordersData.forEach(() =>
       this.ordersFormArray.push(new FormControl(''))
     );
   }
 
+  addNewOrder() {
+    this.ordersFormArray.push(this.getNewOrderGroup());
+  }
+
+  removeOrder(index: number) {
+    this.ordersFormArray.removeAt(index);
+  }
+
+  getNewOrderGroup(): FormGroup {
+    return this.formBuilder.group({
+      id: 0,
+      name: '',
+    });
+  }
+
   submit() {
-    const selectedOrderIds = this.ordersForm.value.orders
-      .map((checked, i) => (checked ? this.ordersData[i].id : null))
-      .filter((v) => v !== null);
-    console.log(selectedOrderIds);
+    // const selectedOrderIds = this.ordersFormGroup.value.orders
+    //   .map((value, i) => (value ? this.ordersData[i].id : null))
+    //   .filter((v) => v !== null);
+    // console.log(selectedOrderIds);
   }
 }

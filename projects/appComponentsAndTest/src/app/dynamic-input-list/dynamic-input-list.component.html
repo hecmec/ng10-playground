@@ -2,17 +2,25 @@
 <!-- <input *ngFor="let numberVal of numberList; let i = index" type="text" [(ngModel)]="numberVal" /> -->
 <!-- <input *ngFor="let numberVal of numberList; let i = index" type="text" [value]="numberVal" /> -->
 
-<h3> Dynamic inputs using FormArray</h3>
-<form [formGroup]="ordersForm" (ngSubmit)="submit()">
-    <!-- our form array of checkboxes will go here -->
-    <div formArrayName="orders" *ngFor="let order of ordersFormArray.controls; let i = index">
-        <input  type="text" [formControlName]="i" [value]="order.name" />        
-    </div>
-    <div *ngIf="!ordersForm.valid">At least one order must be filled</div>
-    <button>submit</button>
+<h3>Dynamic inputs using FormArray</h3>
+
+<form [formGroup]="ordersFormGroup" (ngSubmit)="submit()">
+  <!-- our form array of checkboxes or textboxes will go here -->
+  <div
+    formArrayName="orders"
+    *ngFor="let orderArrayItem of ordersFormArray.controls; let i = index"
+  >
+    <input type="text" [formControlName]="i" [value]="orderArrayItem.value" />
+
+    <button (click)="removeOrder(i)">Remove</button>
+  </div>
+
+  <div *ngIf="!ordersFormGroup.valid">At least one order must be filled</div>
+
+  <button>submit</button>
 </form>
-  
-<h3> Other inputs</h3>
+
+<!-- <h3> Other inputs</h3>
 
 <div>
     <input [value]="client.userName" (input)="client.userName=$event.target.value"> : {{client.userName}}
@@ -22,4 +30,4 @@
 <div>
     <input [ngModel]="client.petName" (ngModelChange)="client.petName=$event"> : {{client.petName}}
 
-</div>
+</div> -->
