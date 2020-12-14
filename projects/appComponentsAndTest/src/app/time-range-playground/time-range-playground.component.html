@@ -1,0 +1,36 @@
+<h3>time-range-playground</h3>
+
+<app-time-range-simple
+  rangeStartTime="10:00"
+  rangeEndTime="15:23"
+  rangeDate="2020-10-15"
+></app-time-range-simple>
+
+<br /><br /><br /><br />
+<h4>Data</h4>
+<!-- <div>startTime: {{ startTimeText }} endTme: {{ endTimeText }}</div>
+<div>isNextDay: {{ isNextDay }}</div> -->
+<br /><br />
+<div>
+  input with time-formatter
+  <mat-form-field class="example-form-field">
+    <mat-label>Clearable time input</mat-label>
+    <input matInput chrTimeFormatter type="text" [(ngModel)]="timeTest1" />
+    <button
+      mat-button
+      *ngIf="timeTest1"
+      matSuffix
+      mat-icon-button
+      aria-label="Clear"
+      (click)="timeTest1 = '00:00'"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+
+  : parsed time is {{ timeTest1 }}
+</div>
+<br /><br />
+<div>simple html time input: <input type="time" /></div>
+
+<div>material html time input:<input type="time" matInput /></div>

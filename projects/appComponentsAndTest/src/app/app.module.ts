@@ -2,9 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { from } from 'rxjs';
 
 import { MatSliderModule } from '@angular/material/slider';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -14,17 +13,25 @@ import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
 
 import { HoverChangeColorDirectiveDirective } from './hover-change-color/hover-change-color.directive';
 import { DirectivesTestComponent } from './directives-test/directives-test.component';
 import { MaterialTestComponent } from './material-test/material-test.component';
 import { SimpleTableComponent } from './simple-table/simple-table.component';
 
-import { from } from 'rxjs';
 import { DynamicInputListComponent } from './dynamic-input-list/dynamic-input-list.component';
 import { SchwarzTemplDrivenFormComponent } from './schwarz-templ-driven-form/schwarz-templ-driven-form.component';
 import { TimeRangeSimpleComponent } from './time-range-simple/time-range-simple.component';
-import { ChrTime } from './time-range-simple/chr-time.class';
+// import { ChrTimeFormatHhmmPipe } from './time-range-simple/chr-time-formatter.directive';
+import { ChrTimeFormatterDirective } from './time-range-simple/chr-time-formatter.directive';
+import { TimeRangePlaygroundComponent } from './time-range-playground/time-range-playground.component';
 
 const myProviders = [];
 
@@ -38,6 +45,9 @@ const myProviders = [];
     DynamicInputListComponent,
     SchwarzTemplDrivenFormComponent,
     TimeRangeSimpleComponent,
+    // ChrTimeFormatHhmmPipe,
+    ChrTimeFormatterDirective,
+    TimeRangePlaygroundComponent,
   ],
   imports: [
     BrowserModule,
@@ -45,6 +55,9 @@ const myProviders = [];
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
+    MatButtonModule,
+    MatInputModule,
+    MatIconModule,
     MatPaginatorModule,
     MatSortModule,
     MatTableModule,
@@ -52,7 +65,8 @@ const myProviders = [];
     MatCardModule,
     MatToolbarModule,
     MatDividerModule,
-    MatButtonModule,
+    MatFormFieldModule,
+    MatSlideToggleModule,
   ],
   providers: myProviders,
   bootstrap: [AppComponent],

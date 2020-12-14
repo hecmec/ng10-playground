@@ -1,10 +1,37 @@
 <div>
-  <button (click)="decrement()">&lt;</button>
-  <input type="text" name="startTime" [(ngModel)]="startTimeText" [ngModelOptions]="{ updateOn: 'blur' }">
-  <input type="text" name="endTime"  [(ngModel)]="endTimeText"   [ngModelOptions]="{ updateOn: 'blur' }">
-  <button (click)="increment()">&gt;</button>
-</div>
-<div>
-  startTime: {{startTimeText}}
-  endTme: {{endTimeText}}
+  <mat-slide-toggle [(ngModel)]="isNextDay"></mat-slide-toggle>
+  &nbsp;
+  <button (click)="decrement()" mat-icon-button>
+    <mat-icon>navigate_before</mat-icon>
+  </button>
+  &nbsp;
+  <mat-form-field>
+    <input
+      #startTimeInput
+      type="text"
+      name="startTime"
+      [(ngModel)]="startTimeText"
+      [ngModelOptions]="{ updateOn: 'blur' }"
+      (change)="startTimeChanged()"
+      matInput
+      class="form-control"
+    />
+  </mat-form-field>
+  &nbsp;
+  <mat-form-field>
+    <input
+      #endTimeInput
+      type="text"
+      name="endTime"
+      [(ngModel)]="endTimeText"
+      [ngModelOptions]="{ updateOn: 'blur' }"
+      (change)="endTimeChanged()"
+      matInput
+      class="form-control"
+    />
+  </mat-form-field>
+  &nbsp;
+  <button (click)="increment()" mat-icon-button>
+    <mat-icon>navigate_next</mat-icon>
+  </button>
 </div>

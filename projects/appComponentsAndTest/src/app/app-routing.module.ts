@@ -6,12 +6,13 @@ import { DynamicInputListComponent } from './dynamic-input-list/dynamic-input-li
 import { MaterialTestComponent } from './material-test/material-test.component';
 import { SchwarzTemplDrivenFormComponent } from './schwarz-templ-driven-form/schwarz-templ-driven-form.component';
 import { SimpleTableComponent } from './simple-table/simple-table.component';
-import { TimeRangeSimpleComponent } from './time-range-simple/time-range-simple.component';
+import { TimeRangePlaygroundComponent } from './time-range-playground/time-range-playground.component';
+// import { TimeRangeSimpleComponent } from './time-range-simple/time-range-simple.component';
 
 const routes: Routes = [
   {
-    path: 'time-range-simple',
-    component: TimeRangeSimpleComponent,
+    path: 'time-range-playground',
+    component: TimeRangePlaygroundComponent,
   },
   {
     path: 'material-test',
