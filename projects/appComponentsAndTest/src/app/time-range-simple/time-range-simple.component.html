@@ -1,0 +1,10 @@
+<div>
+  <button (click)="decrement()">&lt;</button>
+  <input type="text" name="startTime" [(ngModel)]="startTimeText">:
+  <input type="text" name="endTime"  [(ngModel)]="endTimeText">
+  <button (click)="increment()">&gt;</button>
+</div>
+<div>
+  startTime: {{startTimeText}}
+  endTme: {{endTimeText}}
+</div>

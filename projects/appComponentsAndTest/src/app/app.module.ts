@@ -22,6 +22,9 @@ import { SimpleTableComponent } from './simple-table/simple-table.component';
 
 import { from } from 'rxjs';
 import { DynamicInputListComponent } from './dynamic-input-list/dynamic-input-list.component';
+import { SchwarzTemplDrivenFormComponent } from './schwarz-templ-driven-form/schwarz-templ-driven-form.component';
+import { TimeRangeSimpleComponent } from './time-range-simple/time-range-simple.component';
+import { ChrTime } from './time-range-simple/chr-time.class';
 
 const myProviders = [];
 
@@ -33,6 +36,8 @@ const myProviders = [];
     MaterialTestComponent,
     SimpleTableComponent,
     DynamicInputListComponent,
+    SchwarzTemplDrivenFormComponent,
+    TimeRangeSimpleComponent,
   ],
   imports: [
     BrowserModule,
