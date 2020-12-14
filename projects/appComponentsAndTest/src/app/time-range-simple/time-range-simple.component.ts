@@ -8,21 +8,24 @@ import { ChrTime } from './chr-time.class';
 })
 export class TimeRangeSimpleComponent implements OnInit {
 
-  startTime: ChrTime = ChrTime.createFromMinutes(0);
-  endTime: ChrTime = ChrTime.createFromMinutes(0);
+  // startTimeText = '00:00';
+  // endTimeText = '00:00';
+  _startTime: ChrTime = ChrTime.createFromMinutes(0);
+  _endTime: ChrTime = ChrTime.createFromMinutes(0);
+
 
   get endTimeText(): string{
-    return this.startTime.toHoursMinutesString();
+    return this._startTime.toHoursMinutesString();
   }
   set endTimeText(val:string) {
-    this.startTime = ChrTime.createFromHHmmString(val);
+    this._startTime = ChrTime.createFromHHmmString(val);
   }
 
   get startTimeText(): string {
-    return this.endTime.toHoursMinutesString();
+    return this._endTime.toHoursMinutesString();
   }
   set startTimeText(val: string) {
-    this.endTime = ChrTime.createFromHHmmString(val);
+    this._endTime = ChrTime.createFromHHmmString(val);
   }
 
 
@@ -32,13 +35,20 @@ export class TimeRangeSimpleComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  // startTimeChanged() {
+  //   this._startTime = ChrTime.createFromHHmmString(this.startTimeText)
+  // }
+  // endTimeChanged() {
+  //   this._endTime = ChrTime.createFromHHmmString(this.endTimeText)
+  // }
+
   increment() {
-    this.startTime = ChrTime.addMinutes(this.startTime, 15);
-    this.endTime = ChrTime.addMinutes(this.endTime, 15);
+    this._startTime = ChrTime.addMinutes(this._startTime, 15);
+    this._endTime = ChrTime.addMinutes(this._endTime, 15);
   }
 
   decrement() {
-    this.startTime = ChrTime.addMinutes(this.startTime, -15);
-    this.endTime = ChrTime.addMinutes(this.endTime, -15);
+    this._startTime = ChrTime.addMinutes(this._startTime, -15);
+    this._endTime = ChrTime.addMinutes(this._endTime, -15);
   }
 }

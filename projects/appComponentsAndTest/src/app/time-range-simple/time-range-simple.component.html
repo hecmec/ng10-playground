@@ -1,7 +1,7 @@
 <div>
   <button (click)="decrement()">&lt;</button>
-  <input type="text" name="startTime" [(ngModel)]="startTimeText">:
-  <input type="text" name="endTime"  [(ngModel)]="endTimeText">
+  <input type="text" name="startTime" [(ngModel)]="startTimeText" [ngModelOptions]="{ updateOn: 'blur' }">
+  <input type="text" name="endTime"  [(ngModel)]="endTimeText"   [ngModelOptions]="{ updateOn: 'blur' }">
   <button (click)="increment()">&gt;</button>
 </div>
 <div>
