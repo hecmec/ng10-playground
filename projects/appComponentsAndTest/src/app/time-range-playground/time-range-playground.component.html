@@ -1,10 +1,13 @@
 <h3>time-range-playground</h3>
 
-<app-time-range-simple
-  rangeStartTime="10:00"
-  rangeEndTime="15:23"
-  rangeDate="2020-10-15"
-></app-time-range-simple>
+<div>
+  <mat-form-field class="example-form-field">
+    <mat-label>Time Range Form binding</mat-label>
+    <app-time-range-simple timeRange="defaultTimeRange"></app-time-range-simple>
+  </mat-form-field>
+
+  : parsed time is {{ timeTest1 }}
+</div>
 
 <br /><br /><br /><br />
 <h4>Data</h4>

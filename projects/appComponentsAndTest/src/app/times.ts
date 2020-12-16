@@ -22,4 +22,9 @@ export class Times {
    * Horaire de fin de journée en string (format HH:MM)
    */
   public static readonly endDayString: string = '24:00';
+
+  /**
+   * Number of hours in day
+   */
+  public static readonly hoursInDay: number = 24;
 }

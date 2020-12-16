@@ -1,6 +1,6 @@
 import { Directive, ElementRef, HostListener, OnInit } from '@angular/core';
 // import { ChrTimeFormatHhmmPipe } from './chr-time-format-hhmm.pipe';
-import { ChrTime } from './chr-time.class';
+import { ChrTime, IChrTime } from './chr-time.class';
 
 /**
  * https://medium.com/ng-consultant/custom-input-formatting-with-simple-directives-for-angular-2-ec792082976
@@ -35,10 +35,10 @@ export class ChrTimeFormatterDirective implements OnInit {
    * Takes any time string similar to 'hh:mm' and transforms it to 'hh:mm'
    *  @param timeString
    */
-  transform(timeString: string): any {
+  transform(timeString: string): string {
     let time: ChrTime;
     if (timeString) {
-      time = ChrTime.createFromString(timeString);
+      time = ChrTime.createFromString(timeString) as ChrTime;
     } else {
       time = ChrTime.createFromMinutes(0);
     }

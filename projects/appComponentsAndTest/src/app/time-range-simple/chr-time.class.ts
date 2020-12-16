@@ -1,66 +1,84 @@
-import { min, timestamp } from 'rxjs/operators';
+import { Tools } from '../tools';
 
 /**
  * Immutable Time object for Chronos
  */
-export class ChrTime {
+export interface IChrTime {
+  hours: number;
+  minutes: number;
+  isNextDay?: boolean;
+}
+export class ChrTime implements IChrTime {
   /**
    * Creates a ChrTime object, if hours, minutes or seconds exceed the valid range we set them to zero
-   * @param hours
-   * @param minutes
-   * @param seconds
+   * @param hours : number of hours between 0 and 23, any overflow is set to zero
+   * @param minutes : number of minutes between 0 and 59, any overflow is set to zero
+   * @param seconds : number of  seconds between 0 and 59, any overflow is set to zero
    */
-  constructor(hours: number, minutes: number, seconds?: number) {
+  constructor(hours: number, minutes: number) {
     hours = Math.abs(hours);
     hours = hours > 23 ? 0 : hours;
-    this.hours = hours;
+    this._hours = hours;
 
     minutes = Math.abs(minutes);
     minutes = minutes > 59 ? 0 : minutes;
-    this.minutes = minutes;
+    this._minutes = minutes;
 
-    seconds = Math.abs(seconds || 0);
-    seconds = seconds > 59 ? 0 : seconds;
-    this.seconds = seconds;
+    // seconds = Math.abs(seconds || 0);
+    // seconds = seconds > 59 ? 0 : seconds;
+    // this.#seconds = seconds;
 
     Object.freeze(this);
   }
 
-  private hours: number;
-  private minutes: number;
-  private seconds: number;
+  protected _hours: number;
+  protected _minutes: number;
 
-  public get Hours() {
-    return this.hours;
+  public get hours() {
+    return this._hours;
   }
-  public get Minutes() {
-    return this.hours;
-  }
-  public get Seconds() {
-    return this.hours;
+  public get minutes() {
+    return this._minutes;
   }
 
   /**
    * returns 'hh:mm' of this time object
    */
   public toHoursMinutesString() {
-    return `${padTwo(this.hours)}:${padTwo(this.minutes)}`;
-  }
-
-  /**
-   * returns 'hh:mm:ss' of this time object
-   */
-  public toFullString() {
-    return `${padTwo(this.hours)}:${padTwo(this.minutes)}:${padTwo(
-      this.seconds
-    )}`;
+    return `${Tools.padTwo(this._hours)}:${Tools.padTwo(this._minutes)}`;
   }
 
   /**
    * Returns the day time a a number of minutes (transforms hours into minutes)
    */
   public getAsMinutes() {
-    return this.hours * 60 + this.minutes;
+    return this._hours * 60 + this._minutes;
+  }
+
+  /**
+   * Returns a new Time with more minutes or null on error
+   * @param minutes
+   */
+  public addMinutes(minutes: number): ChrTime {
+    const newMin = this.getAsMinutes() + minutes;
+    return ChrTime.createFromMinutes(newMin);
+  }
+
+  protected static getNormalizedTimeString(timeString: string): string {
+    let resultTimeString = null;
+    if (timeString) {
+      // if we have any separator (comma, dot or colon) we replace by colon
+      timeString = timeString.replace(',', ':').replace('.', ':');
+
+      // if there is no separator in the string we inject one at 2 or if the string is shorter at the end.
+      if (!timeString.includes(':')) {
+        let insertIndex = timeString.length > 2 ? 2 : timeString.length;
+        let timeDigitsArray = timeString.split('');
+        timeDigitsArray.splice(insertIndex, 0, ':');
+        resultTimeString = timeDigitsArray.join('');
+      }
+    }
+    return resultTimeString;
   }
 
   /**
@@ -75,18 +93,8 @@ export class ChrTime {
    */
   public static createFromString(timeString: string): ChrTime {
     let chrTime: ChrTime = null;
-    if (timeString) {
-      // if we have any separator (comma, dot or colon) we replace by colon
-      timeString = timeString.replace(',', ':').replace('.', ':');
-
-      // if there is no separator in the string we inject one at 2 or if the string is shorter at the end.
-      if (!timeString.includes(':')) {
-        let insertIndex = timeString.length > 2 ? 2 : timeString.length;
-        let timeDigitsArray = timeString.split('');
-        timeDigitsArray.splice(insertIndex, 0, ':');
-        timeString = timeDigitsArray.join('');
-      }
-
+    const normalizedTimeString = ChrTime.getNormalizedTimeString(timeString);
+    if (normalizedTimeString) {
       chrTime = ChrTime.createFromHHmmString(timeString);
     }
     return chrTime;
@@ -112,11 +120,13 @@ export class ChrTime {
           let minutes = parseInt(args[1] || '0', 10);
           hours = Number.isInteger(hours) ? hours : 0;
           minutes = Number.isInteger(minutes) ? minutes : 0;
-
           // one digit minutes are interpreted as tens of minutes.
           minutes = minutes < 10 ? minutes * 10 : minutes;
 
-          chrTime = new ChrTime(hours, minutes);
+          if (0 >= hours && hours <= 23) {
+            // standard time object
+            chrTime = new ChrTime(hours, minutes);
+          }
         } catch (err) {
           // log when logger is dispo
           console.error(err);
@@ -139,14 +149,4 @@ export class ChrTime {
     }
     return chrTime;
   }
-
-  public static addMinutes(time: ChrTime, minutes: number): ChrTime {
-    const newMin = time.getAsMinutes() + minutes;
-    return ChrTime.createFromMinutes(newMin);
-  }
-}
-
-function padTwo(aNumber: number): string {
-  let result = ('' + (aNumber || 0)).padStart(2, '0');
-  return result;
 }

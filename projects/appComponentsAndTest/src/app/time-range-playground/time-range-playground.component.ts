@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TimeRangeSimpleComponent } from '../time-range-simple/time-range-simple.component';
+import { FormControl } from '@angular/forms';
+import { ChrTimeRange36Hours } from '../time-range-simple/chr-time-range-36hours.class';
 
 @Component({
   selector: 'app-time-range-playground',
@@ -8,10 +10,11 @@ import { TimeRangeSimpleComponent } from '../time-range-simple/time-range-simple
 })
 export class TimeRangePlaygroundComponent implements OnInit {
   public timeTest1: string;
+  public defaultTimeRange: ChrTimeRange36Hours = null;
 
   constructor() {}
 
-  // c:TimeRangeSimpleComponent
+  name = new FormControl('');
 
   ngOnInit(): void {}
 }

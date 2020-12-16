@@ -16,11 +16,13 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ChrTime } from './chr-time.class';
 import { ChrDate } from './chr-date.class';
+import { ChrDateTime } from './chr-date-time.class';
+import { ChrTimeRange36Hours } from './chr-time-range-36hours.class';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 /**
  * This is a custom form control
- * Two way databinding on value
+ * Two way databinding on value property (value/valueChange)
  *    https://blog.angulartraining.com/tutorial-create-your-own-two-way-data-binding-in-angular-46487650ea82
  * Implements interface ControlValueAccessor
  *    https://blog.angulartraining.com/tutorial-custom-form-controls-with-angular-22fc31c8c4cc
@@ -44,15 +46,6 @@ export class TimeRangeSimpleComponent
   implements OnChanges, AfterViewInit, ControlValueAccessor {
   @Input() public interval: number = 15;
 
-  @Input() public rangeStartTime: string;
-
-  @Input() public rangeEndTime: string;
-
-  @Input() public rangeDate: string;
-
-  // if true the startTime will be interpreted as a time on d+1
-  @Input() public nextDay: boolean = false;
-
   // Disables the whole control
   @Input() public disabled: boolean = false;
   // Disables the interval decrement button
@@ -60,72 +53,26 @@ export class TimeRangeSimpleComponent
   // Disables the interval increment button
   @Input() public disableIncrement: boolean = false;
 
-  // Value two way binding
-  rangeValue: ExtendedTimeRange;
-
-  // Both onChange and onTouched are functions
+  // Both onChange and onTouched are functions usind for the ControlValueAccessor Interface
   onChange: any = () => {};
   onTouched: any = () => {};
 
-  @Output() valueChange = new EventEmitter<ExtendedTimeRange>();
+  /**
+   * Two way databinding for timeRange
+   */
+  _timeRange: ChrTimeRange36Hours;
 
-  @Input('value')
-  get value() {
-    return this.rangeValue;
+  @Output() timeRangeChange = new EventEmitter<ChrTimeRange36Hours>();
+
+  @Input('timeRange')
+  get timeRange() {
+    return this._timeRange;
   }
-  set value(val) {
-    this.rangeValue = val;
-    this.valueChange.emit(this.rangeValue);
+  set timeRange(val) {
+    this._timeRange = val;
+    this.timeRangeChange.emit(this._timeRange);
     this.onChange(val);
     this.onTouched();
-  }
-
-  /**
-   * StartTime of this time range with getter and setter
-   */
-  _startTime: ChrTime = ChrTime.createFromMinutes(0);
-  public get startTime(): ChrTime {
-    return this._startTime;
-  }
-  public set startTime(v: ChrTime) {
-    this._startTime = v;
-  }
-
-  /**
-   * EndTime of this time range with getter and setter
-   */
-  _endTime: ChrTime = ChrTime.createFromMinutes(0);
-  public get endTime(): ChrTime {
-    return this._endTime;
-  }
-  public set endTime(v: ChrTime) {
-    this._endTime = v;
-  }
-
-  get startTimeText(): string {
-    return this._startTime.toHoursMinutesString();
-  }
-  set startTimeText(val: string) {
-    this._startTime = ChrTime.createFromHHmmString(val);
-  }
-
-  get endTimeText(): string {
-    // console.debug('get endTimeText', this._endTime.toHoursMinutesString());
-    return this._endTime.toHoursMinutesString();
-  }
-  set endTimeText(val: string) {
-    this._endTime = ChrTime.createFromHHmmString(val);
-  }
-
-  /**
-   *
-   */
-  private _isNextDay: string;
-  public get isNextDay(): string {
-    return this._isNextDay;
-  }
-  public set isNextDay(v: string) {
-    this._isNextDay = v;
   }
 
   // used to unsubscribe from event on destroy
@@ -148,13 +95,11 @@ export class TimeRangeSimpleComponent
   }
 
   increment() {
-    this._startTime = ChrTime.addMinutes(this._startTime, this.interval);
-    this._endTime = ChrTime.addMinutes(this._endTime, this.interval);
+    this.timeRange.addIntervalInMinutes(this.interval);
   }
 
   decrement() {
-    this._startTime = ChrTime.addMinutes(this._startTime, -this.interval);
-    this._endTime = ChrTime.addMinutes(this._endTime, -this.interval);
+    this.timeRange.addIntervalInMinutes(-this.interval);
   }
 
   startTimeChanged() {}
@@ -177,7 +122,7 @@ export class TimeRangeSimpleComponent
    */
   writeValue(obj: any): void {
     if (obj) {
-      this.rangeValue = obj;
+      this._timeRange = obj;
     }
   }
   /**
@@ -200,12 +145,51 @@ export class TimeRangeSimpleComponent
    */
   setDisabledState?(isDisabled: boolean): void {}
 }
-/**
- *
- */
-export type ExtendedTimeRange = {
-  referenceDate: ChrDate;
-  startTime: ChrTime;
-  endTime: ChrTime;
-  isNextDay: Boolean;
-};
+
+// /**
+//  * StartTime of this time range with getter and setter
+//  */
+// _startTime: ChrTime = ChrTime.createFromMinutes(0);
+// public get startTime(): ChrTime {
+//   return this._startTime;
+// }
+// public set startTime(v: ChrTime) {
+//   this._startTime = v;
+// }
+
+// /**
+//  * EndTime of this time range with getter and setter
+//  */
+// _endTime: ChrTime = ChrTime.createFromMinutes(0);
+// public get endTime(): ChrTime {
+//   return this._endTime;
+// }
+// public set endTime(v: ChrTime) {
+//   this._endTime = v;
+// }
+
+// get startTimeText(): string {
+//   return this._startTime.toHoursMinutesString();
+// }
+// set startTimeText(val: string) {
+//   this._startTime = ChrTime.createFromHHmmString(val) as ChrTime;
+// }
+
+// get endTimeText(): string {
+//   // console.debug('get endTimeText', this._endTime.toHoursMinutesString());
+//   return this._endTime.toHoursMinutesString();
+// }
+// set endTimeText(val: string) {
+//   this._endTime = ChrTime.createFromHHmmString(val) as ChrTime;
+// }
+
+// /**
+//  *
+//  */
+// private _isNextDay: string;
+// public get isNextDay(): string {
+//   return this._isNextDay;
+// }
+// public set isNextDay(v: string) {
+//   this._isNextDay = v;
+// }
