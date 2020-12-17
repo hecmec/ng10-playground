@@ -1,5 +1,5 @@
 <div>
-  <mat-slide-toggle [(ngModel)]="isNextDay"></mat-slide-toggle>
+  <mat-slide-toggle [(ngModel)]="timeRange.isNextDay"></mat-slide-toggle>
   &nbsp;
   <button (click)="decrement()" mat-icon-button>
     <mat-icon>navigate_before</mat-icon>
@@ -7,26 +7,24 @@
   &nbsp;
   <mat-form-field>
     <input
-      #startTimeInput
+      matInput
       type="text"
       name="startTime"
-      [(ngModel)]="startTimeText"
+      [(ngModel)]="timeRange.startTime"
       [ngModelOptions]="{ updateOn: 'blur' }"
       (change)="startTimeChanged()"
-      matInput
       class="form-control"
     />
   </mat-form-field>
   &nbsp;
   <mat-form-field>
     <input
-      #endTimeInput
+      matInput
       type="text"
       name="endTime"
-      [(ngModel)]="endTimeText"
+      [(ngModel)]="timeRange.endTime"
       [ngModelOptions]="{ updateOn: 'blur' }"
       (change)="endTimeChanged()"
-      matInput
       class="form-control"
     />
   </mat-form-field>

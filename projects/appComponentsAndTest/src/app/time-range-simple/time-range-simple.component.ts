@@ -44,36 +44,43 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class TimeRangeSimpleComponent
   implements OnChanges, AfterViewInit, ControlValueAccessor {
-  @Input() public interval: number = 15;
-
-  // Disables the whole control
-  @Input() public disabled: boolean = false;
-  // Disables the interval decrement button
-  @Input() public disableDecrement: boolean = false;
-  // Disables the interval increment button
-  @Input() public disableIncrement: boolean = false;
-
   // Both onChange and onTouched are functions usind for the ControlValueAccessor Interface
   onChange: any = () => {};
   onTouched: any = () => {};
+
+  // interval
+  readonly _defaultInterval: number = 15;
+  _interval: number;
+  @Input() public get interval(): number {
+    return this._interval;
+  }
+  public set interval(val: number) {
+    this._interval = Math.abs(val);
+  }
+
+  @Input() public isDisabled: boolean = false;
+  // Disables the interval decrement button
+  @Input() public isDecrementDisabled: boolean = false;
+  // Disables the interval increment button
+  @Input() public isIncrementDisabled: boolean = false;
 
   /**
    * Two way databinding for timeRange
    */
   _timeRange: ChrTimeRange36Hours;
 
-  @Output() timeRangeChange = new EventEmitter<ChrTimeRange36Hours>();
-
   @Input('timeRange')
-  get timeRange() {
+  public get timeRange(): ChrTimeRange36Hours {
     return this._timeRange;
   }
-  set timeRange(val) {
+  public set timeRange(val: ChrTimeRange36Hours) {
     this._timeRange = val;
     this.timeRangeChange.emit(this._timeRange);
     this.onChange(val);
     this.onTouched();
   }
+
+  @Output() timeRangeChange = new EventEmitter<ChrTimeRange36Hours>();
 
   // used to unsubscribe from event on destroy
   private ngDestroyed$ = new Subject();
@@ -85,31 +92,38 @@ export class TimeRangeSimpleComponent
   ngAfterViewInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.debug('ChrPlageHoraire.ngOnChanges', changes);
-    if (changes && changes.nextDay) {
+    console.debug('TimeRangeSimpleComponent.ngOnChanges', changes);
+    if (changes && changes.interval) {
       console.debug('ngOnChanges nextDay');
-      this.isNextDay = changes.nextDay.currentValue;
+      this.interval = changes.interval.currentValue;
       // You can also use nextDay.previousValue and
       // nextDay.firstChange for comparing old and new values
     }
   }
 
   increment() {
+    console.debug('TimeRangeSimpleComponent.increment');
     this.timeRange.addIntervalInMinutes(this.interval);
   }
 
   decrement() {
+    console.debug('TimeRangeSimpleComponent.decrement');
     this.timeRange.addIntervalInMinutes(-this.interval);
   }
 
-  startTimeChanged() {}
-  endTimeChanged() {}
+  startTimeChanged() {
+    console.debug('TimeRangeSimpleComponent.startTimeChanged');
+  }
+
+  endTimeChanged() {
+    console.debug('TimeRangeSimpleComponent.endTimeChanged');
+  }
 
   /**
    * Clean up
    */
   ngOnDestroy() {
-    console.debug('ChrPlageHoraire.ngOnDestroy');
+    console.debug('TimeRangeSimpleComponent.ngOnDestroy');
     this.ngDestroyed$.next();
   }
 
@@ -121,29 +135,30 @@ export class TimeRangeSimpleComponent
    * Writes a new value to the element.
    */
   writeValue(obj: any): void {
+    console.debug('TimeRangeSimpleComponent.writeValue');
     if (obj) {
-      this._timeRange = obj;
+      this.timeRange = obj;
     }
   }
   /**
-   * Registers a callback function that should be called when
-   * the control's value changes in the UI.
+   * Registers a callback function that should be called when the control's value changes in the UI.
    */
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
   /**
-   * Registers a callback function that should be called when
-   * the control receives a blur event.
+   * Registers a callback function that should be called when the control receives a blur event.
    */
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
   /**
-   * This function is called by the forms API when
-   * the control status changes to or from "DISABLED".
+   * This function is called by the forms API when the control status changes to or from "DISABLED".
    */
-  setDisabledState?(isDisabled: boolean): void {}
+  setDisabledState?(isDisabled: boolean): void {
+    console.debug('TimeRangeSimpleComponent.setDisabledState');
+    this.isDisabled = isDisabled;
+  }
 }
 
 // /**

@@ -56,13 +56,13 @@ export class ChrTimeExtended extends ChrTime {
   public isValid(): boolean {
     let isValid: boolean = true;
     // &&= adds a validation
-    isValid &&= this.hours >= 0;
-    isValid &&= this.hours < Times.hoursInDay;
-    isValid &&= this.minutes >= 0;
-    isValid &&= this.minutes < 60;
+    isValid = isValid && this.hours >= 0;
+    isValid = isValid && this.hours < Times.hoursInDay;
+    isValid = isValid && this.minutes >= 0;
+    isValid = isValid && this.minutes < 60;
 
     if (this._isNextDay) {
-      isValid &&= this.hours < maxHoursNextDay;
+      isValid = isValid && this.hours < maxHoursNextDay;
     }
     return isValid;
   }

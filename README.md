@@ -26,7 +26,7 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Generating and Adding new Projects
 
-    ng generate application app1 –-routing
+    ng generate application app1
 
 ## Adding Components or other elements to a project
 

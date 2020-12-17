@@ -10,7 +10,11 @@ import { ChrTimeRange36Hours } from '../time-range-simple/chr-time-range-36hours
 })
 export class TimeRangePlaygroundComponent implements OnInit {
   public timeTest1: string;
-  public defaultTimeRange: ChrTimeRange36Hours = null;
+  public defaultTimeRange: ChrTimeRange36Hours = ChrTimeRange36Hours.createFromDateTimeStrings(
+    '2020-10-20',
+    '12:00',
+    '15:00'
+  );
 
   constructor() {}
 
