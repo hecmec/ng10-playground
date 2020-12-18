@@ -1,5 +1,6 @@
 <div>
-  <mat-slide-toggle [(ngModel)]="timeRange.isNextDay"></mat-slide-toggle>
+  <!-- <mat-slide-toggle [(ngModel)]="isNextDay"></mat-slide-toggle> -->
+  <mat-slide-toggle ></mat-slide-toggle>
   &nbsp;
   <button (click)="decrement()" mat-icon-button>
     <mat-icon>navigate_before</mat-icon>
@@ -22,9 +23,6 @@
       matInput
       type="text"
       name="endTime"
-      [(ngModel)]="timeRange.endTime"
-      [ngModelOptions]="{ updateOn: 'blur' }"
-      (change)="endTimeChanged()"
       class="form-control"
     />
   </mat-form-field>

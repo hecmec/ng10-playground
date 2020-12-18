@@ -6,7 +6,7 @@ import { MatTableModule } from '@angular/material/table';
 
 import { SimpleTableComponent } from './simple-table.component';
 
-describe('SimpleTableComponent', () => {
+xdescribe('SimpleTableComponent', () => {
   let component: SimpleTableComponent;
   let fixture: ComponentFixture<SimpleTableComponent>;
 

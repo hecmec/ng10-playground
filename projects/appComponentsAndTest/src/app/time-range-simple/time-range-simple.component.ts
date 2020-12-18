@@ -19,6 +19,7 @@ import { ChrDate } from './chr-date.class';
 import { ChrDateTime } from './chr-date-time.class';
 import { ChrTimeRange36Hours } from './chr-time-range-36hours.class';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChrTimeExtended } from './chr-time-extended.class';
 
 /**
  * This is a custom form control
@@ -84,6 +85,56 @@ export class TimeRangeSimpleComponent
 
   // used to unsubscribe from event on destroy
   private ngDestroyed$ = new Subject();
+
+
+/**
+ * StartTime of this time range with getter and setter
+ */
+  _startTime: ChrTimeExtended = ChrTimeExtended.createFromMinutes(0);
+  public get startTime(): ChrTimeExtended {
+  return this.timeRange.startTime;
+}
+  public set startTime(v: ChrTimeExtended) {
+  this.timeRange.startTime = v;
+}
+
+/**
+ * EndTime of this time range with getter and setter
+ */
+// _endTime: ChrTime = ChrTime.createFromMinutes(0);
+// public get endTime(): ChrTime {
+//   return this._endTime;
+// }
+// public set endTime(v: ChrTime) {
+//   this._endTime = v;
+// }
+
+// get startTimeText(): string {
+//   return this._startTime.toHoursMinutesString();
+// }
+// set startTimeText(val: string) {
+//   this._startTime = ChrTime.createFromHHmmString(val) as ChrTime;
+// }
+
+// get endTimeText(): string {
+//   // console.debug('get endTimeText', this._endTime.toHoursMinutesString());
+//   return this._endTime.toHoursMinutesString();
+// }
+// set endTimeText(val: string) {
+//   this._endTime = ChrTime.createFromHHmmString(val) as ChrTime;
+// }
+
+/**
+ *
+ */
+// private _isNextDay: string;
+// public get isNextDay(): string {
+//   return this._isNextDay;
+// }
+// public set isNextDay(v: string) {
+//   this._isNextDay = v;
+// }
+  
 
   constructor() {}
 
@@ -161,50 +212,4 @@ export class TimeRangeSimpleComponent
   }
 }
 
-// /**
-//  * StartTime of this time range with getter and setter
-//  */
-// _startTime: ChrTime = ChrTime.createFromMinutes(0);
-// public get startTime(): ChrTime {
-//   return this._startTime;
-// }
-// public set startTime(v: ChrTime) {
-//   this._startTime = v;
-// }
 
-// /**
-//  * EndTime of this time range with getter and setter
-//  */
-// _endTime: ChrTime = ChrTime.createFromMinutes(0);
-// public get endTime(): ChrTime {
-//   return this._endTime;
-// }
-// public set endTime(v: ChrTime) {
-//   this._endTime = v;
-// }
-
-// get startTimeText(): string {
-//   return this._startTime.toHoursMinutesString();
-// }
-// set startTimeText(val: string) {
-//   this._startTime = ChrTime.createFromHHmmString(val) as ChrTime;
-// }
-
-// get endTimeText(): string {
-//   // console.debug('get endTimeText', this._endTime.toHoursMinutesString());
-//   return this._endTime.toHoursMinutesString();
-// }
-// set endTimeText(val: string) {
-//   this._endTime = ChrTime.createFromHHmmString(val) as ChrTime;
-// }
-
-// /**
-//  *
-//  */
-// private _isNextDay: string;
-// public get isNextDay(): string {
-//   return this._isNextDay;
-// }
-// public set isNextDay(v: string) {
-//   this._isNextDay = v;
-// }

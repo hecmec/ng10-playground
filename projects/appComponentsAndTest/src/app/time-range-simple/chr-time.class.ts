@@ -27,8 +27,7 @@ export class ChrTime implements IChrTime {
     // seconds = Math.abs(seconds || 0);
     // seconds = seconds > 59 ? 0 : seconds;
     // this.#seconds = seconds;
-
-    Object.freeze(this);
+    // Object.freeze(this);
   }
 
   protected _hours: number;
@@ -89,17 +88,17 @@ export class ChrTime implements IChrTime {
   static removeNonTimeChars(timeString: string): string {
     let resultString = '';
     if (timeString) {
-      resultString = timeString.replace(/[^.,;:0-9]/, '');
+      resultString = timeString.replace(/[^.,;:0-9]/ig, '');
     }
     return resultString;
   }
 
   /**
-   * If there is no separator in the string this injects one at 2 or if the string is shorter at the end.
+   * If there is no separator ':' in the string this injects one at 2 or if the string is shorter at the end.
    * @param timeString
    */
   static injectMissingSeparator(timeString: string): string {
-    let resultString = '';
+    let resultString = timeString;
     if (timeString && !timeString.includes(':')) {
       let insertIndex = timeString.length > 2 ? 2 : timeString.length;
       let timeDigitsArray = timeString.split('');

@@ -36,3 +36,7 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 how about adding reactive workshop
 https://github.com/aaronfrost/reactive-angular-workshop
+
+## CHROME_BIN
+before testing set the env variable for chrome
+export CHROME_BIN=/usr/bin/chromium-browser
