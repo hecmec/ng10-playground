@@ -38,5 +38,10 @@ how about adding reactive workshop
 https://github.com/aaronfrost/reactive-angular-workshop
 
 ## CHROME_BIN
+
+### on linux
+
 before testing set the env variable for chrome
 export CHROME_BIN=/usr/bin/chromium-browser
+
+### on windows

@@ -1,4 +1,4 @@
-import { ChrTime } from "./chr-time.class";
+import { ChrTime } from './chr-time.class';
 
 describe('ChrTime', () => {
   let chrTime: ChrTime;
@@ -36,8 +36,12 @@ describe('ChrTime', () => {
 
   describe('removeNonTimeChars', () => {
     it('should remove everything but numbers and separators', () => {
-      expect(ChrTime.removeNonTimeChars('abcdefg1233456789')).toEqual('1233456789');
-      expect(ChrTime.removeNonTimeChars('123abc.,;:(°456%&+')).toEqual('123.,;:456');
+      expect(ChrTime.removeNonTimeChars('abcdefg1233456789')).toEqual(
+        '1233456789'
+      );
+      expect(ChrTime.removeNonTimeChars('123abc.,;:(°456%&+')).toEqual(
+        '123.,;:456'
+      );
       expect(ChrTime.removeNonTimeChars('a,b,e,r,')).toEqual(',,,,');
     });
     it('should return empty for null or similar', () => {
@@ -60,8 +64,25 @@ describe('ChrTime', () => {
       expect(ChrTime.injectMissingSeparator('1')).toEqual('1:');
     });
   });
-  
-  // getNormalizedTimeString
+
+  describe('getNormalizedTimeString', () => {
+    it('should replace separators to colon and inject one if separtor is missing', () => {
+      expect(ChrTime.getNormalizedTimeString('12.30')).toEqual('12:30');
+      expect(ChrTime.getNormalizedTimeString(';23')).toEqual(':23');
+      expect(ChrTime.getNormalizedTimeString('23,')).toEqual('23:');
+    });
+    it('should replace separators to colon and inject one if separtor is missing', () => {
+      expect(ChrTime.getNormalizedTimeString('23')).toEqual('23:');
+      expect(ChrTime.getNormalizedTimeString('2345')).toEqual('23:45');
+      expect(ChrTime.getNormalizedTimeString('1')).toEqual('1:');
+    });
+    it('should remove everything but numbers and separators', () => {
+      expect(ChrTime.getNormalizedTimeString('ab1b2.c8d8')).toEqual('12:88');
+      expect(ChrTime.getNormalizedTimeString('123abc.,;:(°456%&+')).toEqual(
+        '123::::456'
+      );
+    });
+  });
 
   // createFromString
 

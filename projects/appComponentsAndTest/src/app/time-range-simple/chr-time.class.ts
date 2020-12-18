@@ -72,12 +72,13 @@ export class ChrTime implements IChrTime {
   static getNormalizedTimeString(timeString: string): string {
     let resultTimeString = null;
     if (timeString) {
-      timeString = ChrTime.replaceSeparators(timeString);
+      resultTimeString = ChrTime.replaceSeparators(timeString);
 
-      timeString = ChrTime.removeNonTimeChars(timeString);
+      resultTimeString = ChrTime.removeNonTimeChars(resultTimeString);
 
-      timeString = ChrTime.injectMissingSeparator(timeString);
+      resultTimeString = ChrTime.injectMissingSeparator(resultTimeString);
     }
+
     return resultTimeString;
   }
 
@@ -88,7 +89,7 @@ export class ChrTime implements IChrTime {
   static removeNonTimeChars(timeString: string): string {
     let resultString = '';
     if (timeString) {
-      resultString = timeString.replace(/[^.,;:0-9]/ig, '');
+      resultString = timeString.replace(/[^.,;:0-9]/gi, '');
     }
     return resultString;
   }
