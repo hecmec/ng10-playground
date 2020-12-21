@@ -42,22 +42,25 @@ describe('ChrTimeExtended', () => {
     });
   });
 
+  /***********************************
+   * STATICS
+   *********************************/
 
   describe('createFromHHmmString', () => {
     /**
-  * Parses any string in the format 'hh:mm'
-  * '10:65'=> '10:00'
-  * '99:99'=> '00:00' // hours and minutes out of bound
-  * '1:30' => '01:30'
-  * '1:3' => '01:30'
-  * '1:7' => '01:00' // minutes out of bound
-  * '12' => '12:00'
-  * '1.' => '01:00'
-  * '1234 => '12:34'
-  * '123456 => '12:34'
-  * '.3' => '00:30'
-  * ':' => '00:00'
-  */
+     * Parses any string in the format 'hh:mm'
+     * '10:65'=> '10:00'
+     * '99:99'=> '00:00' // hours and minutes out of bound
+     * '1:30' => '01:30'
+     * '1:3' => '01:30'
+     * '1:7' => '01:00' // minutes out of bound
+     * '12' => '12:00'
+     * '1.' => '01:00'
+     * '1234 => '12:34'
+     * '123456 => '12:34'
+     * '.3' => '00:30'
+     * ':' => '00:00'
+     */
     it('should parse a stardard hh:mm string', () => {
       expect(ChrTimeExtended.createFromHHmmString('10:30').hours).toEqual(10);
       expect(ChrTimeExtended.createFromHHmmString('10:30').minutes).toEqual(30);
@@ -65,14 +68,16 @@ describe('ChrTimeExtended', () => {
 
     it('should parse an extended hh:mm string, between 24 and 36, and set the extended flag.', () => {
       expect(ChrTimeExtended.createFromHHmmString('32:30').hours).toEqual(8);
-      expect(ChrTimeExtended.createFromHHmmString('32:30').isNextDay).toBeTruthy();
+      expect(
+        ChrTimeExtended.createFromHHmmString('32:30').isNextDay
+      ).toBeTruthy();
     });
 
     it('should parse a stardard 00:00 string', () => {
       expect(ChrTimeExtended.createFromHHmmString('00:00').hours).toEqual(0);
       expect(ChrTimeExtended.createFromHHmmString('00:00').minutes).toEqual(0);
     });
-    
+
     it('should parse hours and minutes lower than 10', () => {
       expect(ChrTimeExtended.createFromHHmmString('09:04').hours).toEqual(9);
       expect(ChrTimeExtended.createFromHHmmString('09:04').minutes).toEqual(4);
@@ -160,7 +165,7 @@ describe('ChrTimeExtended', () => {
       expect(ChrTimeExtended.createFromString('11:60')).toBeNull();
       expect(ChrTimeExtended.createFromString('11:99')).toBeNull();
     });
-  })
+  });
 
   describe('createFromMinutes', () => {
     it('should create a 0.0  if we send 0 minutes.', () => {
@@ -177,8 +182,5 @@ describe('ChrTimeExtended', () => {
       expect(ChrTimeExtended.createFromMinutes(1440).hours).toEqual(0);
       expect(ChrTimeExtended.createFromMinutes(1440).minutes).toEqual(0);
     });
-
-  })
-
-
+  });
 });

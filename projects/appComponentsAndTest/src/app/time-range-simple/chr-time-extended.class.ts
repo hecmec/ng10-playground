@@ -17,7 +17,8 @@ export class ChrTimeExtended extends ChrTime {
   constructor(hours: number, minutes: number, isNextDay?: boolean) {
     super(hours, minutes);
 
-    this._isNextDay = isNextDay;
+    // force to boolean
+    this._isNextDay = !!isNextDay;
 
     //Object.freeze(this);
   }
@@ -86,7 +87,9 @@ export class ChrTimeExtended extends ChrTime {
    */
   public static createFromString(timeString: string): ChrTimeExtended {
     let chrTime: ChrTimeExtended = null;
-    const normalizedTimeString = ChrTimeExtended.getNormalizedTimeString(timeString);
+    const normalizedTimeString = ChrTimeExtended.getNormalizedTimeString(
+      timeString
+    );
     if (normalizedTimeString) {
       chrTime = ChrTimeExtended.createFromHHmmString(normalizedTimeString);
     }
@@ -106,7 +109,9 @@ export class ChrTimeExtended extends ChrTime {
   public static createFromHHmmString(timeString: string): ChrTimeExtended {
     let chrTime: ChrTimeExtended = null;
     if (timeString) {
-      const hoursAndMinutes = ChrTimeExtended.getHoursMinutesFromHHmmString(timeString);
+      const hoursAndMinutes = ChrTimeExtended.getHoursMinutesFromHHmmString(
+        timeString
+      );
       chrTime = this.createFromHoursMinutes(...hoursAndMinutes);
     }
     return chrTime;
@@ -123,7 +128,12 @@ export class ChrTimeExtended extends ChrTime {
     minutes: number
   ): ChrTimeExtended {
     let chrTime: ChrTimeExtended = null;
-    if (0 <= hours && hours < Times.hoursInDay + maxHoursNextDay && 0 <= minutes && minutes < Times.minutesInHour) {
+    if (
+      0 <= hours &&
+      hours < Times.hoursInDay + maxHoursNextDay &&
+      0 <= minutes &&
+      minutes < Times.minutesInHour
+    ) {
       let isNextDay = false;
       if (hours >= Times.hoursInDay) {
         hours = hours - Times.hoursInDay;

@@ -27,4 +27,8 @@ export class Times {
    * Number of hours in day
    */
   public static readonly hoursInDay: number = 24;
+
+  public static readonly minYear: number = 0;
+  public static readonly maxYear: number = 9999;
+  public static readonly monthsInYear: number = 12;
 }

@@ -1,3 +1,7 @@
+import { timestamp } from 'rxjs/operators';
+import { Times } from '../times';
+import { Tools } from '../tools';
+
 /**
  * Immutable Date only oject for Chronos
  */
@@ -21,7 +25,7 @@ export class ChrDate {
    * gets a standard js date object with time to zero.
    * Attention: this will have your local timezone and might not give the intended iso date. (iso is GMT)
    */
-  public get standardDate() {
+  public get standardJsDate() {
     return new Date(this.year, this.month - 1, this.day);
   }
   /**
@@ -32,11 +36,11 @@ export class ChrDate {
    */
   constructor(year: number, month: number, day: number) {
     year = Math.abs(year);
-    year = year > 9999 ? 9999 : year;
+    year = year > Times.maxYear ? Times.maxYear : year;
     this._year = year;
 
     month = Math.abs(month);
-    month = month > 12 ? 12 : month;
+    month = month > Times.monthsInYear ? Times.monthsInYear : month;
     this._month = month;
 
     day = Math.abs(day);
@@ -59,7 +63,7 @@ export class ChrDate {
   public toLocalDateString(locale?: string) {
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return this.standardDate.toLocaleDateString(locale);
+    return this.standardJsDate.toLocaleDateString(locale);
   }
 
   /**
@@ -68,15 +72,78 @@ export class ChrDate {
    */
   public toFrenchDateString(format: string = 'fr-FR') {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return this.standardDate.toLocaleDateString();
+    return this.standardJsDate.toLocaleDateString();
   }
 
   /**
-   * Gets a local iso string
+   * Gets an iso string as yyyy-mm-dd
+   * This will ignore any time zone offset.
    */
   public toIsoDateString(): string {
-    return `${this.year}-${this.month}-${this.day}`;
+    return `${Tools.padTwo(this.year)}-${Tools.padTwo(
+      this.month
+    )}-${Tools.padTwo(this.day)}`;
   }
+
+  /**
+   * Tests whether this object equals onother one
+   * @param otherDate: ChrDate
+   */
+  public equals(otherDate: ChrDate): boolean {
+    let result: boolean = false;
+    if (otherDate) {
+      result =
+        this.year === otherDate.year &&
+        this.month === otherDate.month &&
+        this.day === otherDate.day;
+    }
+
+    return result;
+  }
+
+  /**
+   * Years must be in the interval [minYear, maxYear]
+   * Validation function as pure function
+   * @param year
+   */
+  private static yearIsValid(year: number): boolean {
+    return Times.minYear <= year && year <= Times.maxYear;
+  }
+
+  /**
+   * Month is valid, if it is in the interval [0, monthsInYear]
+   * @param month
+   */
+  private static monthIsValid(month: number): boolean {
+    return 1 <= month && month <= Times.monthsInYear;
+  }
+
+  /**
+   * TODO: comment
+   * @param day
+   * @param month
+   * @param year
+   */
+  private static dayIsValid(day: number, month: number, year: number): boolean {
+    const maxDays = ChrDate.getMaxDaysOfMonthInYear(month, year);
+    return day <= maxDays;
+  }
+
+  /**
+   * TODO: define what is a valid date
+   */
+  public isValid(): boolean {
+    let isValid: boolean =
+      ChrDate.yearIsValid(this.year) &&
+      ChrDate.monthIsValid(this.month) &&
+      ChrDate.dayIsValid(this.day, this.month, this.year);
+
+    return isValid;
+  }
+
+  /*******************************************
+   * Static methods
+   *******************************************/
 
   /**
    * Gets the number of days in a month, with leap years, from the date object.
@@ -122,6 +189,7 @@ export class ChrDate {
     }
     return date;
   }
+
   /**
    * Parse string from french date String 'dd/mm/yyyy'
    * @param isoDateString

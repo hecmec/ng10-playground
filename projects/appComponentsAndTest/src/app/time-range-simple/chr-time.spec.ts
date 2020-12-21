@@ -34,6 +34,17 @@ describe('ChrTime', () => {
     });
   });
 
+  describe('toHoursMinutesString', () => {
+    it('should create a correct ', () => {
+      chrTime = new ChrTime(6, 20);
+      expect(chrTime.toHoursMinutesString).toEqual(6);
+      expect(chrTime.minutes).toEqual(20);
+    });
+  });
+
+  /**********************************
+   * statics
+   **********************************/
   describe('removeNonTimeChars', () => {
     it('should remove everything but numbers and separators', () => {
       expect(ChrTime.removeNonTimeChars('abcdefg1233456789')).toEqual(
@@ -86,19 +97,19 @@ describe('ChrTime', () => {
 
   describe('createFromHHmmString', () => {
     /**
-  * Parses any string in the format 'hh:mm'
-  * '10:65'=> '10:00'
-  * '99:99'=> '00:00' // hours and minutes out of bound
-  * '1:30' => '01:30'
-  * '1:3' => '01:30'
-  * '1:7' => '01:00' // minutes out of bound
-  * '12' => '12:00'
-  * '1.' => '01:00'
-  * '1234 => '12:34'
-  * '123456 => '12:34'
-  * '.3' => '00:30'
-  * ':' => '00:00'
-  */
+     * Parses any string in the format 'hh:mm'
+     * '10:65'=> '10:00'
+     * '99:99'=> '00:00' // hours and minutes out of bound
+     * '1:30' => '01:30'
+     * '1:3' => '01:30'
+     * '1:7' => '01:00' // minutes out of bound
+     * '12' => '12:00'
+     * '1.' => '01:00'
+     * '1234 => '12:34'
+     * '123456 => '12:34'
+     * '.3' => '00:30'
+     * ':' => '00:00'
+     */
     it('should parse a stardard hh:mm string', () => {
       expect(ChrTime.createFromHHmmString('10:30').hours).toEqual(10);
       expect(ChrTime.createFromHHmmString('10:30').minutes).toEqual(30);
@@ -108,7 +119,7 @@ describe('ChrTime', () => {
       expect(ChrTime.createFromHHmmString('00:00').hours).toEqual(0);
       expect(ChrTime.createFromHHmmString('00:00').minutes).toEqual(0);
     });
-    
+
     it('should parse hours and minutes lower than 10', () => {
       expect(ChrTime.createFromHHmmString('09:04').hours).toEqual(9);
       expect(ChrTime.createFromHHmmString('09:04').minutes).toEqual(4);
@@ -117,6 +128,7 @@ describe('ChrTime', () => {
     it('should parse one digits hours as simple hours', () => {
       expect(ChrTime.createFromHHmmString('5:5').hours).toEqual(5);
     });
+
     it('should parse one digits minutes as 10 times the minutes', () => {
       expect(ChrTime.createFromHHmmString('5:5').minutes).toEqual(50);
       expect(ChrTime.createFromHHmmString('5:3').minutes).toEqual(30);
@@ -201,7 +213,7 @@ describe('ChrTime', () => {
       expect(ChrTime.createFromString('11:60')).toBeNull();
       expect(ChrTime.createFromString('11:99')).toBeNull();
     });
-  })
+  });
 
   describe('createFromMinutes', () => {
     it('should create a 0.0  if we send 0 minutes.', () => {
@@ -218,8 +230,5 @@ describe('ChrTime', () => {
       expect(ChrTime.createFromMinutes(1440).hours).toEqual(0);
       expect(ChrTime.createFromMinutes(1440).minutes).toEqual(0);
     });
-
-  })
-
-
+  });
 });
