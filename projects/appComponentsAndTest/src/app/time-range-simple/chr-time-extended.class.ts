@@ -14,7 +14,7 @@ export class ChrTimeExtended extends ChrTime {
     return this._isNextDay;
   }
 
-  constructor(hours: number, minutes: number, isNextDay: boolean) {
+  constructor(hours: number, minutes: number, isNextDay?: boolean) {
     super(hours, minutes);
 
     this._isNextDay = isNextDay;
@@ -59,7 +59,7 @@ export class ChrTimeExtended extends ChrTime {
     isValid = isValid && this.hours >= 0;
     isValid = isValid && this.hours < Times.hoursInDay;
     isValid = isValid && this.minutes >= 0;
-    isValid = isValid && this.minutes < 60;
+    isValid = isValid && this.minutes < Times.minutesInHour;
 
     if (this._isNextDay) {
       isValid = isValid && this.hours < maxHoursNextDay;
@@ -86,9 +86,9 @@ export class ChrTimeExtended extends ChrTime {
    */
   public static createFromString(timeString: string): ChrTimeExtended {
     let chrTime: ChrTimeExtended = null;
-    const normalizedTimeString = ChrTime.getNormalizedTimeString(timeString);
+    const normalizedTimeString = ChrTimeExtended.getNormalizedTimeString(timeString);
     if (normalizedTimeString) {
-      chrTime = ChrTimeExtended.createFromHHmmString(timeString);
+      chrTime = ChrTimeExtended.createFromHHmmString(normalizedTimeString);
     }
     return chrTime;
   }
@@ -106,29 +106,15 @@ export class ChrTimeExtended extends ChrTime {
   public static createFromHHmmString(timeString: string): ChrTimeExtended {
     let chrTime: ChrTimeExtended = null;
     if (timeString) {
-      const args: string[] = timeString.split(':');
-      if (args.length >= 1) {
-        try {
-          let hours = parseInt(args[0], 10);
-          let minutes = parseInt(args[1] || '0', 10);
-          hours = Number.isInteger(hours) ? hours : 0;
-          minutes = Number.isInteger(minutes) ? minutes : 0;
-          // one digit minutes are interpreted as tens of minutes.
-          minutes = minutes < 10 ? minutes * 10 : minutes;
-
-          chrTime = ChrTimeExtended.createFromHoursMinutes(hours, minutes);
-        } catch (err) {
-          // log when logger is dispo
-          console.error(err);
-        }
-      }
+      const hoursAndMinutes = ChrTimeExtended.getHoursMinutesFromHHmmString(timeString);
+      chrTime = this.createFromHoursMinutes(...hoursAndMinutes);
     }
     return chrTime;
   }
 
   /**
    * Creates a time object from hours and minutes
-   * If the hours exteed 24 hours but stay in the under
+   * If the hours exteed 24 hours but stay in the under 36, then isNextDAy flag is set
    * @param hours
    * @param minutes
    */
@@ -137,7 +123,7 @@ export class ChrTimeExtended extends ChrTime {
     minutes: number
   ): ChrTimeExtended {
     let chrTime: ChrTimeExtended = null;
-    if (0 >= hours && hours < Times.hoursInDay + maxHoursNextDay) {
+    if (0 <= hours && hours < Times.hoursInDay + maxHoursNextDay && 0 <= minutes && minutes < Times.minutesInHour) {
       let isNextDay = false;
       if (hours >= Times.hoursInDay) {
         hours = hours - Times.hoursInDay;

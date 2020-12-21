@@ -1,3 +1,4 @@
+import { Times } from '../times';
 import { Tools } from '../tools';
 
 /**
@@ -149,60 +150,81 @@ export class ChrTime implements IChrTime {
    * Separators like '.', ',', ';' are replaced by ':'
    * If the string contains non-numericals we return null
    * Examples
-   * '1,3' -> '01:30'
-   * '01,30' -> '01:30'
-   * '1.3' -> '01:30'
-   * '01.30' -> '01:30'
-   * '1:3' -> '01:30'
-   * '01:30' -> '01:30'
+   * '10:65'=> '10:00'
+   * '99:99'=> '00:00' // hours and minutes out of bound
+   * '1;30' => '01:30'
+   * '1:3' => '01:30'
+   * '1:7' => '01:00' // minutes out of bound
+   * '12' => '12:00'
+   * '1:' => '01:00'
+   * '1234 => '12:34'
+   * '123456 => '12:34'
+   * ':3' => '00:30'
+   * ':' => '00:00'
    * @param timeString
    */
   static createFromString(timeString: string): ChrTime {
     let chrTime: ChrTime = null;
     const normalizedTimeString = ChrTime.getNormalizedTimeString(timeString);
     if (normalizedTimeString) {
-      chrTime = ChrTime.createFromHHmmString(timeString);
+      chrTime = ChrTime.createFromHHmmString(normalizedTimeString);
     }
     return chrTime;
   }
 
+  protected static getHoursMinutesFromHHmmString(timeString: string): [number, number] {
+    let result: [number, number] = [0, 0];
+    if (timeString) {
+      const args: string[] = timeString.split(':');
+      if (args.length >= 1) {
+        try {
+          let hoursArg = args[0];
+          hoursArg = hoursArg.slice(0, 2); 
+          let minutesArg = args[1];
+          minutesArg = minutesArg.slice(0, 2);
+          // one digit minutes are interpreted as tens of minutes.
+          if (minutesArg && minutesArg.length === 1) {
+            minutesArg = minutesArg + '0';
+          }
+          let hours = parseInt(hoursArg, 10);
+          let minutes = parseInt(minutesArg || '0', 10);
+          hours = Number.isInteger(hours) ? hours : 0;
+          minutes = Number.isInteger(minutes) ? minutes : 0;
+          result = [hours, minutes];
+        } catch (err) {
+          // log when logger is dispo
+          console.error(err);
+        }
+      }
+    }
+
+    return result;
+  }
+
   /**
-   * Parses any string in the format 'hh:mm'
+   * Parses any string in the format 'hh:mm'.
+   * It will look for the colon as separator.
    * '10:65'=> '10:00'
    * '99:99'=> '00:00' // hours and minutes out of bound
    * '1:30' => '01:30'
    * '1:3' => '01:30'
    * '1:7' => '01:00' // minutes out of bound
    * '12' => '12:00'
-   * '1.' => '01:00'
-   * '1234 => '12:34'
-   * '123456 => '12:34'
-   * '.3' => '00:30'
+   * '1:' => '01:00'
+   * ':3' => '00:30'
    * ':' => '00:00'
    * @param timeString
    */
   public static createFromHHmmString(timeString: string): ChrTime {
     let chrTime: ChrTime = null;
     if (timeString) {
-      const args: string[] = timeString.split(':');
-      if (args.length >= 1) {
-        try {
-          let hours = parseInt(args[0], 10);
-          let minutes = parseInt(args[1] || '0', 10);
-          hours = Number.isInteger(hours) ? hours : 0;
-          minutes = Number.isInteger(minutes) ? minutes : 0;
-          // one digit minutes are interpreted as tens of minutes.
-          minutes = minutes < 10 ? minutes * 10 : minutes;
-
-          if (0 >= hours && hours <= 23) {
-            // standard time object
-            chrTime = new ChrTime(hours, minutes);
-          }
-        } catch (err) {
-          // log when logger is dispo
-          console.error(err);
-        }
+      const hoursAndMinutes = ChrTime.getHoursMinutesFromHHmmString(timeString);
+      const hours = hoursAndMinutes[0];
+      const minutes = hoursAndMinutes[1];
+      if (0 <= hours && hours < Times.hoursInDay && 0 <= minutes && minutes < Times.minutesInHour) {
+        chrTime = new ChrTime(...hoursAndMinutes);
       }
+      
     }
     return chrTime;
   }
