@@ -14,12 +14,11 @@ export class ChrTimeExtended extends ChrTime {
     return this._isNextDay;
   }
 
-  constructor(hours: number, minutes: number, isNextDay?: boolean) {
+  protected constructor(hours: number, minutes: number, isNextDay?: boolean) {
     super(hours, minutes);
 
     // force to boolean
     this._isNextDay = !!isNextDay;
-
     //Object.freeze(this);
   }
 
@@ -45,22 +44,21 @@ export class ChrTimeExtended extends ChrTime {
     );
 
     if (!newTime.isValid) {
-      newTime = this.clone();
+      newTime = this.clone() as ChrTimeExtended;
     }
     return newTime;
   }
 
-  public clone(): ChrTimeExtended {
+  public clone(): IChrTime {
     return new ChrTimeExtended(this.hours, this.minutes, this.isNextDay);
   }
 
-  public isValid(): boolean {
+  public get isValid(): boolean {
     let isValid: boolean = true;
     // &&= adds a validation
-    isValid = isValid && this.hours >= 0;
-    isValid = isValid && this.hours < Times.hoursInDay;
-    isValid = isValid && this.minutes >= 0;
-    isValid = isValid && this.minutes < Times.minutesInHour;
+
+    isValid = ChrTimeExtended.isHoursValid(this.hours);
+    isValid = ChrTime.isMinutesValid(this.minutes);
 
     if (this._isNextDay) {
       isValid = isValid && this.hours < maxHoursNextDay;
@@ -71,10 +69,18 @@ export class ChrTimeExtended extends ChrTime {
    * Returns 'hh:mm' of this time object
    * this will show 33:00 for 07:00 nextDay
    */
-  public toHoursMinutesString() {
+  public toHoursMinutesString(): string {
     const hours = this.isNextDay ? Times.hoursInDay + this._hours : this._hours;
     return `${Tools.padTwo(hours)}:${Tools.padTwo(this._minutes)}`;
   }
+
+  /***********************************
+   * STATICS
+   ***********************************/
+  static isHoursValid(hours: number): boolean {
+    return 0 <= hours && hours < Times.hoursInDay;
+  }
+
   /**
    * Takes any time string similar to 'hh:mm' and transforms it to 'hh:mm'
    * '1,3' -> '01:30'
@@ -112,7 +118,7 @@ export class ChrTimeExtended extends ChrTime {
       const hoursAndMinutes = ChrTimeExtended.getHoursMinutesFromHHmmString(
         timeString
       );
-      chrTime = this.createFromHoursMinutes(...hoursAndMinutes);
+      chrTime = ChrTimeExtended.createFromHoursMinutes(...hoursAndMinutes);
     }
     return chrTime;
   }
@@ -127,20 +133,17 @@ export class ChrTimeExtended extends ChrTime {
     hours: number,
     minutes: number
   ): ChrTimeExtended {
-    let chrTime: ChrTimeExtended = null;
-    if (
-      0 <= hours &&
-      hours < Times.hoursInDay + maxHoursNextDay &&
-      0 <= minutes &&
-      minutes < Times.minutesInHour
-    ) {
-      let isNextDay = false;
-      if (hours >= Times.hoursInDay) {
-        hours = hours - Times.hoursInDay;
-        isNextDay = true;
-      }
-      chrTime = new ChrTimeExtended(hours, minutes, isNextDay);
+    let isNextDay = false;
+    if (hours >= Times.hoursInDay) {
+      hours = hours - Times.hoursInDay;
+      isNextDay = true;
     }
+    let chrTime: ChrTimeExtended = new ChrTimeExtended(
+      hours,
+      minutes,
+      isNextDay
+    );
+
     return chrTime;
   }
 

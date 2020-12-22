@@ -1,64 +1,86 @@
+import { Times } from '../times';
 import { ChrTime } from './chr-time.class';
 
 describe('ChrTime', () => {
   let chrTime: ChrTime;
   // beforeEach(() => { chrTime = new chrTime(); });
 
-  describe('creation by constructor', () => {
-    it('should be createable by constructor with hour and minute', () => {
-      chrTime = new ChrTime(6, 20);
-      expect(chrTime.hours).toEqual(6);
-      expect(chrTime.minutes).toEqual(20);
-    });
-
-    it('should be creatable with zero hours', () => {
-      chrTime = new ChrTime(0, 20);
-      expect(chrTime.hours).toEqual(0);
-      expect(chrTime.minutes).toEqual(20);
-    });
-
-    it('should be creatable with negative hours and turn them to positive', () => {
-      chrTime = new ChrTime(-10, 20);
-      expect(chrTime.hours).toEqual(10);
-    });
-
-    it('should set hours to zero if they exceed 23 hours', () => {
-      chrTime = new ChrTime(25, 20);
-      expect(chrTime.hours).toEqual(0);
-    });
-
-    it('should set minutes to zero if they exceed 59 minutes', () => {
-      chrTime = new ChrTime(20, 60);
-      expect(chrTime.hours).toEqual(20);
-      expect(chrTime.minutes).toEqual(0);
-    });
-  });
-
   describe('toHoursMinutesString', () => {
-    it('should create a correct ', () => {
-      chrTime = new ChrTime(6, 20);
-      expect(chrTime.toHoursMinutesString).toEqual(6);
+    it('should ceate a "06:20" string for a time 6:20', () => {
+      chrTime = ChrTime.createFromHoursMinutes(6, 20);
+      expect(chrTime.toHoursMinutesString()).toEqual('06:20');
       expect(chrTime.minutes).toEqual(20);
+      expect(chrTime.isValid).toBeTrue();
     });
   });
+
+  describe('addMinutes', () => {
+    it('should add an hour if we add 60 minutes to  6:20 ', () => {
+      chrTime = ChrTime.createFromHHmmString('6:20');
+      expect(chrTime.addMinutes(60).toHoursMinutesString()).toEqual('07:20');
+    });
+    it('should be an invalid time object of 30:20 if you add a day to 6:20', () => {
+      chrTime = ChrTime.createFromHHmmString('6:20');
+      chrTime = chrTime.addMinutes(Times.minutesInDay);
+      expect(chrTime.toHoursMinutesString()).toEqual('30:20');
+      expect(chrTime.isValid).toBeFalse();
+    });
+  });
+
+  //addMinutes
 
   /**********************************
    * statics
    **********************************/
+  describe('createFromHoursMinutes', () => {
+    it('should be createable by constructor with hour and minute', () => {
+      chrTime = ChrTime.createFromHoursMinutes(6, 20);
+      expect(chrTime.hours).toEqual(6);
+      expect(chrTime.minutes).toEqual(20);
+      expect(chrTime.isValid).toBeTrue();
+    });
+
+    it('should be creatable with zero hours', () => {
+      chrTime = ChrTime.createFromHoursMinutes(0, 20);
+      expect(chrTime.hours).toEqual(0);
+      expect(chrTime.minutes).toEqual(20);
+      expect(chrTime.isValid).toBeTrue();
+    });
+
+    it('should be creatable with negative hours and turn them to positive', () => {
+      chrTime = ChrTime.createFromHoursMinutes(-10, 20);
+      expect(chrTime.hours).toEqual(10);
+      expect(chrTime.isValid).toBeTrue();
+    });
+
+    it('should make time invalid if hours exceed 23 hours', () => {
+      chrTime = ChrTime.createFromHoursMinutes(25, 20);
+      expect(chrTime.hours).toEqual(25);
+      expect(chrTime.isValid).toBeFalse();
+    });
+
+    it('should make time object invalid if minutes exceed 59 minutes', () => {
+      chrTime = ChrTime.createFromHoursMinutes(20, 60);
+      expect(chrTime.hours).toEqual(20);
+      expect(chrTime.minutes).toEqual(60);
+      expect(chrTime.isValid).toBeFalse();
+    });
+  });
+
   describe('removeNonTimeChars', () => {
     it('should remove everything but numbers and separators', () => {
-      expect(ChrTime.removeNonTimeChars('abcdefg1233456789')).toEqual(
+      expect(ChrTime._removeNonTimeChars('abcdefg1233456789')).toEqual(
         '1233456789'
       );
-      expect(ChrTime.removeNonTimeChars('123abc.,;:(°456%&+')).toEqual(
+      expect(ChrTime._removeNonTimeChars('123abc.,;:(°456%&+')).toEqual(
         '123.,;:456'
       );
-      expect(ChrTime.removeNonTimeChars('a,b,e,r,')).toEqual(',,,,');
+      expect(ChrTime._removeNonTimeChars('a,b,e,r,')).toEqual(',,,,');
     });
     it('should return empty for null or similar', () => {
-      expect(ChrTime.removeNonTimeChars(null)).toEqual('');
-      expect(ChrTime.removeNonTimeChars(undefined)).toEqual('');
-      expect(ChrTime.removeNonTimeChars('')).toEqual('');
+      expect(ChrTime._removeNonTimeChars(null)).toEqual('');
+      expect(ChrTime._removeNonTimeChars(undefined)).toEqual('');
+      expect(ChrTime._removeNonTimeChars('')).toEqual('');
     });
   });
 
@@ -217,18 +239,24 @@ describe('ChrTime', () => {
 
   describe('createFromMinutes', () => {
     it('should create a 0.0  if we send 0 minutes.', () => {
-      expect(ChrTime.createFromMinutes(0).hours).toEqual(0);
-      expect(ChrTime.createFromMinutes(0).minutes).toEqual(0);
+      const time = ChrTime.createFromMinutes(0);
+      expect(time.hours).toEqual(0);
+      expect(time.minutes).toEqual(0);
+      expect(time.isValid).toBeTrue();
     });
 
     it('should create the biggest time object.', () => {
-      expect(ChrTime.createFromMinutes(1439).hours).toEqual(23);
-      expect(ChrTime.createFromMinutes(1439).minutes).toEqual(59);
+      const time = ChrTime.createFromMinutes(1439);
+      expect(time.hours).toEqual(23);
+      expect(time.minutes).toEqual(59);
+      expect(time.isValid).toBeTrue();
     });
 
     it('should create a zero time object if the minutes exceed the legal range.', () => {
-      expect(ChrTime.createFromMinutes(1440).hours).toEqual(0);
-      expect(ChrTime.createFromMinutes(1440).minutes).toEqual(0);
+      const time = ChrTime.createFromMinutes(1440);
+      expect(time.hours).toEqual(24);
+      expect(time.minutes).toEqual(0);
+      expect(time.isValid).toBeFalse();
     });
   });
 });

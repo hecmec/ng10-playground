@@ -4,8 +4,8 @@ import { ChrTimeRange36Hours } from './chr-time-range-36hours.class';
 
 describe('ChrTimeRange36Hours', () => {
   let standardDate = new ChrDate(2020, 10, 20);
-  let standardStart = new ChrTimeExtended(10, 0);
-  let standardEnd = new ChrTimeExtended(12, 0);
+  let standardStart = ChrTimeExtended.createFromHoursMinutes(10, 0);
+  let standardEnd = ChrTimeExtended.createFromHoursMinutes(12, 0);
   const standardTimeRange: ChrTimeRange36Hours = new ChrTimeRange36Hours(
     standardDate,
     standardStart,
@@ -27,8 +27,8 @@ describe('ChrTimeRange36Hours', () => {
     });
 
     it('should be createable by constructor with extended hour for end', () => {
-      const startTime = new ChrTimeExtended(20, 30);
-      const endTime = new ChrTimeExtended(10, 30, true);
+      const startTime = ChrTimeExtended.createFromHoursMinutes(20, 30);
+      const endTime = ChrTimeExtended.createFromHoursMinutes(30, 30);
 
       const chrTimeRange = new ChrTimeRange36Hours(
         standardDate,
@@ -42,8 +42,8 @@ describe('ChrTimeRange36Hours', () => {
     });
 
     it('should be createable by constructor with extended hour for start and end', () => {
-      const startTime = new ChrTimeExtended(4, 11, true);
-      const endTime = new ChrTimeExtended(10, 15, true);
+      const startTime = ChrTimeExtended.createFromHoursMinutes(28, 11);
+      const endTime = ChrTimeExtended.createFromHoursMinutes(34, 15);
 
       const chrTimeRange = new ChrTimeRange36Hours(
         standardDate,
@@ -69,8 +69,8 @@ describe('ChrTimeRange36Hours', () => {
     });
 
     it('should give correct hh:mm strings for extended start and end time', () => {
-      const startTime = new ChrTimeExtended(3, 30, true);
-      const endTime = new ChrTimeExtended(10, 30, true);
+      const startTime = ChrTimeExtended.createFromHoursMinutes(27, 30);
+      const endTime = ChrTimeExtended.createFromHoursMinutes(34, 30);
       const chrTimeRange = new ChrTimeRange36Hours(
         standardDate,
         startTime,
