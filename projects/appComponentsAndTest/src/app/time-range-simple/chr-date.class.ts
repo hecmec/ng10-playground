@@ -29,12 +29,12 @@ export class ChrDate {
     return new Date(this.year, this.month - 1, this.day);
   }
   /**
-   * Creates a ChrTime object, if hours, minutes or seconds exceed the valid range we set them to zero
+   * Creates a ChrTime object
    * @param year
    * @param month
    * @param day
    */
-  constructor(year: number, month: number, day: number) {
+  protected constructor(day: number, month: number, year: number) {
     year = Math.abs(year);
     year = year > Times.maxYear ? Times.maxYear : year;
     this._year = year;
@@ -44,7 +44,7 @@ export class ChrDate {
     this._month = month;
 
     day = Math.abs(day);
-    const maxDays = ChrDate.getMaxDaysOfMonthInYear(month, year);
+    const maxDays = ChrDate._getMaxDaysOfMonthInYear(month, year);
     if (maxDays) {
       day = day > maxDays ? maxDays : day;
       this._day = day;
@@ -52,7 +52,7 @@ export class ChrDate {
       this._day = 0;
     }
 
-    Object.freeze(this);
+    //Object.freeze(this);
   }
 
   /**
@@ -86,7 +86,8 @@ export class ChrDate {
   }
 
   /**
-   * Tests whether this object equals onother one
+   * Tests whether this object equals another one
+   * Two ChrDates are equal if they have equal days, months and years
    * @param otherDate: ChrDate
    */
   public equals(otherDate: ChrDate): boolean {
@@ -102,31 +103,10 @@ export class ChrDate {
   }
 
   /**
-   * Years must be in the interval [minYear, maxYear]
-   * Validation function as pure function
-   * @param year
+   * Clones this object and returns it
    */
-  private static yearIsValid(year: number): boolean {
-    return Times.minYear <= year && year <= Times.maxYear;
-  }
-
-  /**
-   * Month is valid, if it is in the interval [0, monthsInYear]
-   * @param month
-   */
-  private static monthIsValid(month: number): boolean {
-    return 1 <= month && month <= Times.monthsInYear;
-  }
-
-  /**
-   * TODO: comment
-   * @param day
-   * @param month
-   * @param year
-   */
-  private static dayIsValid(day: number, month: number, year: number): boolean {
-    const maxDays = ChrDate.getMaxDaysOfMonthInYear(month, year);
-    return day <= maxDays;
+  public clone(): ChrDate {
+    return ChrDate.createFromDayMonthYear(this.day, this.month, this.year);
   }
 
   /**
@@ -134,9 +114,9 @@ export class ChrDate {
    */
   public isValid(): boolean {
     let isValid: boolean =
-      ChrDate.yearIsValid(this.year) &&
-      ChrDate.monthIsValid(this.month) &&
-      ChrDate.dayIsValid(this.day, this.month, this.year);
+      ChrDate._yearIsValid(this.year) &&
+      ChrDate._monthIsValid(this.month) &&
+      ChrDate._dayIsValid(this.day, this.month, this.year);
 
     return isValid;
   }
@@ -146,11 +126,65 @@ export class ChrDate {
    *******************************************/
 
   /**
+   * Parse string from iso date String 'yyyy-mm-dd'
+   * @param isoDateString
+   * @returns ChrDate object. Is null creation is impossbile
+   */
+  public static createFromIsoString(isoDateString: string): ChrDate {
+    let date: ChrDate = null;
+    if (isoDateString) {
+      try {
+        let jsDate = new Date(isoDateString);
+        date = ChrDate.createFromDayMonthYear(
+          jsDate.getDate(),
+          jsDate.getMonth() + 1,
+          jsDate.getFullYear()
+        );
+      } catch (err) {
+        // FIXME log to logger when dispo
+        console.error(err);
+        date = null;
+      }
+    }
+    return date;
+  }
+
+  /**
+   * Parse string from french date String 'dd/mm/yyyy'
+   * @param isoDateString
+   */
+  public static createFromFrenchDateString(dateString: string): ChrDate {
+    throw new Error('Not yet implemented ...');
+  }
+
+  /**
+   * This creates only valid dates
+   * @param year number of the year
+   * @param month number of month (1 based not 0 like in js)
+   * @param day number of day
+   */
+  public static createFromDayMonthYear(
+    day: number,
+    month: number,
+    year: number
+  ): ChrDate {
+    let date: ChrDate = null;
+    if (
+      ChrDate._yearIsValid(year) &&
+      ChrDate._monthIsValid(month) &&
+      ChrDate._dayIsValid(day, month, year)
+    ) {
+      date = new ChrDate(day, month, year);
+    }
+    return date;
+  }
+
+  /**
    * Gets the number of days in a month, with leap years, from the date object.
    * @param year: 0 < year <= 9999
    * @param month: number,  1 is january, 12 is december
    */
-  private static getMaxDaysOfMonthInYear(month: number, year: number): number {
+  private static _getMaxDaysOfMonthInYear(month: number, year: number): number {
     let result = null;
     if (year && year <= 9999 && month && month <= 12)
       try {
@@ -168,33 +202,34 @@ export class ChrDate {
   }
 
   /**
-   * Parse string from iso date String 'yyyy-mm-dd'
-   * @param isoDateString
+   * Years must be in the interval [minYear, maxYear]
+   * Validation function as pure function
+   * @param year
    */
-  public static createFromIsoString(isoDateString: string): ChrDate {
-    let date: ChrDate = null;
-    if (isoDateString) {
-      try {
-        let jsDate = new Date(isoDateString);
-        date = new ChrDate(
-          jsDate.getFullYear(),
-          jsDate.getMonth() + 1,
-          jsDate.getDate()
-        );
-      } catch (err) {
-        // FIXME log to logger when dispo
-        console.error(err);
-        date = null;
-      }
-    }
-    return date;
+  private static _yearIsValid(year: number): boolean {
+    return Times.minYear <= year && year <= Times.maxYear;
   }
 
   /**
-   * Parse string from french date String 'dd/mm/yyyy'
-   * @param isoDateString
+   * Month is valid, if it is in the interval [0, monthsInYear]
+   * @param month
    */
-  public static createFromFrenchDateString(dateString: string): ChrDate {
-    throw new Error('Not yet implemented ...');
+  private static _monthIsValid(month: number): boolean {
+    return 1 <= month && month <= Times.monthsInYear;
+  }
+
+  /**
+   * TODO: comment
+   * @param day
+   * @param month
+   * @param year
+   */
+  private static _dayIsValid(
+    day: number,
+    month: number,
+    year: number
+  ): boolean {
+    const maxDays = ChrDate._getMaxDaysOfMonthInYear(month, year);
+    return 0 < day && day <= maxDays;
   }
 }

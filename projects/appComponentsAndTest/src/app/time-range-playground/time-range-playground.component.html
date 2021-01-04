@@ -1,20 +1,23 @@
 <h3>time-range-playground</h3>
 
 <div>
-  <app-time-range-simple timeRange="defaultTimeRange"></app-time-range-simple>
+  <app-time-range-simple
+    [(timeRange)]="defaultTimeRange"
+  ></app-time-range-simple>
   <!-- <mat-form-field class="example-form-field">
     <mat-label>Time Range Form binding</mat-label>
     <app-time-range-simple timeRange="defaultTimeRange"></app-time-range-simple>
   </mat-form-field> -->
 
-  : parsed time is {{ timeTest1 }}
+  : parsed time is {{ defaultTimeRange | json }}
 </div>
 
-<br /><br /><br /><br />
-<h4>Data</h4>
+<br /><br />
+<b>Data</b><br />
 <!-- <div>startTime: {{ startTimeText }} endTme: {{ endTimeText }}</div>
 <div>isNextDay: {{ isNextDay }}</div> -->
-<br /><br />
+<hr />
+<br />
 <div>
   input with time-formatter
   <mat-form-field class="example-form-field">
@@ -34,7 +37,11 @@
 
   : parsed time is {{ timeTest1 }}
 </div>
-<br /><br />
+<hr />
+<br />
 <div>simple html time input: <input type="time" /></div>
-
+<hr />
+<br />
 <div>material html time input:<input type="time" matInput /></div>
+<hr />
+<br />

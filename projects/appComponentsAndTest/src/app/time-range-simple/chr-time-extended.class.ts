@@ -5,7 +5,7 @@ import { ChrTime, IChrTime } from './chr-time.class';
 const maxHoursNextDay = 11;
 /**
  * Its like time but allows to work with up to 36 hours
- * In of exceeding hours, the hours are reset minus 24h and the isNextDay flag is set.
+ * In case of exceeding hours, the hours are reset minus 24h and the isNextDay flag is set.
  */
 export class ChrTimeExtended extends ChrTime {
   private _isNextDay: boolean;
@@ -14,12 +14,18 @@ export class ChrTimeExtended extends ChrTime {
     return this._isNextDay;
   }
 
+  /**
+   * Use static creation function to create new objects
+   * This construct is protected
+   * @param hours
+   * @param minutes
+   * @param isNextDay
+   */
   protected constructor(hours: number, minutes: number, isNextDay?: boolean) {
     super(hours, minutes);
 
     // force to boolean
     this._isNextDay = !!isNextDay;
-    //Object.freeze(this);
   }
 
   /**
@@ -55,13 +61,12 @@ export class ChrTimeExtended extends ChrTime {
 
   public get isValid(): boolean {
     let isValid: boolean = true;
-    // &&= adds a validation
 
-    isValid = ChrTimeExtended.isHoursValid(this.hours);
-    isValid = ChrTime.isMinutesValid(this.minutes);
+    isValid = isValid && ChrTimeExtended.isHoursValid(this.hours);
+    isValid = isValid && ChrTime._isMinutesValid(this.minutes);
 
     if (this._isNextDay) {
-      isValid = isValid && this.hours < maxHoursNextDay;
+      isValid = isValid && this.hours <= maxHoursNextDay;
     }
     return isValid;
   }
@@ -99,6 +104,7 @@ export class ChrTimeExtended extends ChrTime {
     if (normalizedTimeString) {
       chrTime = ChrTimeExtended.createFromHHmmString(normalizedTimeString);
     }
+    Object.freeze(chrTime);
     return chrTime;
   }
 
@@ -115,11 +121,12 @@ export class ChrTimeExtended extends ChrTime {
   public static createFromHHmmString(timeString: string): ChrTimeExtended {
     let chrTime: ChrTimeExtended = null;
     if (timeString) {
-      const hoursAndMinutes = ChrTimeExtended.getHoursMinutesFromHHmmString(
+      const hoursAndMinutes = ChrTimeExtended._getHoursMinutesFromHHmmString(
         timeString
       );
       chrTime = ChrTimeExtended.createFromHoursMinutes(...hoursAndMinutes);
     }
+    Object.freeze(chrTime);
     return chrTime;
   }
 
@@ -144,6 +151,7 @@ export class ChrTimeExtended extends ChrTime {
       isNextDay
     );
 
+    Object.freeze(chrTime);
     return chrTime;
   }
 

@@ -1,8 +1,14 @@
-# components and directives
+# components and directives with tests
+
+this doc is for appComponentsAndTest
 
 ## Run it
 
     ng serve appComponentsAndTest --port 4201
+
+## Test
+
+    npm run test:com
 
 ### create new component
 

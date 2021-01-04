@@ -5,6 +5,7 @@ import { min } from 'rxjs/operators';
 
 /**
  * This is a value object that implements the sliding time range on 36 hours and all its rules
+ * Start and end time are extended time objects
  *
  */
 export class ChrTimeRange36Hours {
@@ -50,7 +51,14 @@ export class ChrTimeRange36Hours {
     this.startTime = this.startTime.setIsNextDay(val);
   }
 
-  constructor(
+  /**
+   * for internal use only
+   * use static creation functions to create a new one
+   * @param referenceDate
+   * @param startTime
+   * @param endTime
+   */
+  private constructor(
     referenceDate: ChrDate,
     startTime: ChrTimeExtended,
     endTime: ChrTimeExtended
@@ -84,15 +92,21 @@ export class ChrTimeRange36Hours {
     startTimeString: string,
     endTimeString: string
   ): ChrTimeRange36Hours {
+    let timeRange: ChrTimeRange36Hours = null;
+
     const referenceDate = ChrDate.createFromIsoString(isoDateString);
     const startTime = ChrTimeExtended.createFromString(startTimeString);
     const endTime = ChrTimeExtended.createFromString(endTimeString);
 
-    const timeRange = new ChrTimeRange36Hours(
-      referenceDate,
-      startTime,
-      endTime
-    );
+    if (
+      referenceDate.isValid &&
+      startTime.isValid &&
+      endTime.isValid &&
+      startTime.isSmallerThan(endTime)
+    ) {
+      timeRange = new ChrTimeRange36Hours(referenceDate, startTime, endTime);
+    }
+
     return timeRange;
   }
 }

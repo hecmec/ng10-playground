@@ -45,7 +45,7 @@ import { ChrTimeExtended } from './chr-time-extended.class';
 })
 export class TimeRangeSimpleComponent
   implements OnChanges, AfterViewInit, ControlValueAccessor {
-  // Both onChange and onTouched are functions usind for the ControlValueAccessor Interface
+  // Both onChange and onTouched are functions used for the ControlValueAccessor Interface
   onChange: any = () => {};
   onTouched: any = () => {};
 
@@ -86,55 +86,53 @@ export class TimeRangeSimpleComponent
   // used to unsubscribe from event on destroy
   private ngDestroyed$ = new Subject();
 
-
-/**
- * StartTime of this time range with getter and setter
- */
+  /**
+   * StartTime of this time range with getter and setter
+   */
   _startTime: ChrTimeExtended = ChrTimeExtended.createFromMinutes(0);
   public get startTime(): ChrTimeExtended {
-  return this.timeRange.startTime;
-}
+    return this.timeRange.startTime;
+  }
   public set startTime(v: ChrTimeExtended) {
-  this.timeRange.startTime = v;
-}
+    this.timeRange.startTime = v;
+  }
 
-/**
- * EndTime of this time range with getter and setter
- */
-// _endTime: ChrTime = ChrTime.createFromMinutes(0);
-// public get endTime(): ChrTime {
-//   return this._endTime;
-// }
-// public set endTime(v: ChrTime) {
-//   this._endTime = v;
-// }
+  /**
+   * EndTime of this time range with getter and setter
+   */
+  // _endTime: ChrTime = ChrTime.createFromMinutes(0);
+  // public get endTime(): ChrTime {
+  //   return this._endTime;
+  // }
+  // public set endTime(v: ChrTime) {
+  //   this._endTime = v;
+  // }
 
-// get startTimeText(): string {
-//   return this._startTime.toHoursMinutesString();
-// }
-// set startTimeText(val: string) {
-//   this._startTime = ChrTime.createFromHHmmString(val) as ChrTime;
-// }
+  // get startTimeText(): string {
+  //   return this._startTime.toHoursMinutesString();
+  // }
+  // set startTimeText(val: string) {
+  //   this._startTime = ChrTime.createFromHHmmString(val) as ChrTime;
+  // }
 
-// get endTimeText(): string {
-//   // console.debug('get endTimeText', this._endTime.toHoursMinutesString());
-//   return this._endTime.toHoursMinutesString();
-// }
-// set endTimeText(val: string) {
-//   this._endTime = ChrTime.createFromHHmmString(val) as ChrTime;
-// }
+  // get endTimeText(): string {
+  //   // console.debug('get endTimeText', this._endTime.toHoursMinutesString());
+  //   return this._endTime.toHoursMinutesString();
+  // }
+  // set endTimeText(val: string) {
+  //   this._endTime = ChrTime.createFromHHmmString(val) as ChrTime;
+  // }
 
-/**
- *
- */
-// private _isNextDay: string;
-// public get isNextDay(): string {
-//   return this._isNextDay;
-// }
-// public set isNextDay(v: string) {
-//   this._isNextDay = v;
-// }
-  
+  /**
+   *
+   */
+  // private _isNextDay: string;
+  // public get isNextDay(): string {
+  //   return this._isNextDay;
+  // }
+  // public set isNextDay(v: string) {
+  //   this._isNextDay = v;
+  // }
 
   constructor() {}
 
@@ -211,5 +209,3 @@ export class TimeRangeSimpleComponent
     this.isDisabled = isDisabled;
   }
 }
-
-

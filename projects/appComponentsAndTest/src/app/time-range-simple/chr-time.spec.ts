@@ -27,7 +27,41 @@ describe('ChrTime', () => {
     });
   });
 
-  //addMinutes
+  describe('isSmallerThan', () => {
+    it('should tell us that "6:00" is smaller than "7:00"', () => {
+      const chrTime1 = ChrTime.createFromHHmmString('6:00');
+      const chrTime2 = ChrTime.createFromHHmmString('7:00');
+      expect(chrTime1.isSmallerThan(chrTime2)).toBeTruthy();
+    });
+    it('should tell us that "12:00" is not smaller than "12:00"', () => {
+      const chrTime1 = ChrTime.createFromHHmmString('12:00');
+      const chrTime2 = ChrTime.createFromHHmmString('12:00');
+      expect(chrTime1.isSmallerThan(chrTime2)).toBeFalsy();
+    });
+    it('should tell us that "00:10" is not smaller than "00:08"', () => {
+      const chrTime1 = ChrTime.createFromHHmmString('00:10');
+      const chrTime2 = ChrTime.createFromHHmmString('00:08');
+      expect(chrTime1.isSmallerThan(chrTime2)).toBeFalsy();
+    });
+  });
+
+  describe('equals', () => {
+    it('should tell us that "6:00" is not equal to "7:00"', () => {
+      const chrTime1 = ChrTime.createFromHHmmString('6:00');
+      const chrTime2 = ChrTime.createFromHHmmString('7:00');
+      expect(chrTime1.equals(chrTime2)).toBeFalsy();
+    });
+    it('should tell us that "23:55" is equal to "23:55"', () => {
+      const chrTime1 = ChrTime.createFromHHmmString('23:55');
+      const chrTime2 = ChrTime.createFromHHmmString('23:55');
+      expect(chrTime1.equals(chrTime2)).toBeTruthy();
+    });
+    it('should tell us that "00:10" is not equal to than "00:08"', () => {
+      const chrTime1 = ChrTime.createFromHHmmString('00:10');
+      const chrTime2 = ChrTime.createFromHHmmString('00:08');
+      expect(chrTime1.equals(chrTime2)).toBeFalsy();
+    });
+  });
 
   /**********************************
    * statics
@@ -86,15 +120,15 @@ describe('ChrTime', () => {
 
   describe('injectMissingSeparator', () => {
     it('should inject no separator if there is one', () => {
-      expect(ChrTime.injectMissingSeparator('10:20')).toEqual('10:20');
-      expect(ChrTime.injectMissingSeparator(':1020')).toEqual(':1020');
-      expect(ChrTime.injectMissingSeparator('10:20:')).toEqual('10:20:');
+      expect(ChrTime._injectMissingSeparator('10:20')).toEqual('10:20');
+      expect(ChrTime._injectMissingSeparator(':1020')).toEqual(':1020');
+      expect(ChrTime._injectMissingSeparator('10:20:')).toEqual('10:20:');
     });
     it('should inject a separator if there is no one', () => {
-      expect(ChrTime.injectMissingSeparator('abc')).toEqual('ab:c');
-      expect(ChrTime.injectMissingSeparator('1234')).toEqual('12:34');
-      expect(ChrTime.injectMissingSeparator('12')).toEqual('12:');
-      expect(ChrTime.injectMissingSeparator('1')).toEqual('1:');
+      expect(ChrTime._injectMissingSeparator('abc')).toEqual('ab:c');
+      expect(ChrTime._injectMissingSeparator('1234')).toEqual('12:34');
+      expect(ChrTime._injectMissingSeparator('12')).toEqual('12:');
+      expect(ChrTime._injectMissingSeparator('1')).toEqual('1:');
     });
   });
 
@@ -259,4 +293,23 @@ describe('ChrTime', () => {
       expect(time.isValid).toBeFalse();
     });
   });
+
+  describe('compare', () => {
+    it('should compare times with 0 minutes as 0 difference.', () => {
+      const time1 = ChrTime.createFromMinutes(0);
+      const time2 = ChrTime.createFromMinutes(0);
+      expect(ChrTime.compare(time1, time2)).toEqual(0);
+    });
+    it('should return less than 0 if first time is smaller than second time.', () => {
+      const time1 = ChrTime.createFromMinutes(20);
+      const time2 = ChrTime.createFromMinutes(30);
+      expect(ChrTime.compare(time1, time2)).toBeLessThan(0);
+    });
+    it('should return greater than 0 if first time is greater than second time.', () => {
+      const time1 = ChrTime.createFromMinutes(20);
+      const time2 = ChrTime.createFromMinutes(10);
+      expect(ChrTime.compare(time1, time2)).toBeGreaterThan(0);
+    });
+  });
+  //
 });

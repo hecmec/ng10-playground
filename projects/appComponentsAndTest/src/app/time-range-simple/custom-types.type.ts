@@ -1,3 +1,6 @@
+/**
+ * this type allows for null or empty
+ */
 type Nothing = null | undefined | '';
 
 // optional types

@@ -1,21 +1,24 @@
 import { Times } from '../times';
 import { Tools } from '../tools';
 
-/**
- * Immutable Time object for Chronos
- */
 export interface IChrTime {
   hours: number;
   minutes: number;
   isNextDay?: boolean;
 }
+/**
+ * Immutable Time object for Chronos
+ * The ChrTime object has hours and minutes.
+ * Use static creation functions to create new time objects.
+ * You are allowed to create invalid time objects (for)
+ */
+
 export class ChrTime implements IChrTime {
   /**
    * Creates a ChrTime object, if hours, minutes or seconds exceed the valid range we set them to zero
    * This is private, use the factory methods (ceate...) to create time objects
    * @param hours : number of hours between 0 and 23, any overflow is set to zero
    * @param minutes : number of minutes between 0 and 59, any overflow is set to zero
-   * @param seconds : number of  seconds between 0 and 59, any overflow is set to zero
    */
   protected constructor(hours: number, minutes: number) {
     this._hours = Math.abs(hours);
@@ -64,108 +67,42 @@ export class ChrTime implements IChrTime {
   }
 
   /**
+   * Tests whether this time is smaller than another time (by simply comparing hours and minutes)
+   * @param otherTime
+   */
+  public isSmallerThan(otherTime: IChrTime): boolean {
+    let result = false;
+    if (otherTime) {
+      result = ChrTime.compare(this, otherTime) < 0;
+    }
+    return result;
+  }
+
+  /**
+   * Tests whether this time equals other time (by simply comparing hours and minutes)
+   * @param otherTime
+   */
+  public equals(otherTime: IChrTime): boolean {
+    let result = false;
+    if (otherTime) {
+      result = ChrTime.compare(this, otherTime) === 0;
+    }
+    return result;
+  }
+
+  /**
    * checks validity of this object
    */
   public get isValid(): boolean {
     let isValid: boolean = true;
-    isValid = isValid && ChrTime.isHoursValid(this.hours);
-    isValid = isValid && ChrTime.isMinutesValid(this.minutes);
+    isValid = isValid && ChrTime._isHoursValid(this.hours);
+    isValid = isValid && ChrTime._isMinutesValid(this.minutes);
     return isValid;
   }
 
   /***********************************
    * STATICS
    ***********************************/
-
-  static isHoursValid(hours: number): boolean {
-    return 0 <= hours && hours < Times.hoursInDay;
-  }
-
-  static isMinutesValid(minutes: number): boolean {
-    return 0 <= minutes && minutes < Times.minutesInHour;
-  }
-
-  /**
-   * Removes every char that is not either a digit or a possible sepator '.,;:'
-   * @param timeString
-   */
-  static _removeNonTimeChars(timeString: string): string {
-    let resultString = '';
-    if (timeString) {
-      resultString = timeString.replace(/[^.,;:0-9]/gi, '');
-    }
-    return resultString;
-  }
-
-  /**
-   * This will remove any non digit or separator chars.
-   * Separators like ';,.' are replaced by ':'
-   * If there is no separtor we introduce one at index 2 or if less at the end.
-   * @param timeString
-   */
-  static getNormalizedTimeString(timeString: string): string {
-    let resultTimeString = null;
-    if (timeString) {
-      resultTimeString = ChrTime.replaceSeparators(timeString);
-
-      resultTimeString = ChrTime._removeNonTimeChars(resultTimeString);
-
-      resultTimeString = ChrTime.injectMissingSeparator(resultTimeString);
-    }
-
-    return resultTimeString;
-  }
-
-  /**
-   * If there is no separator ':' in the string this injects one at 2 or if the string is shorter at the end.
-   * @param timeString
-   */
-  static injectMissingSeparator(timeString: string): string {
-    let resultString = timeString;
-    if (timeString && !timeString.includes(':')) {
-      let insertIndex = timeString.length > 2 ? 2 : timeString.length;
-      let timeDigitsArray = timeString.split('');
-      timeDigitsArray.splice(insertIndex, 0, ':');
-      resultString = timeDigitsArray.join('');
-    }
-    return resultString;
-  }
-
-  /**
-   *  if we have any separator (comma, dot or colon) we replace by colon
-   * @param timeString
-   */
-  static replaceSeparators(timeString: string): string {
-    let resultString = '';
-    if (timeString) {
-      resultString = timeString
-        .replace(',', ':')
-        .replace('.', ':')
-        .replace(';', ':');
-    }
-    return resultString;
-  }
-
-  /**
-   * Tests if this string is a time string parsable by this ChrTime
-   * @param timeString
-   */
-  static isParsableAsTimeString(timeString: string): boolean {
-    let isParsable = false;
-    if (timeString) {
-      // hours between 0 and 23, single or double digits, can even be empty
-      const hoursPart = '([0-1]?d|2[0-3]|d)?';
-      // allowed separators in caturing group
-      const separatorPart = '([.,;:])';
-      // allowed minutes
-      const minutesPart = '([0-5]?[0-9])?';
-      const regEx: RegExp = new RegExp(
-        `^${hoursPart}${separatorPart}${minutesPart}$`
-      );
-      isParsable = regEx.test(timeString);
-    }
-    return isParsable;
-  }
 
   /**
    * Creates a new chrtime object
@@ -174,6 +111,7 @@ export class ChrTime implements IChrTime {
    */
   static createFromHoursMinutes(hours: number, minutes: number): ChrTime {
     const chrTime: ChrTime = new ChrTime(hours, minutes);
+    Object.freeze(chrTime);
     return chrTime;
   }
 
@@ -201,14 +139,174 @@ export class ChrTime implements IChrTime {
     if (normalizedTimeString) {
       chrTime = ChrTime.createFromHHmmString(normalizedTimeString);
     }
+    Object.freeze(chrTime);
     return chrTime;
+  }
+
+  /**
+   * Parses any string in the format 'hh:mm'.
+   * It will look for the colon as separator.
+   * '10:65'=> '10:00'
+   * '99:99'=> '00:00' // hours and minutes out of bound
+   * '1:30' => '01:30'
+   * '1:3' => '01:30'
+   * '1:7' => '01:00' // minutes out of bound
+   * '12' => '12:00'
+   * '1:' => '01:00'
+   * ':3' => '00:30'
+   * ':' => '00:00'
+   * @param timeString
+   */
+  static createFromHHmmString(timeString: string): ChrTime {
+    let chrTime: ChrTime = null;
+    if (timeString) {
+      const hoursAndMinutes = ChrTime._getHoursMinutesFromHHmmString(
+        timeString
+      );
+      const hours = hoursAndMinutes[0];
+      const minutes = hoursAndMinutes[1];
+      if (
+        0 <= hours &&
+        hours < Times.hoursInDay &&
+        0 <= minutes &&
+        minutes < Times.minutesInHour
+      ) {
+        chrTime = ChrTime.createFromHoursMinutes(hours, minutes);
+      }
+    }
+    return chrTime;
+  }
+
+  /**
+   * Creates a ChrTime from minutes
+   * @param minutes
+   */
+  static createFromMinutes(minutes: number): ChrTime {
+    let chrTime: ChrTime = null;
+    if (minutes !== undefined && minutes !== null) {
+      const hours = Math.floor(minutes / 60);
+      const minutesRest = minutes % 60;
+      chrTime = ChrTime.createFromHoursMinutes(hours, minutesRest);
+    }
+    return chrTime;
+  }
+
+  /**
+   * Tests whether this time is smaller, equal or greater than another time
+   * If compareTo returns less than 0,
+   * @param otherTime
+   */
+  static compare(aTime: IChrTime, bTime: IChrTime): number {
+    let result: number = 0;
+    if (aTime.isNextDay && !bTime.isNextDay) {
+      result = 1;
+    } else if (!aTime.isNextDay && bTime.isNextDay) {
+      result = -1;
+    }
+    // now they should be both the same day
+    else if (aTime.hours != bTime.hours) {
+      result = aTime.hours - bTime.hours;
+    } else {
+      result = aTime.minutes - bTime.minutes;
+    }
+    return result;
+  }
+
+  static _isHoursValid(hours: number): boolean {
+    return 0 <= hours && hours < Times.hoursInDay;
+  }
+
+  static _isMinutesValid(minutes: number): boolean {
+    return 0 <= minutes && minutes < Times.minutesInHour;
+  }
+
+  /**
+   * Removes every char that is not either a digit or a possible sepator '.,;:'
+   * @param timeString
+   */
+  static _removeNonTimeChars(timeString: string): string {
+    let resultString = '';
+    if (timeString) {
+      resultString = timeString.replace(/[^.,;:0-9]/gi, '');
+    }
+    return resultString;
+  }
+
+  /**
+   * This will remove any non digit or separator chars.
+   * Separators like ';,.' are replaced by ':'
+   * If there is no separtor we introduce one at index 2 or if less at the end.
+   * @param timeString
+   */
+  static getNormalizedTimeString(timeString: string): string {
+    let resultTimeString = null;
+    if (timeString) {
+      resultTimeString = ChrTime._replaceSeparators(timeString);
+
+      resultTimeString = ChrTime._removeNonTimeChars(resultTimeString);
+
+      resultTimeString = ChrTime._injectMissingSeparator(resultTimeString);
+    }
+
+    return resultTimeString;
+  }
+
+  /**
+   * If there is no separator ':' in the string this injects one at 2 or if the string is shorter at the end.
+   * @param timeString
+   */
+  static _injectMissingSeparator(timeString: string): string {
+    let resultString = timeString;
+    if (timeString && !timeString.includes(':')) {
+      let insertIndex = timeString.length > 2 ? 2 : timeString.length;
+      let timeDigitsArray = timeString.split('');
+      timeDigitsArray.splice(insertIndex, 0, ':');
+      resultString = timeDigitsArray.join('');
+    }
+    return resultString;
+  }
+
+  /**
+   *  if we have any separator (comma, dot or colon) we replace by colon
+   * @param timeString
+   */
+  static _replaceSeparators(timeString: string): string {
+    let resultString = '';
+    if (timeString) {
+      resultString = timeString
+        .replace(',', ':')
+        .replace('.', ':')
+        .replace(';', ':');
+    }
+    return resultString;
+  }
+
+  /**
+   * Tests if this string is a time string parsable by this ChrTime
+   * @param timeString
+   */
+  static _isParsableAsTimeString(timeString: string): boolean {
+    let isParsable = false;
+    if (timeString) {
+      // hours between 0 and 23, single or double digits, can even be empty
+      const hoursPart = '([0-1]?d|2[0-3]|d)?';
+      // allowed separators in caturing group
+      const separatorPart = '([.,;:])';
+      // allowed minutes
+      const minutesPart = '([0-5]?[0-9])?';
+      const regEx: RegExp = new RegExp(
+        `^${hoursPart}${separatorPart}${minutesPart}$`
+      );
+      isParsable = regEx.test(timeString);
+    }
+    return isParsable;
   }
 
   /**
    * Gets a tuple of numbers from hh:mm string
    * @param timeString
    */
-  static getHoursMinutesFromHHmmString(timeString: string): [number, number] {
+  static _getHoursMinutesFromHHmmString(timeString: string): [number, number] {
     let result: [number, number] = [0, 0];
     if (timeString) {
       const args: string[] = timeString.split(':');
@@ -236,50 +334,28 @@ export class ChrTime implements IChrTime {
 
     return result;
   }
+}
 
-  /**
-   * Parses any string in the format 'hh:mm'.
-   * It will look for the colon as separator.
-   * '10:65'=> '10:00'
-   * '99:99'=> '00:00' // hours and minutes out of bound
-   * '1:30' => '01:30'
-   * '1:3' => '01:30'
-   * '1:7' => '01:00' // minutes out of bound
-   * '12' => '12:00'
-   * '1:' => '01:00'
-   * ':3' => '00:30'
-   * ':' => '00:00'
-   * @param timeString
-   */
-  static createFromHHmmString(timeString: string): ChrTime {
-    let chrTime: ChrTime = null;
-    if (timeString) {
-      const hoursAndMinutes = ChrTime.getHoursMinutesFromHHmmString(timeString);
-      const hours = hoursAndMinutes[0];
-      const minutes = hoursAndMinutes[1];
-      if (
-        0 <= hours &&
-        hours < Times.hoursInDay &&
-        0 <= minutes &&
-        minutes < Times.minutesInHour
-      ) {
-        chrTime = ChrTime.createFromHoursMinutes(hours, minutes);
-      }
-    }
-    return chrTime;
+/**
+ *
+ * class in test
+ */
+export class ChrOptionalTime extends ChrTime implements IChrTime {
+  private _value: ChrTime;
+  public get value(): ChrTime {
+    return this._value;
   }
-
+  public set value(v: ChrTime) {
+    this._value = v;
+  }
   /**
-   * Creates a ChrTime from minutes
-   * @param minutes
+   * Gets a time string or empty if there is no value
    */
-  static createFromMinutes(minutes: number): ChrTime {
-    let chrTime: ChrTime = null;
-    if (minutes !== undefined && minutes !== null) {
-      const hours = Math.floor(minutes / 60);
-      const minutesRest = minutes % 60;
-      chrTime = ChrTime.createFromHoursMinutes(hours, minutesRest);
+  public toHoursMinutesString() {
+    if (this.value) {
+      return this.value.toHoursMinutesString();
+    } else {
+      return '';
     }
-    return chrTime;
   }
 }
