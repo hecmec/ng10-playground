@@ -79,6 +79,18 @@ export class ChrTime implements IChrTime {
   }
 
   /**
+   * Tests whether this time is smaller than or equal to another time (by simply comparing hours and minutes)
+   * @param otherTime
+   */
+  public isSmallerThanOrEquals(otherTime: IChrTime): boolean {
+    let result = false;
+    if (otherTime) {
+      result = ChrTime.compare(this, otherTime) <= 0;
+    }
+    return result;
+  }
+
+  /**
    * Tests whether this time equals other time (by simply comparing hours and minutes)
    * @param otherTime
    */

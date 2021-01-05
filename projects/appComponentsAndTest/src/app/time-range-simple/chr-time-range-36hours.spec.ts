@@ -34,6 +34,74 @@ describe('ChrTimeRange36Hours', () => {
     });
   });
 
+  describe('equals', () => {
+    it('should eval two ranges with same date and times as equal', () => {
+      const chrTimeRange1 = ChrTimeRange36Hours.createFromDateTimeStrings(
+        '2020-10-20',
+        '27:30',
+        '34:30'
+      );
+      const chrTimeRange2 = ChrTimeRange36Hours.createFromDateTimeStrings(
+        '2020-10-20',
+        '27:30',
+        '34:30'
+      );
+      expect(chrTimeRange1.equals(chrTimeRange2)).toBeTruthy();
+    });
+    it('should eval two ranges that differ in reference date as not equal', () => {
+      const chrTimeRange1 = ChrTimeRange36Hours.createFromDateTimeStrings(
+        '2020-10-20',
+        '27:30',
+        '34:30'
+      );
+      const chrTimeRange2 = ChrTimeRange36Hours.createFromDateTimeStrings(
+        '2020-10-22',
+        '27:30',
+        '34:30'
+      );
+      expect(chrTimeRange1.equals(chrTimeRange2)).toBeFalsy();
+    });
+  });
+
+  describe('isValid', () => {
+    it('should eval a range with correct times and date as valid', () => {
+      const chrTimeRange1 = ChrTimeRange36Hours.createFromDateTimeStrings(
+        '2020-10-20',
+        '00:00',
+        '22:55'
+      );
+      expect(chrTimeRange1.isValid).toBeTruthy();
+    });
+    it('should eval a range with correct extended times and date as valid', () => {
+      const chrTimeRange1 = ChrTimeRange36Hours.createFromDateTimeStrings(
+        '1492-05-20',
+        '27:30',
+        '34:30'
+      );
+      expect(chrTimeRange1.isValid).toBeTruthy();
+    });
+    it('should make a null range with incorrect date', () => {
+      const chrTimeRange1 = ChrTimeRange36Hours.createFromDateTimeStrings(
+        '1492-14-20',
+        '27:30',
+        '34:30'
+      );
+      expect(chrTimeRange1).toBeNull();
+    });
+    it('should eval a range with incorrect time as invalid', () => {
+      const chrTimeRange1 = ChrTimeRange36Hours.createFromDateTimeStrings(
+        '1492-08-20',
+        '20:30',
+        '36:30'
+      );
+      expect(chrTimeRange1.isValid).toBeFalse();
+    });
+  });
+
+  // isValid
+
+  // clone
+
   /******************************************
    * Statics
    ******************************************/
@@ -76,6 +144,7 @@ describe('ChrTimeRange36Hours', () => {
       expect(chrTimeRange.endTime.hours).toEqual(6);
       expect(chrTimeRange.isNextDay).toBeFalsy();
     });
+
     it('should be createable by createFromDateTimeStrings with extended hour for start and end', () => {
       const chrTimeRange = ChrTimeRange36Hours.createFromDateTimeStrings(
         '2020-10-20',

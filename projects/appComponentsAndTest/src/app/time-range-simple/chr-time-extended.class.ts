@@ -30,7 +30,9 @@ export class ChrTimeExtended extends ChrTime {
 
   /**
    * Returns a new Time with more minutes or null on error
+   * Use negative minutes to decrement
    * @param minutes
+   * @returns a new copy
    */
   public addMinutes(minutes: number): ChrTimeExtended {
     const newMin = this.getAsMinutes() + minutes;

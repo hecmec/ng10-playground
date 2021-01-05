@@ -27,6 +27,8 @@ import { ChrTimeExtended } from './chr-time-extended.class';
  *    https://blog.angulartraining.com/tutorial-create-your-own-two-way-data-binding-in-angular-46487650ea82
  * Implements interface ControlValueAccessor
  *    https://blog.angulartraining.com/tutorial-custom-form-controls-with-angular-22fc31c8c4cc
+ * Precht on form controls: top
+ *    https://blog.thoughtram.io/angular/2016/07/27/custom-form-controls-in-angular-2.html
  *
  */
 @Component({
@@ -49,9 +51,11 @@ export class TimeRangeSimpleComponent
   onChange: any = () => {};
   onTouched: any = () => {};
 
-  // interval
+  /**
+   * Interval
+   */
   readonly _defaultInterval: number = 15;
-  _interval: number;
+  _interval: number = this._defaultInterval;
   @Input() public get interval(): number {
     return this._interval;
   }
@@ -66,7 +70,7 @@ export class TimeRangeSimpleComponent
   @Input() public isIncrementDisabled: boolean = false;
 
   /**
-   * Two way databinding for timeRange
+   * Two way databinding for timeRange (property and propertyChange EventEmitter)
    */
   _timeRange: ChrTimeRange36Hours;
 
@@ -89,50 +93,71 @@ export class TimeRangeSimpleComponent
   /**
    * StartTime of this time range with getter and setter
    */
-  _startTime: ChrTimeExtended = ChrTimeExtended.createFromMinutes(0);
+  //_startTime: ChrTimeExtended = null;
   public get startTime(): ChrTimeExtended {
-    return this.timeRange.startTime;
+    console.debug(
+      'TimeRangeCmp.startTime get',
+      this.timeRange?.startTime?.toHoursMinutesString()
+    );
+    return this.timeRange?.startTime;
   }
   public set startTime(v: ChrTimeExtended) {
-    this.timeRange.startTime = v;
+    if (this.timeRange) {
+      this.timeRange.startTime = v;
+    }
   }
 
   /**
    * EndTime of this time range with getter and setter
    */
-  // _endTime: ChrTime = ChrTime.createFromMinutes(0);
-  // public get endTime(): ChrTime {
-  //   return this._endTime;
-  // }
-  // public set endTime(v: ChrTime) {
-  //   this._endTime = v;
-  // }
+  //_endTime: ChrTimeExtended = null;
+  public get endTime(): ChrTimeExtended {
+    console.debug(
+      'TimeRangeCmp.endTime get',
+      this.timeRange?.endTime?.toHoursMinutesString()
+    );
+    return this.timeRange?.endTime;
+  }
+  public set endTime(v: ChrTimeExtended) {
+    if (this.timeRange) {
+      this.timeRange.endTime = v;
+    }
+  }
 
-  // get startTimeText(): string {
-  //   return this._startTime.toHoursMinutesString();
-  // }
-  // set startTimeText(val: string) {
-  //   this._startTime = ChrTime.createFromHHmmString(val) as ChrTime;
-  // }
+  /**
+   * StartTime text property. This parses and formats text
+   */
+  get startTimeText(): string {
+    return this.startTime?.toHoursMinutesString();
+  }
+  set startTimeText(val: string) {
+    this.startTime = ChrTimeExtended.createFromHHmmString(
+      val
+    ) as ChrTimeExtended;
+  }
 
-  // get endTimeText(): string {
-  //   // console.debug('get endTimeText', this._endTime.toHoursMinutesString());
-  //   return this._endTime.toHoursMinutesString();
-  // }
-  // set endTimeText(val: string) {
-  //   this._endTime = ChrTime.createFromHHmmString(val) as ChrTime;
-  // }
+  /**
+   * EndTime text property
+   */
+  get endTimeText(): string {
+    console.debug('TimeRangeCmp.endTime', this.endTime.toHoursMinutesString());
+    // console.debug('get endTimeText', this._endTime.toHoursMinutesString());
+    return this.endTime.toHoursMinutesString();
+  }
+  set endTimeText(val: string) {
+    this.endTime = ChrTimeExtended.createFromHHmmString(val) as ChrTimeExtended;
+  }
 
   /**
    *
    */
-  // private _isNextDay: string;
-  // public get isNextDay(): string {
-  //   return this._isNextDay;
-  // }
-  // public set isNextDay(v: string) {
-  //   this._isNextDay = v;
-  // }
+  private _isNextDay: string;
+  public get isNextDay(): string {
+    return this._isNextDay;
+  }
+  public set isNextDay(v: string) {
+    this._isNextDay = v;
+  }
 
   constructor() {}
 
@@ -141,38 +166,43 @@ export class TimeRangeSimpleComponent
   ngAfterViewInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.debug('TimeRangeSimpleComponent.ngOnChanges', changes);
-    if (changes && changes.interval) {
-      console.debug('ngOnChanges nextDay');
-      this.interval = changes.interval.currentValue;
-      // You can also use nextDay.previousValue and
-      // nextDay.firstChange for comparing old and new values
+    console.debug('TimeRangeCmp.ngOnChanges', changes);
+    if (changes) {
+      if (changes.interval) {
+        console.debug('TimeRangeCmp.ngOnChanges: interval', changes);
+        this.interval = changes.interval.currentValue;
+        // You can also use nextDay.previousValue and
+        // nextDay.firstChange for comparing old and new values
+      }
+      if (changes.timeRange) {
+        console.debug('TimeRangeCmp.ngOnChanges: timerange', changes);
+      }
     }
   }
 
   increment() {
-    console.debug('TimeRangeSimpleComponent.increment');
+    console.debug('TimeRangeCmp.increment');
     this.timeRange.addIntervalInMinutes(this.interval);
   }
 
   decrement() {
-    console.debug('TimeRangeSimpleComponent.decrement');
+    console.debug('TimeRangeCmp.decrement');
     this.timeRange.addIntervalInMinutes(-this.interval);
   }
 
   startTimeChanged() {
-    console.debug('TimeRangeSimpleComponent.startTimeChanged');
+    console.debug('TimeRangeCmp.startTimeChanged');
   }
 
   endTimeChanged() {
-    console.debug('TimeRangeSimpleComponent.endTimeChanged');
+    console.debug('TimeRangeCmp.endTimeChanged');
   }
 
   /**
    * Clean up
    */
   ngOnDestroy() {
-    console.debug('TimeRangeSimpleComponent.ngOnDestroy');
+    console.debug('TimeRangeCmp.ngOnDestroy');
     this.ngDestroyed$.next();
   }
 
@@ -181,12 +211,15 @@ export class TimeRangeSimpleComponent
    **************************/
 
   /**
-   * Writes a new value to the element.
+   * takes a new value from the form model and writes it into the view
+   *
    */
   writeValue(obj: any): void {
-    console.debug('TimeRangeSimpleComponent.writeValue');
+    console.debug('TimeRangeCmp.writeValue', obj);
     if (obj) {
       this.timeRange = obj;
+      // this.startTime = this.timeRange.startTime;
+      // this.endTime = this.timeRange.endTime;
     }
   }
   /**
@@ -205,7 +238,7 @@ export class TimeRangeSimpleComponent
    * This function is called by the forms API when the control status changes to or from "DISABLED".
    */
   setDisabledState?(isDisabled: boolean): void {
-    console.debug('TimeRangeSimpleComponent.setDisabledState');
+    console.debug('TimeRangeCmp.setDisabledState');
     this.isDisabled = isDisabled;
   }
 }

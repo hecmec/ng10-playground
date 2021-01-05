@@ -63,6 +63,10 @@ describe('ChrTime', () => {
     });
   });
 
+  // isSmallerThanOrEquals
+
+  // isValid
+
   /**********************************
    * statics
    **********************************/

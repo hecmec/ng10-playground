@@ -112,7 +112,7 @@ export class ChrDate {
   /**
    * TODO: define what is a valid date
    */
-  public isValid(): boolean {
+  public get isValid(): boolean {
     let isValid: boolean =
       ChrDate._yearIsValid(this.year) &&
       ChrDate._monthIsValid(this.month) &&

@@ -1,8 +1,10 @@
 import { ChrDate } from './chr-date.class';
 import { ChrTime } from './chr-time.class';
 import { ChrTimeExtended } from './chr-time-extended.class';
-import { min } from 'rxjs/operators';
+import { min, timestamp } from 'rxjs/operators';
 
+const lowerRangeLimit = ChrTimeExtended.createFromHHmmString('00:00');
+const upperRangeLimit = ChrTimeExtended.createFromHHmmString('36:00');
 /**
  * This is a value object that implements the sliding time range on 36 hours and all its rules
  * Start and end time are extended time objects
@@ -52,6 +54,29 @@ export class ChrTimeRange36Hours {
   }
 
   /**
+   * This range is valid if
+   * 1) date and time are valid
+   * 2) starttime <= endtime
+   * 3) starttime >= 00:00
+   * 4) endtime < 36:00
+   * TODO: improve
+   */
+  public get isValid(): boolean {
+    let result: boolean = true;
+
+    result =
+      this.referenceDate.isValid &&
+      this.startTime.isValid &&
+      this.endTime.isValid &&
+      this.startTime.isSmallerThanOrEquals(this.endTime) &&
+      lowerRangeLimit.isSmallerThanOrEquals(this.startTime) &&
+      this.endTime.isSmallerThanOrEquals(upperRangeLimit);
+
+    // add specific validation here
+    return result;
+  }
+
+  /**
    * for internal use only
    * use static creation functions to create a new one
    * @param referenceDate
@@ -63,9 +88,9 @@ export class ChrTimeRange36Hours {
     startTime: ChrTimeExtended,
     endTime: ChrTimeExtended
   ) {
-    this.referenceDate = referenceDate;
-    this.startTime = startTime;
-    this.endTime = endTime;
+    this.referenceDate = referenceDate.clone();
+    this.startTime = startTime.clone() as ChrTimeExtended;
+    this.endTime = endTime.clone() as ChrTimeExtended;
   }
 
   /**
@@ -73,13 +98,45 @@ export class ChrTimeRange36Hours {
    * @param minutes
    */
   public addIntervalInMinutes(minutes: number) {
+    const startTimeIncremented = this.startTime.addMinutes(minutes);
     const endTimeIncremented = this.endTime.addMinutes(minutes);
-    // if not null, the incrementation is possible
-    if (endTimeIncremented) {
-      this.endTime = endTimeIncremented as ChrTimeExtended;
-      this.startTime = this.startTime.addMinutes(minutes) as ChrTimeExtended;
+
+    // if both are ok we
+    if (endTimeIncremented?.isValid && startTimeIncremented?.isValid) {
+      this.endTime = endTimeIncremented;
+      this.startTime = startTimeIncremented;
     }
+    return this.clone();
   }
+
+  /**
+   * Creates a deep clone of this object
+   */
+  public clone(): ChrTimeRange36Hours {
+    return new ChrTimeRange36Hours(
+      this.referenceDate,
+      this.startTime,
+      this.startTime
+    );
+    // return ChrTimeRange36Hours.createFromDateTimeStrings(
+    //   this.referenceDate.toIsoDateString(),
+    //   this.startTime.toHoursMinutesString(),
+    //   this.endTime.toHoursMinutesString()
+    // );
+  }
+
+  public equals(other: ChrTimeRange36Hours): boolean {
+    let result: boolean =
+      this.referenceDate.equals(other.referenceDate) &&
+      this.startTime.equals(other.startTime) &&
+      this.endTime.equals(other.endTime);
+
+    return result;
+  }
+
+  /***************************************
+   * STATICS
+   ***************************************/
 
   /**
    * Creates a ChrTimeRange36Hours from coresponding strings
@@ -98,14 +155,17 @@ export class ChrTimeRange36Hours {
     const startTime = ChrTimeExtended.createFromString(startTimeString);
     const endTime = ChrTimeExtended.createFromString(endTimeString);
 
-    if (
-      referenceDate.isValid &&
-      startTime.isValid &&
-      endTime.isValid &&
-      startTime.isSmallerThan(endTime)
-    ) {
+    if (referenceDate && startTime && endTime) {
       timeRange = new ChrTimeRange36Hours(referenceDate, startTime, endTime);
     }
+    // if (
+    //   referenceDate.isValid &&
+    //   startTime.isValid &&
+    //   endTime.isValid &&
+    //   startTime.isSmallerThan(endTime)
+    // ) {
+    //   timeRange = new ChrTimeRange36Hours(referenceDate, startTime, endTime);
+    // }
 
     return timeRange;
   }
