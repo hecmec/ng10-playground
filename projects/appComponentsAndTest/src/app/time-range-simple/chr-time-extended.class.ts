@@ -14,6 +14,15 @@ export class ChrTimeExtended extends ChrTime {
     return this._isNextDay;
   }
 
+  public get isValid(): boolean {
+    let isValid: boolean = super.isValid;
+
+    if (this._isNextDay) {
+      isValid = isValid && this.hours <= maxHoursNextDay;
+    }
+    return isValid;
+  }
+
   /**
    * Use static creation function to create new objects
    * This construct is protected
@@ -28,15 +37,26 @@ export class ChrTimeExtended extends ChrTime {
     this._isNextDay = !!isNextDay;
   }
 
+  public getAsMinutes(): number {
+    const nextDayMinutes = this._isNextDay ? Times.minutesInDay : 0;
+    let minutes =
+      nextDayMinutes + this._hours * Times.minutesInHour + this._minutes;
+    return minutes;
+  }
+
   /**
    * Returns a new Time with more minutes or null on error
    * Use negative minutes to decrement
    * @param minutes
    * @returns a new copy
    */
-  public addMinutes(minutes: number): ChrTimeExtended {
+  public addMinutes(minutes: number, blockOnLimit?: boolean): ChrTimeExtended {
     const newMin = this.getAsMinutes() + minutes;
-    return ChrTimeExtended.createFromMinutes(newMin);
+    const newTime = ChrTimeExtended.createFromMinutes(newMin);
+    if (blockOnLimit) {
+      return this.clone() as ChrTimeExtended;
+    }
+    return newTime;
   }
 
   /**
@@ -61,17 +81,6 @@ export class ChrTimeExtended extends ChrTime {
     return new ChrTimeExtended(this.hours, this.minutes, this.isNextDay);
   }
 
-  public get isValid(): boolean {
-    let isValid: boolean = true;
-
-    isValid = isValid && ChrTimeExtended.isHoursValid(this.hours);
-    isValid = isValid && ChrTime._isMinutesValid(this.minutes);
-
-    if (this._isNextDay) {
-      isValid = isValid && this.hours <= maxHoursNextDay;
-    }
-    return isValid;
-  }
   /**
    * Returns 'hh:mm' of this time object
    * this will show 33:00 for 07:00 nextDay
@@ -98,13 +107,19 @@ export class ChrTimeExtended extends ChrTime {
    * '01:30' -> '01:30'
    * @param timeString
    */
-  public static createFromString(timeString: string): ChrTimeExtended {
+  public static createFromString(
+    timeString: string,
+    isPermissive?: boolean
+  ): ChrTimeExtended {
     let chrTime: ChrTimeExtended = null;
-    const normalizedTimeString = ChrTimeExtended.getNormalizedTimeString(
+    const normalizedTimeString = ChrTimeExtended._getNormalizedTimeString(
       timeString
     );
     if (normalizedTimeString) {
-      chrTime = ChrTimeExtended.createFromHHmmString(normalizedTimeString);
+      chrTime = ChrTimeExtended.createFromHHmmString(
+        normalizedTimeString,
+        isPermissive
+      );
     }
     Object.freeze(chrTime);
     return chrTime;
@@ -120,13 +135,20 @@ export class ChrTimeExtended extends ChrTime {
    * '12' => 12:00
    * @param timeString
    */
-  public static createFromHHmmString(timeString: string): ChrTimeExtended {
+  public static createFromHHmmString(
+    timeString: string,
+    isPermissive?: boolean
+  ): ChrTimeExtended {
     let chrTime: ChrTimeExtended = null;
     if (timeString) {
       const hoursAndMinutes = ChrTimeExtended._getHoursMinutesFromHHmmString(
         timeString
       );
       chrTime = ChrTimeExtended.createFromHoursMinutes(...hoursAndMinutes);
+
+      if (!isPermissive) {
+        chrTime = chrTime.isValid ? chrTime : null;
+      }
     }
     Object.freeze(chrTime);
     return chrTime;
@@ -163,7 +185,7 @@ export class ChrTimeExtended extends ChrTime {
    */
   public static createFromMinutes(minutes: number): ChrTimeExtended {
     let chrTime: ChrTimeExtended = null;
-    if (minutes !== undefined && minutes !== null) {
+    if (Tools.hasValue(minutes)) {
       const hours = Math.floor(minutes / 60);
       const minutesRest = minutes % 60;
       chrTime = ChrTimeExtended.createFromHoursMinutes(hours, minutesRest);

@@ -10,4 +10,12 @@ export class Tools {
     let result = ('' + (aNumber || 0)).padStart(2, '0');
     return result;
   }
+
+  /**
+   * this is important for numbers and boolean where you cannot just ask like if(value), because that would exclude 0 and false
+   * @param val
+   */
+  public static hasValue(val: any): boolean {
+    return val !== null && typeof val !== 'undefined';
+  }
 }

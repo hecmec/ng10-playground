@@ -130,7 +130,10 @@ export class ChrDate {
    * @param isoDateString
    * @returns ChrDate object. Is null creation is impossbile
    */
-  public static createFromIsoString(isoDateString: string): ChrDate {
+  public static createFromIsoString(
+    isoDateString: string,
+    isPermissive?: boolean
+  ): ChrDate {
     let date: ChrDate = null;
     if (isoDateString) {
       try {

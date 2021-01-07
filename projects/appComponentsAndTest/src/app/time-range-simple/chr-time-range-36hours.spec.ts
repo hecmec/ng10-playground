@@ -88,13 +88,65 @@ describe('ChrTimeRange36Hours', () => {
       );
       expect(chrTimeRange1).toBeNull();
     });
+    it('should make an invalid range with incorrect date in permissive mode', () => {
+      const chrTimeRange1 = ChrTimeRange36Hours.createFromDateTimeStrings(
+        '1492-14-20',
+        '27:30',
+        '34:30',
+        true
+      );
+      expect(chrTimeRange1).toBeNull();
+    });
     it('should eval a range with incorrect time as invalid', () => {
       const chrTimeRange1 = ChrTimeRange36Hours.createFromDateTimeStrings(
         '1492-08-20',
         '20:30',
-        '36:30'
+        '36:30',
+        true
       );
       expect(chrTimeRange1.isValid).toBeFalse();
+    });
+  });
+
+  describe('addIntervalInMinutes', () => {
+    it('should add 10 minutes to start and end in standard range', () => {
+      const chrTimeRange = ChrTimeRange36Hours.createFromDateTimeStrings(
+        '2020-10-20',
+        '10:00',
+        '11:00'
+      );
+      const chrTimeRangeAdded = chrTimeRange.addIntervalInMinutes(10);
+      expect(chrTimeRangeAdded.startTime.minutes).toEqual(10);
+      expect(chrTimeRangeAdded.endTime.minutes).toEqual(10);
+      expect(chrTimeRangeAdded.isValid).toBeTruthy();
+    });
+
+    it('should substract 10 minutes from start and end in standard range', () => {
+      const chrTimeRange = ChrTimeRange36Hours.createFromDateTimeStrings(
+        '2020-10-20',
+        '10:00',
+        '11:30'
+      );
+      const chrTimeRangeAdded = chrTimeRange.addIntervalInMinutes(-10);
+      expect(chrTimeRangeAdded.startTime.hours).toEqual(9);
+      expect(chrTimeRangeAdded.startTime.minutes).toEqual(50);
+      expect(chrTimeRangeAdded.endTime.hours).toEqual(11);
+      expect(chrTimeRangeAdded.endTime.minutes).toEqual(20);
+      expect(chrTimeRangeAdded.isValid).toBeTruthy();
+    });
+
+    it('should add 30 minutes to start and end in extended range', () => {
+      const chrTimeRange = ChrTimeRange36Hours.createFromDateTimeStrings(
+        '2020-10-20',
+        '10:00',
+        '30:55'
+      );
+      const chrTimeRangeAdded = chrTimeRange.addIntervalInMinutes(30);
+      expect(chrTimeRangeAdded.startTime.minutes).toEqual(30);
+      expect(chrTimeRangeAdded.endTime.hours).toEqual(7);
+      expect(chrTimeRangeAdded.endTime.minutes).toEqual(25);
+      expect(chrTimeRangeAdded.endTime.isNextDay).toBeTruthy();
+      expect(chrTimeRangeAdded.isValid).toBeTruthy();
     });
   });
 

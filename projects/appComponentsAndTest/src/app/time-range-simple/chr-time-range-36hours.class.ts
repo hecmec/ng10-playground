@@ -3,12 +3,11 @@ import { ChrTime } from './chr-time.class';
 import { ChrTimeExtended } from './chr-time-extended.class';
 import { min, timestamp } from 'rxjs/operators';
 
-const lowerRangeLimit = ChrTimeExtended.createFromHHmmString('00:00');
-const upperRangeLimit = ChrTimeExtended.createFromHHmmString('36:00');
+const lowerRangeLimit = ChrTimeExtended.createFromHHmmString('00:00', true);
+const upperRangeLimit = ChrTimeExtended.createFromHHmmString('36:00', true);
 /**
  * This is a value object that implements the sliding time range on 36 hours and all its rules
  * Start and end time are extended time objects
- *
  */
 export class ChrTimeRange36Hours {
   /**
@@ -94,19 +93,44 @@ export class ChrTimeRange36Hours {
   }
 
   /**
-   * Add minutes to startTime and endTime if possible
+   * Add minutes to startTime and endTime if possible.
+   * This will not change the range if start or endtime would become invalid.
+   *
    * @param minutes
+   * @param blockOnLimit: will go until the limmit but not further
    */
-  public addIntervalInMinutes(minutes: number) {
+  public addIntervalInMinutes(minutes: number, blockOnLimit?: boolean) {
     const startTimeIncremented = this.startTime.addMinutes(minutes);
     const endTimeIncremented = this.endTime.addMinutes(minutes);
 
-    // if both are ok we
-    if (endTimeIncremented?.isValid && startTimeIncremented?.isValid) {
-      this.endTime = endTimeIncremented;
-      this.startTime = startTimeIncremented;
+    let newRange = this.clone();
+    newRange.endTime = endTimeIncremented;
+    newRange.startTime = startTimeIncremented;
+    let diffMinutes: number;
+
+    if (blockOnLimit) {
+      if (newRange.startTime < lowerRangeLimit) {
+        let startTimeMinutes = newRange.startTime.getAsMinutes();
+        let lowerLimitAsMinutes = lowerRangeLimit.getAsMinutes();
+        diffMinutes = Math.abs(lowerLimitAsMinutes - startTimeMinutes);
+
+        newRange.startTime = ChrTimeExtended.createFromMinutes(
+          lowerLimitAsMinutes
+        );
+        newRange.endTime = newRange.endTime.addMinutes(-diffMinutes);
+      } else if (newRange.endTime >= upperRangeLimit) {
+        let endTimeMinutes = newRange.endTime.getAsMinutes();
+        let upperLimitAsMinutes = upperRangeLimit.getAsMinutes();
+        diffMinutes = Math.abs(endTimeMinutes - upperLimitAsMinutes - 1);
+
+        newRange.startTime = newRange.startTime.addMinutes(diffMinutes);
+        newRange.endTime = ChrTimeExtended.createFromMinutes(
+          upperLimitAsMinutes - 1
+        );
+      }
     }
-    return this.clone();
+
+    return newRange;
   }
 
   /**
@@ -118,13 +142,12 @@ export class ChrTimeRange36Hours {
       this.startTime,
       this.startTime
     );
-    // return ChrTimeRange36Hours.createFromDateTimeStrings(
-    //   this.referenceDate.toIsoDateString(),
-    //   this.startTime.toHoursMinutesString(),
-    //   this.endTime.toHoursMinutesString()
-    // );
   }
 
+  /**
+   * Ranges are equal if their referenceDate, startTime, endTime are equal respectively
+   * @param other
+   */
   public equals(other: ChrTimeRange36Hours): boolean {
     let result: boolean =
       this.referenceDate.equals(other.referenceDate) &&
@@ -147,25 +170,27 @@ export class ChrTimeRange36Hours {
   public static createFromDateTimeStrings(
     isoDateString: string,
     startTimeString: string,
-    endTimeString: string
+    endTimeString: string,
+    isPermissive?: boolean
   ): ChrTimeRange36Hours {
     let timeRange: ChrTimeRange36Hours = null;
 
-    const referenceDate = ChrDate.createFromIsoString(isoDateString);
-    const startTime = ChrTimeExtended.createFromString(startTimeString);
-    const endTime = ChrTimeExtended.createFromString(endTimeString);
+    const referenceDate = ChrDate.createFromIsoString(
+      isoDateString,
+      isPermissive
+    );
+    const startTime = ChrTimeExtended.createFromString(
+      startTimeString,
+      isPermissive
+    );
+    const endTime = ChrTimeExtended.createFromString(
+      endTimeString,
+      isPermissive
+    );
 
     if (referenceDate && startTime && endTime) {
       timeRange = new ChrTimeRange36Hours(referenceDate, startTime, endTime);
     }
-    // if (
-    //   referenceDate.isValid &&
-    //   startTime.isValid &&
-    //   endTime.isValid &&
-    //   startTime.isSmallerThan(endTime)
-    // ) {
-    //   timeRange = new ChrTimeRange36Hours(referenceDate, startTime, endTime);
-    // }
 
     return timeRange;
   }

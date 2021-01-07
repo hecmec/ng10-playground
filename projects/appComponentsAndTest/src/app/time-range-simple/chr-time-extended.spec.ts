@@ -1,3 +1,4 @@
+import { Times } from '../times';
 import { ChrTimeExtended } from './chr-time-extended.class';
 
 describe('ChrTimeExtended', () => {
@@ -66,16 +67,16 @@ describe('ChrTimeExtended', () => {
       expect(chrTime.isValid).toBeFalse();
     });
 
-    it('should  make extended time invalid if they exceed 59 minutes', () => {
+    it('should parse extended time  as mod 60', () => {
       chrTime = ChrTimeExtended.createFromHoursMinutes(20, 60);
-      expect(chrTime.hours).toEqual(20);
-      expect(chrTime.minutes).toEqual(60);
-      expect(chrTime.isValid).toBeFalse();
+      expect(chrTime.hours).toEqual(21);
+      expect(chrTime.minutes).toEqual(0);
+      expect(chrTime.isValid).toBeTruthy();
 
-      chrTime = ChrTimeExtended.createFromHoursMinutes(20, 1000);
-      expect(chrTime.hours).toEqual(20);
-      expect(chrTime.minutes).toEqual(1000);
-      expect(chrTime.isValid).toBeFalse();
+      chrTime = ChrTimeExtended.createFromHoursMinutes(10, 200);
+      expect(chrTime.hours).toEqual(13);
+      expect(chrTime.minutes).toEqual(20);
+      expect(chrTime.isValid).toBeTruthy();
     });
   });
 
@@ -128,12 +129,20 @@ describe('ChrTimeExtended', () => {
 
     // illigal stuff
     it('should parse hours that exceed the legal limit and make object invalid', () => {
-      expect(ChrTimeExtended.createFromHHmmString('36:44').isValid).toBeFalse();
-      expect(ChrTimeExtended.createFromHHmmString('99:55').isValid).toBeFalse();
+      expect(
+        ChrTimeExtended.createFromHHmmString('36:44', true).isValid
+      ).toBeFalse();
+      expect(
+        ChrTimeExtended.createFromHHmmString('99:55', true).isValid
+      ).toBeFalse();
     });
-    it('should parse hours that exceed the legal limat  and make object invalid', () => {
-      expect(ChrTimeExtended.createFromHHmmString('11:60').isValid).toBeFalse();
-      expect(ChrTimeExtended.createFromHHmmString('11:99').isValid).toBeFalse();
+    it('should parse minutes  that exceed the legal limat as modula 60 ', () => {
+      expect(
+        ChrTimeExtended.createFromHHmmString('11:70', true).isValid
+      ).toBeTruthy();
+      expect(
+        ChrTimeExtended.createFromHHmmString('35:99', true).isValid
+      ).toBeFalse();
     });
   });
 
@@ -193,18 +202,41 @@ describe('ChrTimeExtended', () => {
 
     // illigal stuff
     it('should parse hours that exceed the legal limit, but mark object as invalid', () => {
-      chrTime = ChrTimeExtended.createFromString('36:44');
+      chrTime = ChrTimeExtended.createFromString('36:44', true);
       expect(chrTime.hours).toEqual(12);
       expect(chrTime.isValid).toBeFalse();
 
-      chrTime = ChrTimeExtended.createFromString('99:55');
-      expect(chrTime.hours).toEqual(75);
+      chrTime = ChrTimeExtended.createFromString('75:55', true);
+      // it will try to go to next day, so hours are minus 24h
+      expect(chrTime.hours).toEqual(51);
       expect(chrTime.isValid).toBeFalse();
     });
-    it('should parse minutes that exceed the legal limit, but mark object as invalid', () => {
-      chrTime = ChrTimeExtended.createFromString('11:60');
-      expect(chrTime.minutes).toEqual(60);
-      expect(chrTime.isValid).toBeFalse();
+    it('should parse minutes that exceed the legal limit', () => {
+      chrTime = ChrTimeExtended.createFromString('11:60', true);
+      expect(chrTime.minutes).toEqual(0);
+      expect(chrTime.isValid).toBeTruthy();
+    });
+  });
+
+  describe('getAsMinutes', () => {
+    it('should get minutes for standard time.', () => {
+      expect(
+        ChrTimeExtended.createFromMinutes(
+          Times.minutesInDay - 100
+        ).getAsMinutes()
+      ).toEqual(Times.minutesInDay - 100);
+    });
+    it('should get minutes for extended time.', () => {
+      expect(
+        ChrTimeExtended.createFromMinutes(
+          Times.minutesInDay + 300
+        ).getAsMinutes()
+      ).toEqual(Times.minutesInDay + 300);
+    });
+    it('should get minutes for extended time.', () => {
+      expect(ChrTimeExtended.createFromString('30:30').getAsMinutes()).toEqual(
+        Times.minutesInDay + 6 * 60 + 30
+      );
     });
   });
 
@@ -221,7 +253,7 @@ describe('ChrTimeExtended', () => {
       expect(chrTime.isValid).toBeTrue();
     });
 
-    it('should create a zero time object if the minutes exceed the legal range.', () => {
+    it('should create a time object that is on next day if the minutes exceed the limit of one day.', () => {
       ChrTimeExtended;
       chrTime = ChrTimeExtended.createFromMinutes(1440);
       expect(chrTime.hours).toEqual(0);

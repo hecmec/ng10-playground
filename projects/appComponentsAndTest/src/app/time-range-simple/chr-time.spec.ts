@@ -63,9 +63,42 @@ describe('ChrTime', () => {
     });
   });
 
-  // isSmallerThanOrEquals
+  describe('isValid', () => {
+    // valid
+    it('should tell us that "00:00" is a valid time', () => {
+      const chrTime = ChrTime.createFromHHmmString('00:00');
+      expect(chrTime.isValid).toBeTruthy();
+    });
+    it('should tell us that "12:34" is a valid time', () => {
+      const chrTime = ChrTime.createFromHHmmString('12:34');
+      expect(chrTime.isValid).toBeTruthy();
+    });
+    it('should tell us that "23:59" is a valid time', () => {
+      const chrTime = ChrTime.createFromHHmmString('23:59');
+      expect(chrTime.isValid).toBeTruthy();
+    });
 
-  // isValid
+    // invalid
+    it('should tell us that "24:00" is not a valid time', () => {
+      const chrTime = ChrTime.createFromHHmmString('24:00', true);
+      expect(chrTime.isValid).toBeFalse();
+    });
+    it('should tell us that "10:60" is 11:00', () => {
+      const chrTime = ChrTime.createFromHHmmString('10:60', true);
+      expect(chrTime.hours).toEqual(11);
+    });
+    it('should tell us that "27:35", a valid extended time, is not a valid time', () => {
+      const chrTime = ChrTime.createFromHHmmString('27:35', true);
+      expect(chrTime.isValid).toBeFalse();
+    });
+
+    it('should tell us that "27:35", a valid extended time, is not a valid time', () => {
+      const chrTime = ChrTime.createFromHHmmString('27:35', false);
+      expect(chrTime).toBeNull();
+    });
+  });
+
+  // isSmallerThanOrEquals
 
   /**********************************
    * statics
@@ -97,11 +130,18 @@ describe('ChrTime', () => {
       expect(chrTime.isValid).toBeFalse();
     });
 
-    it('should make time object invalid if minutes exceed 59 minutes', () => {
+    it('should make time object with changed hours if minutes exceed 59 minutes', () => {
       chrTime = ChrTime.createFromHoursMinutes(20, 60);
-      expect(chrTime.hours).toEqual(20);
-      expect(chrTime.minutes).toEqual(60);
-      expect(chrTime.isValid).toBeFalse();
+      expect(chrTime.hours).toEqual(21);
+      expect(chrTime.minutes).toEqual(0);
+      expect(chrTime.isValid).toBeTruthy();
+    });
+
+    it('should make time object with changed hours if minutes exceed 59 minutes', () => {
+      chrTime = ChrTime.createFromHoursMinutes(0, 99);
+      expect(chrTime.hours).toEqual(1);
+      expect(chrTime.minutes).toEqual(39);
+      expect(chrTime.isValid).toBeTruthy();
     });
   });
 
@@ -138,18 +178,18 @@ describe('ChrTime', () => {
 
   describe('getNormalizedTimeString', () => {
     it('should replace separators to colon and inject one if separtor is missing', () => {
-      expect(ChrTime.getNormalizedTimeString('12.30')).toEqual('12:30');
-      expect(ChrTime.getNormalizedTimeString(';23')).toEqual(':23');
-      expect(ChrTime.getNormalizedTimeString('23,')).toEqual('23:');
+      expect(ChrTime._getNormalizedTimeString('12.30')).toEqual('12:30');
+      expect(ChrTime._getNormalizedTimeString(';23')).toEqual(':23');
+      expect(ChrTime._getNormalizedTimeString('23,')).toEqual('23:');
     });
     it('should replace separators to colon and inject one if separtor is missing', () => {
-      expect(ChrTime.getNormalizedTimeString('23')).toEqual('23:');
-      expect(ChrTime.getNormalizedTimeString('2345')).toEqual('23:45');
-      expect(ChrTime.getNormalizedTimeString('1')).toEqual('1:');
+      expect(ChrTime._getNormalizedTimeString('23')).toEqual('23:');
+      expect(ChrTime._getNormalizedTimeString('2345')).toEqual('23:45');
+      expect(ChrTime._getNormalizedTimeString('1')).toEqual('1:');
     });
     it('should remove everything but numbers and separators', () => {
-      expect(ChrTime.getNormalizedTimeString('ab1b2.c8d8')).toEqual('12:88');
-      expect(ChrTime.getNormalizedTimeString('123abc.,;:(°456%&+')).toEqual(
+      expect(ChrTime._getNormalizedTimeString('ab1b2.c8d8')).toEqual('12:88');
+      expect(ChrTime._getNormalizedTimeString('123abc.,;:(°456%&+')).toEqual(
         '123::::456'
       );
     });
@@ -206,9 +246,19 @@ describe('ChrTime', () => {
       expect(ChrTime.createFromHHmmString('24:44')).toBeNull();
       expect(ChrTime.createFromHHmmString('99:55')).toBeNull();
     });
-    it('should parse minutes that are too big as null', () => {
-      expect(ChrTime.createFromHHmmString('11:60')).toBeNull();
-      expect(ChrTime.createFromHHmmString('11:99')).toBeNull();
+    it('should parse minutes that are too big as modula 60', () => {
+      expect(ChrTime.createFromHHmmString('11:60').minutes).toEqual(0);
+      expect(ChrTime.createFromHHmmString('11:60').hours).toEqual(12);
+    });
+    // permissive mode
+    it('should parse hours that are too big as invalid time objects, in permissive mode.', () => {
+      expect(ChrTime.createFromHHmmString('24:44', true).isValid).toBeFalse();
+      expect(ChrTime.createFromHHmmString('99:55', true).isValid).toBeFalse();
+    });
+    it('should parse minutes that are too big as mod 60, in permissive mode.', () => {
+      expect(ChrTime.createFromHHmmString('11:60', true).minutes).toEqual(0);
+      expect(ChrTime.createFromHHmmString('11:99', true).minutes).toEqual(39);
+      expect(ChrTime.createFromHHmmString('11:99', true).isValid).toBeTruthy();
     });
   });
 
@@ -269,9 +319,9 @@ describe('ChrTime', () => {
       expect(ChrTime.createFromString('24:44')).toBeNull();
       expect(ChrTime.createFromString('99:55')).toBeNull();
     });
-    it('should parse minutes that are too big as null', () => {
-      expect(ChrTime.createFromString('11:60')).toBeNull();
-      expect(ChrTime.createFromString('11:99')).toBeNull();
+    it('should parse minutes that are too big as modula 60', () => {
+      expect(ChrTime.createFromString('11:70').minutes).toEqual(10);
+      expect(ChrTime.createFromString('11:70').hours).toEqual(12);
     });
   });
 
