@@ -18,7 +18,12 @@ import { ChrTime } from './chr-time.class';
 import { ChrDate } from './chr-date.class';
 import { ChrDateTime } from './chr-date-time.class';
 import { ChrTimeRange36Hours } from './chr-time-range-36hours.class';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormControl,
+  NG_VALUE_ACCESSOR,
+  Validators,
+} from '@angular/forms';
 import { ChrTimeExtended } from './chr-time-extended.class';
 
 /**
@@ -171,6 +176,14 @@ export class TimeRangeSimpleComponent
   constructor() {}
 
   // ngOnInit(): void {}
+  startTimeField = new FormControl('', [Validators.required]);
+
+  getErrorStartTimeMessage() {
+    return 'time error';
+    // return this.email.hasError('required') ? 'You must enter a value' :
+    //     this.email.hasError('email') ? 'Not a valid email' :
+    //         '';
+  }
 
   ngAfterViewInit(): void {}
 

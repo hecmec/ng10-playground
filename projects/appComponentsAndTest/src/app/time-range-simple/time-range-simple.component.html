@@ -10,12 +10,14 @@
     <input
       matInput
       type="text"
-      name="startTime"
       class="form-control"
+      [formControl]="startTimeField"
       [(ngModel)]="startTimeText"
-      [ngModelOptions]="{ updateOn: 'blur' }"
       (change)="startTimeChanged()"
     />
+    <mat-error *ngIf="startTimeField.invalid">{{
+      getErrorStartTimeMessage()
+    }}</mat-error>
   </mat-form-field>
   &nbsp;
   <mat-form-field>
