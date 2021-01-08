@@ -1,13 +1,34 @@
 import { Times } from '../times';
+import { Tools } from '../tools';
 import { ChrTimeExtended } from './chr-time-extended.class';
 
 describe('ChrTimeExtended', () => {
-  let chrTime: ChrTimeExtended;
+  let chrTimeExt: ChrTimeExtended;
   // beforeEach(() => { chrTime = new chrTime(); });
 
   //toHoursMinutesString
+  describe('toHoursMinutesString', () => {
+    it('should ceate a "33:33" string for a time 33:33', () => {
+      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(33, 33);
+      expect(chrTimeExt.toHoursMinutesString()).toEqual('33:33');
+      expect(chrTimeExt.minutes).toEqual(33);
+      expect(chrTimeExt.hours).toEqual(9);
+      expect(chrTimeExt.isValid).toBeTrue();
+    });
+  });
 
-  //getAsMinutes
+  describe('getAsMinutes', () => {
+    it('should get minutes for extended time 33:33', () => {
+      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(33, 33);
+      expect(chrTimeExt.getAsMinutes()).toEqual(33 * 60 + 33);
+      expect(chrTimeExt.isValid).toBeTrue();
+    });
+    it('should get minutes even for invalid extended time 37:99', () => {
+      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(37, 99);
+      expect(chrTimeExt.getAsMinutes()).toEqual(37 * 60 + 99);
+      expect(chrTimeExt.isValid).toBeFalsy();
+    });
+  });
 
   //addMinutes
 
@@ -16,67 +37,67 @@ describe('ChrTimeExtended', () => {
    *********************************/
   describe('createFromHoursMinutes', () => {
     it('should be createable by constructor with hour and minute', () => {
-      chrTime = ChrTimeExtended.createFromHoursMinutes(6, 20);
-      expect(chrTime.hours).toEqual(6);
-      expect(chrTime.minutes).toEqual(20);
-      expect(chrTime.isValid).toBeTrue();
+      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(6, 20);
+      expect(chrTimeExt.hours).toEqual(6);
+      expect(chrTimeExt.minutes).toEqual(20);
+      expect(chrTimeExt.isValid).toBeTrue();
     });
 
     it('should be createable by constructor with hour and minute, even for hours between 24 and 35', () => {
-      chrTime = ChrTimeExtended.createFromHoursMinutes(35, 20);
-      expect(chrTime.hours).toEqual(11);
-      expect(chrTime.isNextDay).toBeTrue();
-      expect(chrTime.minutes).toEqual(20);
-      expect(chrTime.isValid).toBeTrue();
+      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(35, 20);
+      expect(chrTimeExt.hours).toEqual(11);
+      expect(chrTimeExt.isNextDay).toBeTrue();
+      expect(chrTimeExt.minutes).toEqual(20);
+      expect(chrTimeExt.isValid).toBeTrue();
     });
 
     it('should be creatable with zero hours', () => {
-      chrTime = ChrTimeExtended.createFromHoursMinutes(0, 20);
-      expect(chrTime.hours).toEqual(0);
-      expect(chrTime.minutes).toEqual(20);
-      expect(chrTime.isValid).toBeTrue();
+      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(0, 20);
+      expect(chrTimeExt.hours).toEqual(0);
+      expect(chrTimeExt.minutes).toEqual(20);
+      expect(chrTimeExt.isValid).toBeTrue();
     });
 
     it('should be creatable with negative hours and turn them to positive', () => {
-      chrTime = ChrTimeExtended.createFromHoursMinutes(-10, 20);
-      expect(chrTime.hours).toEqual(10);
-      expect(chrTime.isValid).toBeTrue();
+      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(-10, 20);
+      expect(chrTimeExt.hours).toEqual(10);
+      expect(chrTimeExt.isValid).toBeTrue();
     });
 
     it('should make extended time valid for 35:59 as biggest extended time', () => {
-      chrTime = ChrTimeExtended.createFromHoursMinutes(35, 59);
-      expect(chrTime.hours).toEqual(11);
-      expect(chrTime.minutes).toEqual(59);
-      expect(chrTime.isNextDay).toBeTrue();
-      expect(chrTime.isValid).toBeTrue();
+      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(35, 59);
+      expect(chrTimeExt.hours).toEqual(11);
+      expect(chrTimeExt.minutes).toEqual(59);
+      expect(chrTimeExt.isNextDay).toBeTrue();
+      expect(chrTimeExt.isValid).toBeTrue();
     });
 
     it('should make extended time invalid for 36:00', () => {
-      chrTime = ChrTimeExtended.createFromHoursMinutes(36, 0);
-      expect(chrTime.hours).toEqual(12);
-      expect(chrTime.minutes).toEqual(0);
-      expect(chrTime.isNextDay).toBeTrue();
-      expect(chrTime.isValid).toBeFalse();
+      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(36, 0);
+      expect(chrTimeExt.hours).toEqual(12);
+      expect(chrTimeExt.minutes).toEqual(0);
+      expect(chrTimeExt.isNextDay).toBeTrue();
+      expect(chrTimeExt.isValid).toBeFalse();
     });
 
     it('should make extended time invalid if hours exceed 35 hours', () => {
-      chrTime = ChrTimeExtended.createFromHoursMinutes(36, 20);
-      expect(chrTime.hours).toEqual(12);
-      expect(chrTime.minutes).toEqual(20);
-      expect(chrTime.isNextDay).toBeTrue();
-      expect(chrTime.isValid).toBeFalse();
+      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(36, 20);
+      expect(chrTimeExt.hours).toEqual(12);
+      expect(chrTimeExt.minutes).toEqual(20);
+      expect(chrTimeExt.isNextDay).toBeTrue();
+      expect(chrTimeExt.isValid).toBeFalse();
     });
 
     it('should parse extended time  as mod 60', () => {
-      chrTime = ChrTimeExtended.createFromHoursMinutes(20, 60);
-      expect(chrTime.hours).toEqual(21);
-      expect(chrTime.minutes).toEqual(0);
-      expect(chrTime.isValid).toBeTruthy();
+      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(20, 60);
+      expect(chrTimeExt.hours).toEqual(21);
+      expect(chrTimeExt.minutes).toEqual(0);
+      expect(chrTimeExt.isValid).toBeTruthy();
 
-      chrTime = ChrTimeExtended.createFromHoursMinutes(10, 200);
-      expect(chrTime.hours).toEqual(13);
-      expect(chrTime.minutes).toEqual(20);
-      expect(chrTime.isValid).toBeTruthy();
+      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(10, 200);
+      expect(chrTimeExt.hours).toEqual(13);
+      expect(chrTimeExt.minutes).toEqual(20);
+      expect(chrTimeExt.isValid).toBeTruthy();
     });
   });
 
@@ -96,27 +117,27 @@ describe('ChrTimeExtended', () => {
      * ':' => '00:00'
      */
     it('should parse a stardard hh:mm string', () => {
-      chrTime = ChrTimeExtended.createFromHHmmString('10:30');
-      expect(chrTime.hours).toEqual(10);
-      expect(chrTime.minutes).toEqual(30);
+      chrTimeExt = ChrTimeExtended.createFromHHmmString('10:30');
+      expect(chrTimeExt.hours).toEqual(10);
+      expect(chrTimeExt.minutes).toEqual(30);
     });
 
     it('should parse an extended hh:mm string, between 24 and 36, and set the extended flag.', () => {
-      chrTime = ChrTimeExtended.createFromHHmmString('32:30');
-      expect(chrTime.hours).toEqual(8);
-      expect(chrTime.isNextDay).toBeTruthy();
+      chrTimeExt = ChrTimeExtended.createFromHHmmString('32:30');
+      expect(chrTimeExt.hours).toEqual(8);
+      expect(chrTimeExt.isNextDay).toBeTruthy();
     });
 
     it('should parse a stardard 00:00 string', () => {
-      chrTime = ChrTimeExtended.createFromHHmmString('00:00');
-      expect(chrTime.hours).toEqual(0);
-      expect(chrTime.minutes).toEqual(0);
+      chrTimeExt = ChrTimeExtended.createFromHHmmString('00:00');
+      expect(chrTimeExt.hours).toEqual(0);
+      expect(chrTimeExt.minutes).toEqual(0);
     });
 
     it('should parse hours and minutes lower than 10', () => {
-      chrTime = ChrTimeExtended.createFromHHmmString('09:04');
-      expect(chrTime.hours).toEqual(9);
-      expect(chrTime.minutes).toEqual(4);
+      chrTimeExt = ChrTimeExtended.createFromHHmmString('09:04');
+      expect(chrTimeExt.hours).toEqual(9);
+      expect(chrTimeExt.minutes).toEqual(4);
     });
 
     it('should parse one digits hours as simple hours', () => {
@@ -202,19 +223,19 @@ describe('ChrTimeExtended', () => {
 
     // illigal stuff
     it('should parse hours that exceed the legal limit, but mark object as invalid', () => {
-      chrTime = ChrTimeExtended.createFromString('36:44', true);
-      expect(chrTime.hours).toEqual(12);
-      expect(chrTime.isValid).toBeFalse();
+      chrTimeExt = ChrTimeExtended.createFromString('36:44', true);
+      expect(chrTimeExt.hours).toEqual(12);
+      expect(chrTimeExt.isValid).toBeFalse();
 
-      chrTime = ChrTimeExtended.createFromString('75:55', true);
+      chrTimeExt = ChrTimeExtended.createFromString('75:55', true);
       // it will try to go to next day, so hours are minus 24h
-      expect(chrTime.hours).toEqual(51);
-      expect(chrTime.isValid).toBeFalse();
+      expect(chrTimeExt.hours).toEqual(51);
+      expect(chrTimeExt.isValid).toBeFalse();
     });
     it('should parse minutes that exceed the legal limit', () => {
-      chrTime = ChrTimeExtended.createFromString('11:60', true);
-      expect(chrTime.minutes).toEqual(0);
-      expect(chrTime.isValid).toBeTruthy();
+      chrTimeExt = ChrTimeExtended.createFromString('11:60', true);
+      expect(chrTimeExt.minutes).toEqual(0);
+      expect(chrTimeExt.isValid).toBeTruthy();
     });
   });
 
@@ -247,19 +268,19 @@ describe('ChrTimeExtended', () => {
     });
 
     it('should create the biggest time object.', () => {
-      chrTime = ChrTimeExtended.createFromMinutes(1439);
-      expect(chrTime.hours).toEqual(23);
-      expect(chrTime.minutes).toEqual(59);
-      expect(chrTime.isValid).toBeTrue();
+      chrTimeExt = ChrTimeExtended.createFromMinutes(1439);
+      expect(chrTimeExt.hours).toEqual(23);
+      expect(chrTimeExt.minutes).toEqual(59);
+      expect(chrTimeExt.isValid).toBeTrue();
     });
 
     it('should create a time object that is on next day if the minutes exceed the limit of one day.', () => {
       ChrTimeExtended;
-      chrTime = ChrTimeExtended.createFromMinutes(1440);
-      expect(chrTime.hours).toEqual(0);
-      expect(chrTime.minutes).toEqual(0);
-      expect(chrTime.isNextDay).toBeTrue();
-      expect(chrTime.isValid).toBeTrue();
+      chrTimeExt = ChrTimeExtended.createFromMinutes(1440);
+      expect(chrTimeExt.hours).toEqual(0);
+      expect(chrTimeExt.minutes).toEqual(0);
+      expect(chrTimeExt.isNextDay).toBeTrue();
+      expect(chrTimeExt.isValid).toBeTrue();
     });
   });
 });

@@ -148,11 +148,59 @@ describe('ChrTimeRange36Hours', () => {
       expect(chrTimeRangeAdded.endTime.isNextDay).toBeTruthy();
       expect(chrTimeRangeAdded.isValid).toBeTruthy();
     });
+
+    it('should stop at upper limit if add minutes to go beyond (in bocking mode)', () => {
+      const chrTimeRange = ChrTimeRange36Hours.createFromDateTimeStrings(
+        '2020-10-20',
+        '10:00',
+        '35:55'
+      );
+      const blockOnLimit = true;
+      const chrTimeRangeAdded = chrTimeRange.addIntervalInMinutes(
+        15,
+        blockOnLimit
+      );
+      expect(chrTimeRangeAdded.startTime.hours).toEqual(10);
+      expect(chrTimeRangeAdded.startTime.minutes).toEqual(4);
+
+      expect(chrTimeRangeAdded.endTime.hours).toEqual(11);
+      expect(chrTimeRangeAdded.endTime.minutes).toEqual(59);
+      expect(chrTimeRangeAdded.endTime.isNextDay).toBeTruthy();
+      expect(chrTimeRangeAdded.isValid).toBeTruthy();
+    });
+
+    it('should stop at upper limit if add minutes to go beyond (in bocking mode)', () => {
+      const chrTimeRange = ChrTimeRange36Hours.createFromDateTimeStrings(
+        '2020-10-20',
+        '00:10',
+        '24:05'
+      );
+      const blockOnLimit = true;
+      const chrTimeRangeAdded = chrTimeRange.addIntervalInMinutes(
+        -15,
+        blockOnLimit
+      );
+      expect(chrTimeRangeAdded.startTime.hours).toEqual(0);
+      expect(chrTimeRangeAdded.startTime.minutes).toEqual(0);
+      // we can only decrement by 10
+      expect(chrTimeRangeAdded.endTime.hours).toEqual(23);
+      expect(chrTimeRangeAdded.endTime.minutes).toEqual(55);
+      expect(chrTimeRangeAdded.endTime.isNextDay).toBeFalse();
+      expect(chrTimeRangeAdded.isValid).toBeTruthy();
+    });
   });
 
-  // isValid
+  describe('equals', () => {
+    it('should clone a simple range', () => {
+      const chrTimeRange1 = ChrTimeRange36Hours.createFromDateTimeStrings(
+        '2020-10-20',
+        '27:30',
+        '34:30'
+      );
 
-  // clone
+      expect(chrTimeRange1.equals(chrTimeRange1.clone())).toBeTruthy();
+    });
+  });
 
   /******************************************
    * Statics

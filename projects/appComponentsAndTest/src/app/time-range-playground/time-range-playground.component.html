@@ -9,7 +9,9 @@
     <app-time-range-simple timeRange="defaultTimeRange"></app-time-range-simple>
   </mat-form-field> -->
 
-  : parsed time is {{ defaultTimeRange | json }}
+  parsed date is {{ defaultTimeRange.referenceDate | json }}<br />
+  parsed startTime is {{ defaultTimeRange.startTime | json }} <br />
+  parsed endTime is {{ defaultTimeRange.endTime | json }}
 </div>
 
 <br /><br />

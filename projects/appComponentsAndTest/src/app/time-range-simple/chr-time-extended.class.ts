@@ -1,6 +1,7 @@
 import { Tools } from '../tools';
 import { Times } from '../times';
 import { ChrTime, IChrTime } from './chr-time.class';
+import { timestamp } from 'rxjs/operators';
 
 const maxHoursNextDay = 11;
 /**
@@ -9,6 +10,9 @@ const maxHoursNextDay = 11;
  */
 export class ChrTimeExtended extends ChrTime {
   private _isNextDay: boolean;
+  // upper limit of 36 jours expressed in minutes
+  private _upperLimitMinutes =
+    Times.minutesInDay + (maxHoursNextDay + 1) * Times.minutesInHour;
 
   public get isNextDay(): boolean {
     return this._isNextDay;
@@ -47,13 +51,18 @@ export class ChrTimeExtended extends ChrTime {
   /**
    * Returns a new Time with more minutes or null on error
    * Use negative minutes to decrement
+   * You cannot have negative minutes
    * @param minutes
    * @returns a new copy
    */
   public addMinutes(minutes: number, blockOnLimit?: boolean): ChrTimeExtended {
-    const newMin = this.getAsMinutes() + minutes;
-    const newTime = ChrTimeExtended.createFromMinutes(newMin);
-    if (blockOnLimit) {
+    let newMin = this.getAsMinutes() + minutes;
+    // take 0 as min value
+    newMin = Math.max(0, newMin);
+    let newTime = ChrTimeExtended.createFromMinutes(newMin);
+
+    if (blockOnLimit && newTime.getAsMinutes() >= this._upperLimitMinutes) {
+      newTime = ChrTimeExtended.createFromMinutes(this._upperLimitMinutes - 1);
       return this.clone() as ChrTimeExtended;
     }
     return newTime;
@@ -64,19 +73,23 @@ export class ChrTimeExtended extends ChrTime {
    * If this results in an invalid time object we return a clone of the original object
    * @param nextDay
    */
-  public setIsNextDay(nextDay: boolean) {
+  public setIsNextDay(nextDay: boolean, isPermissive?: boolean) {
     let newTime: ChrTimeExtended = new ChrTimeExtended(
       this.hours,
       this.minutes,
       nextDay
     );
 
-    if (!newTime.isValid) {
+    if (!isPermissive && !newTime.isValid) {
+      // if new time is not valid
       newTime = this.clone() as ChrTimeExtended;
     }
     return newTime;
   }
 
+  /**
+   * clones this extended time
+   */
   public clone(): IChrTime {
     return new ChrTimeExtended(this.hours, this.minutes, this.isNextDay);
   }
@@ -90,9 +103,18 @@ export class ChrTimeExtended extends ChrTime {
     return `${Tools.padTwo(hours)}:${Tools.padTwo(this._minutes)}`;
   }
 
+  /**
+   * Returns 'hh:mm' of this time object
+   * this will show 07:00:00 for 07:00 nextDay
+   */
+  public toHoursMinutesIn24Range(): string {
+    return `${Tools.padTwo(this._hours)}:${Tools.padTwo(this._minutes)}`;
+  }
+
   /***********************************
    * STATICS
    ***********************************/
+
   static isHoursValid(hours: number): boolean {
     return 0 <= hours && hours < Times.hoursInDay;
   }
@@ -121,8 +143,39 @@ export class ChrTimeExtended extends ChrTime {
         isPermissive
       );
     }
-    Object.freeze(chrTime);
+    // Object.freeze(chrTime);
     return chrTime;
+  }
+
+  /**
+   * like createFromString, but returns an extendedTime initialized to 0 on failure.
+   * @param timeString
+   * @param isPermissive
+   */
+  public static createFromStringOrDefault(
+    timeString: string,
+    isPermissive?: boolean
+  ): ChrTimeExtended {
+    let chrTimeExt = ChrTimeExtended.createFromString(timeString, isPermissive);
+    if (!chrTimeExt) {
+      chrTimeExt = ChrTimeExtended.createFromMinutes(0);
+    }
+    return chrTimeExt;
+  }
+
+  /**
+   * Parses any time string like createFromString, but you can force next day for times in 24 hour range
+   */
+  public static createFromString24Range(
+    timeString: string,
+    isNextDay: boolean
+  ): ChrTimeExtended {
+    let chrTimeExt = ChrTimeExtended.createFromString(timeString, true);
+    if (isNextDay && !chrTimeExt.isNextDay) {
+      chrTimeExt = chrTimeExt.setIsNextDay(true);
+    }
+
+    return chrTimeExt;
   }
 
   /**

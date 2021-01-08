@@ -64,7 +64,8 @@ export class ChrTime implements IChrTime {
    * @param blockOnLimit : returns a clone of the original object if the add action creaes an invalid object.
    */
   public addMinutes(minutes: number, blockOnLimit?: boolean): ChrTime {
-    const newMin = this.getAsMinutes() + minutes;
+    let newMin = this.getAsMinutes() + minutes;
+    newMin = Math.max(0, newMin);
     const newTime = ChrTime.createFromMinutes(newMin);
     if (blockOnLimit) {
       return this.clone() as ChrTime;

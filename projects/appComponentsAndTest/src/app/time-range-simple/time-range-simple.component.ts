@@ -128,12 +128,16 @@ export class TimeRangeSimpleComponent
    * StartTime text property. This parses and formats text
    */
   get startTimeText(): string {
-    return this.startTime?.toHoursMinutesString();
+    return this.startTime?.toHoursMinutesIn24Range();
   }
   set startTimeText(val: string) {
-    this.startTime = ChrTimeExtended.createFromHHmmString(
-      val
+    this.startTime = ChrTimeExtended.createFromString24Range(
+      val,
+      this.startTime.isNextDay
     ) as ChrTimeExtended;
+    if (!this.startTime) {
+      this.startTime = ChrTimeExtended.createFromMinutes(0);
+    }
   }
 
   /**
@@ -142,21 +146,26 @@ export class TimeRangeSimpleComponent
   get endTimeText(): string {
     console.debug('TimeRangeCmp.endTime', this.endTime.toHoursMinutesString());
     // console.debug('get endTimeText', this._endTime.toHoursMinutesString());
-    return this.endTime.toHoursMinutesString();
+    return this.endTime.toHoursMinutesIn24Range();
   }
   set endTimeText(val: string) {
-    this.endTime = ChrTimeExtended.createFromHHmmString(val) as ChrTimeExtended;
+    this.endTime = ChrTimeExtended.createFromString24Range(
+      val,
+      this.endTime.isNextDay
+    ) as ChrTimeExtended;
+    if (!this.startTime) {
+      this.startTime = ChrTimeExtended.createFromMinutes(0);
+    }
   }
 
   /**
    *
    */
-  private _isNextDay: string;
-  public get isNextDay(): string {
-    return this._isNextDay;
+  public get isNextDay(): boolean {
+    return this.timeRange.isNextDay;
   }
-  public set isNextDay(v: string) {
-    this._isNextDay = v;
+  public set isNextDay(v: boolean) {
+    this.timeRange.isNextDay = v;
   }
 
   constructor() {}
@@ -182,12 +191,12 @@ export class TimeRangeSimpleComponent
 
   increment() {
     console.debug('TimeRangeCmp.increment');
-    this.timeRange.addIntervalInMinutes(this.interval);
+    this.timeRange = this.timeRange.addIntervalInMinutes(this.interval);
   }
 
   decrement() {
     console.debug('TimeRangeCmp.decrement');
-    this.timeRange.addIntervalInMinutes(-this.interval);
+    this.timeRange = this.timeRange.addIntervalInMinutes(-this.interval);
   }
 
   startTimeChanged() {
