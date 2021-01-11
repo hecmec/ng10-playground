@@ -30,8 +30,11 @@ import { DynamicInputListComponent } from './dynamic-input-list/dynamic-input-li
 import { SchwarzTemplDrivenFormComponent } from './schwarz-templ-driven-form/schwarz-templ-driven-form.component';
 import { TimeRangeSimpleComponent } from './time-range-simple/time-range-simple.component';
 // import { ChrTimeFormatHhmmPipe } from './time-range-simple/chr-time-formatter.directive';
-import { ChrTimeFormatterDirective } from './time-range-simple/chr-time-formatter.directive';
+import { ChrTimeFormatterDirective } from './time-range-simple/directives/chr-time-formatter.directive';
+import { ChrTimeOnlyDirective } from './time-range-simple/directives/chr-timeonly.directive';
+
 import { TimeRangePlaygroundComponent } from './time-range-playground/time-range-playground.component';
+import { TimeFieldComponent } from './time-field-component/time-field.component';
 
 const myProviders = [];
 
@@ -47,7 +50,9 @@ const myProviders = [];
     TimeRangeSimpleComponent,
     // ChrTimeFormatHhmmPipe,
     ChrTimeFormatterDirective,
+    ChrTimeOnlyDirective,
     TimeRangePlaygroundComponent,
+    TimeFieldComponent,
   ],
   imports: [
     BrowserModule,

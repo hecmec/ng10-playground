@@ -1,5 +1,5 @@
-import { Times } from '../times';
-import { Tools } from '../tools';
+import { Times } from '../../times';
+import { Tools } from '../../tools';
 import { ChrTimeExtended } from './chr-time-extended.class';
 
 describe('ChrTimeExtended', () => {

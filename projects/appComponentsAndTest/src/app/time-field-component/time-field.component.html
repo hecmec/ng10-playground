@@ -1,0 +1,9 @@
+
+
+<mat-form-field>
+  <input matInput chrTimeOnly type="text" class="form-control" [formControl]="timeField" 
+  [(ngModel)]="timeText" (change)="timeChanged()" />
+  <mat-error *ngIf="timeField.invalid">{{
+    getErrorMessageTime()
+    }}</mat-error>
+</mat-form-field>

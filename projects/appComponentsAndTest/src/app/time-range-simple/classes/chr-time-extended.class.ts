@@ -1,5 +1,5 @@
-import { Tools } from '../tools';
-import { Times } from '../times';
+import { Tools } from '../../tools';
+import { Times } from '../../times';
 import { ChrTime, IChrTime } from './chr-time.class';
 import { timestamp } from 'rxjs/operators';
 

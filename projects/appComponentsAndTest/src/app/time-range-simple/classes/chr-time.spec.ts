@@ -1,4 +1,4 @@
-import { Times } from '../times';
+import { Times } from '../../times';
 import { ChrTime } from './chr-time.class';
 
 describe('ChrTime', () => {

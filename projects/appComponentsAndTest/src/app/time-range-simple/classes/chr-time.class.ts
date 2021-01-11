@@ -1,5 +1,5 @@
-import { Times } from '../times';
-import { Tools } from '../tools';
+import { Times } from '../../times';
+import { Tools } from '../../tools';
 
 export interface IChrTime {
   hours: number;
@@ -132,12 +132,26 @@ export class ChrTime implements IChrTime {
 
   /**
    * Creates a new chrtime object
+   *
    * @param hours
    * @param minutes
+   * @param isPermissive: will create a time object even if it is out of bounds like 25h (in that case it will be invalid)
+   * @param failOnMinuteOverflow: normally 10:70 will be mapped to 11:10, if you set this flag overflow will fail
    */
-  static createFromHoursMinutes(hours: number, minutes: number): ChrTime {
-    const chrTime: ChrTime = new ChrTime(hours, minutes);
-    Object.freeze(chrTime);
+  static createFromHoursMinutes(hours: number, minutes: number, isPermissive?: boolean, failOnMinuteOverflow?: boolean): ChrTime {
+    let chrTime: ChrTime = null;
+
+    if (failOnMinuteOverflow && minutes >= Times.minutesInHour) {
+      chrTime = null;
+    }
+    else {
+      chrTime = new ChrTime(hours, minutes);
+
+      if (chrTime && !isPermissive) {
+        chrTime = chrTime.isValid ? chrTime : null;
+      }
+    }
+    // Object.freeze(chrTime);
     return chrTime;
   }
 
@@ -157,18 +171,21 @@ export class ChrTime implements IChrTime {
    * '123456 => '12:34'
    * ':3' => '00:30'
    * ':' => '00:00'
-   * @param timeString
+   * @param timeString: a time stirng 
+   * @param isPermissive: will create a time object even if it is out of bounds like 25h (in that case it will be invalid)
+   * @param failOnMinuteOverflow: normally 10:70 will be mapped to 11:10, if you set this flag overflow will fail
    */
-  static createFromString(timeString: string, isPermissive?: boolean): ChrTime {
+  static createFromString(timeString: string, isPermissive?: boolean, failOnMinuteOverflow?: boolean): ChrTime {
     let chrTime: ChrTime = null;
     const normalizedTimeString = ChrTime._getNormalizedTimeString(timeString);
     if (normalizedTimeString) {
       chrTime = ChrTime.createFromHHmmString(
         normalizedTimeString,
-        isPermissive
+        isPermissive,
+        failOnMinuteOverflow,
       );
     }
-    Object.freeze(chrTime);
+    // Object.freeze(chrTime);
     return chrTime;
   }
 
@@ -186,10 +203,13 @@ export class ChrTime implements IChrTime {
    * ':3' => '00:30'
    * ':' => '00:00'
    * @param timeString
+   * @param isPermissive: will create a time object even if it is out of bounds like 25h (in that case it will be invalid)
+   * @param failOnMinuteOverflow: normally 10:70 will be mapped to 11:10, if you set this flag overflow will fail
    */
   static createFromHHmmString(
     timeString: string,
-    isPermissive?: boolean
+    isPermissive?: boolean,
+    failOnMinuteOverflow?: boolean
   ): ChrTime {
     let chrTime: ChrTime = null;
     if (timeString) {
@@ -197,27 +217,30 @@ export class ChrTime implements IChrTime {
         timeString
       );
 
-      chrTime = ChrTime.createFromHoursMinutes(...hoursAndMinutes);
+      chrTime = ChrTime.createFromHoursMinutes(hoursAndMinutes[0], hoursAndMinutes[1], isPermissive, failOnMinuteOverflow);
 
-      if (!isPermissive) {
-        chrTime = chrTime.isValid ? chrTime : null;
-      }
     }
-    Object.freeze(chrTime);
+    // Object.freeze(chrTime);
     return chrTime;
   }
 
   /**
    * Creates a ChrTime from minutes
    * @param minutes
+   * @param isPermissive: will create a time object even if it is out of bounds like 25h (in that case it will be invalid)
    */
-  static createFromMinutes(minutes: number): ChrTime {
+  static createFromMinutes(minutes: number, isPermissive?: boolean): ChrTime {
     let chrTime: ChrTime = null;
     if (Tools.hasValue(minutes)) {
       const hours = Math.floor(minutes / Times.minutesInHour);
       const minutesRest = minutes % Times.minutesInHour;
       chrTime = ChrTime.createFromHoursMinutes(hours, minutesRest);
     }
+
+    if (!isPermissive) {
+      chrTime = chrTime.isValid ? chrTime : null;
+    }
+    
     return chrTime;
   }
 

@@ -1,4 +1,4 @@
-import { Tools } from '../tools';
+import { Tools } from '../../tools';
 import { ChrDate } from './chr-date.class';
 import { ChrTime } from './chr-time.class';
 

@@ -11,20 +11,15 @@ import {
   EventEmitter,
   forwardRef,
 } from '@angular/core';
-import { MatInput } from '@angular/material/input';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { ChrTime } from './chr-time.class';
-import { ChrDate } from './chr-date.class';
-import { ChrDateTime } from './chr-date-time.class';
-import { ChrTimeRange36Hours } from './chr-time-range-36hours.class';
+import { ChrTimeRange36Hours } from './classes/chr-time-range-36hours.class';
 import {
   ControlValueAccessor,
   FormControl,
   NG_VALUE_ACCESSOR,
   Validators,
 } from '@angular/forms';
-import { ChrTimeExtended } from './chr-time-extended.class';
+import { ChrTimeExtended } from './classes/chr-time-extended.class';
 
 /**
  * This is a custom form control
@@ -37,7 +32,7 @@ import { ChrTimeExtended } from './chr-time-extended.class';
  *
  */
 @Component({
-  selector: 'app-time-range-simple',
+  selector: 'time-range-simple',
   templateUrl: './time-range-simple.component.html',
   styleUrls: ['./time-range-simple.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -133,6 +128,7 @@ export class TimeRangeSimpleComponent
    * StartTime text property. This parses and formats text
    */
   get startTimeText(): string {
+    console.debug('TimeRangeCmp.startTime', this.startTime.toHoursMinutesString());
     return this.startTime?.toHoursMinutesIn24Range();
   }
   set startTimeText(val: string) {
@@ -150,7 +146,6 @@ export class TimeRangeSimpleComponent
    */
   get endTimeText(): string {
     console.debug('TimeRangeCmp.endTime', this.endTime.toHoursMinutesString());
-    // console.debug('get endTimeText', this._endTime.toHoursMinutesString());
     return this.endTime.toHoursMinutesIn24Range();
   }
   set endTimeText(val: string) {

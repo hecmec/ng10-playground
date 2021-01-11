@@ -1,6 +1,6 @@
 import { timestamp } from 'rxjs/operators';
-import { Times } from '../times';
-import { Tools } from '../tools';
+import { Times } from '../../times';
+import { Tools } from '../../tools';
 
 /**
  * Immutable Date only oject for Chronos

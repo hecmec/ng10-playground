@@ -1,9 +1,8 @@
-<h3>time-range-playground</h3>
+<h2>time-range-playground</h2>
 
+<h3>Simple Time Range</h3>
 <div>
-  <app-time-range-simple
-    [(timeRange)]="defaultTimeRange"
-  ></app-time-range-simple>
+  <time-range-simple [(timeRange)]="defaultTimeRange"></time-range-simple>
   <!-- <mat-form-field class="example-form-field">
     <mat-label>Time Range Form binding</mat-label>
     <app-time-range-simple timeRange="defaultTimeRange"></app-time-range-simple>
@@ -12,37 +11,77 @@
   parsed date is {{ defaultTimeRange.referenceDate | json }}<br />
   parsed startTime is {{ defaultTimeRange.startTime | json }} <br />
   parsed endTime is {{ defaultTimeRange.endTime | json }}
+
+  <br /><br />
+  <b>Data</b><br />
+  <!-- <div>startTime: {{ startTimeText }} endTme: {{ endTimeText }}</div>
+  <div>isNextDay: {{ isNextDay }}</div> -->
+
 </div>
 
-<br /><br />
-<b>Data</b><br />
-<!-- <div>startTime: {{ startTimeText }} endTme: {{ endTimeText }}</div>
-<div>isNextDay: {{ isNextDay }}</div> -->
-<hr />
+
 <br />
+<hr /><br />
+<h3>ChrTimeField component </h3>
 <div>
-  input with time-formatter
+  <time-field [(ngModel)]="timeTestObj"></time-field> : {{timeTestObj}}
+
+</div>
+
+
+<br />
+<hr /><br />
+<h3>ChrTimeOnly directive on html text input </h3>
+<div>
+  <input chrTimeOnly type="text" [(ngModel)]="timeTestStr2" />{{timeTestStr2}}
+
+</div>
+
+
+
+<br />
+<hr /><br />
+<h3>chrTimeFormatter directive on html text input </h3>
+<div>
+  <input chrTimeFormatter type="text" value= [(ngModel)]="timeTestStr1"/>{{timeTestStr1}}
+
+</div>
+
+
+<br /><hr /><br />
+<h3>chrTimeFormatter directive on mat-input with </h3>
+<div>
   <mat-form-field class="example-form-field">
     <mat-label>Clearable time input</mat-label>
-    <input matInput chrTimeFormatter type="text" [(ngModel)]="timeTest1" />
-    <button
-      mat-button
-      *ngIf="timeTest1"
-      matSuffix
-      mat-icon-button
-      aria-label="Clear"
-      (click)="timeTest1 = '00:00'"
-    >
+    <input matInput chrTimeFormatter type="text" [(ngModel)]="timeTestStr" />
+    <button mat-button *ngIf="timeTestStr" matSuffix mat-icon-button aria-label="Clear" (click)="timeTest1 = '00:00'">
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
-  : parsed time is {{ timeTest1 }}
+  : parsed time is {{ timeTestStr }}
 </div>
-<hr />
-<br />
-<div>simple html time input: <input type="time" /></div>
-<hr />
-<br />
-<div>material html time input:<input type="time" matInput /></div>
-<hr />
-<br />
+
+
+
+<br /><hr /><br />
+<h3>Html text input with pattern </h3>
+<div>
+  <input type="text" pattern="[0-9]*" maxlength="5" name="country_code" title="Three digits country code" />
+  this will only test on form submission
+</div>
+
+<!-- <br /><hr /><br />
+<h3>simple html time input: </h3>
+<div>
+  <input type="time" />
+</div> -->
+
+<!-- <br />
+<hr /><br />
+<div>
+  <h3>material html time input: </h3>
+
+  <input type="time" matInput />
+</div> -->
+
+
