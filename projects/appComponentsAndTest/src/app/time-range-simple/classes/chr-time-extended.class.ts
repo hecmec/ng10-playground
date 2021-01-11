@@ -3,16 +3,17 @@ import { Times } from '../../times';
 import { ChrTime, IChrTime } from './chr-time.class';
 import { timestamp } from 'rxjs/operators';
 
-const maxHoursNextDay = 11;
+const defaultMaxHoursNextDay = 11;
+
 /**
  * Its like time but allows to work with up to 36 hours
  * In case of exceeding hours, the hours are reset minus 24h and the isNextDay flag is set.
  */
 export class ChrTimeExtended extends ChrTime {
+  private _maxHoursNextDay = defaultMaxHoursNextDay;
   private _isNextDay: boolean;
   // upper limit of 36 jours expressed in minutes
-  private _upperLimitMinutes =
-    Times.minutesInDay + (maxHoursNextDay + 1) * Times.minutesInHour;
+  private _upperLimitMinutes = Times.minutesInDay;
 
   public get isNextDay(): boolean {
     return this._isNextDay;
@@ -21,9 +22,8 @@ export class ChrTimeExtended extends ChrTime {
   public get isValid(): boolean {
     let isValid: boolean = super.isValid;
 
-    if (this._isNextDay) {
-      isValid = isValid && this.hours <= maxHoursNextDay;
-    }
+    isValid = isValid && this.getAsMinutes() < this._upperLimitMinutes;
+
     return isValid;
   }
 
@@ -36,6 +36,8 @@ export class ChrTimeExtended extends ChrTime {
    */
   protected constructor(hours: number, minutes: number, isNextDay?: boolean) {
     super(hours, minutes);
+
+    this._upperLimitMinutes = Times.minutesInDay + (this._maxHoursNextDay + 1) * Times.minutesInHour;
 
     // force to boolean
     this._isNextDay = !!isNextDay;
@@ -187,6 +189,7 @@ export class ChrTimeExtended extends ChrTime {
    * '1:7' => '01:00' // minutes out of bound
    * '12' => 12:00
    * @param timeString
+   * // TODO: add overflow flag
    */
   public static createFromHHmmString(
     timeString: string,
@@ -212,6 +215,7 @@ export class ChrTimeExtended extends ChrTime {
    * If the hours exteed 24 hours but stay in the under 36, then isNextDAy flag is set
    * @param hours
    * @param minutes
+   * // TODO: add permissive and overflow
    */
   public static createFromHoursMinutes(
     hours: number,

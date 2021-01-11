@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ChrTime } from './chr-time.class';
+import { ChrTime } from './classes/chr-time.class';
 
 @Pipe({ name: 'ChrTimeFormatHhmmPipe' })
 export class ChrTimeFormatHhmmPipe implements PipeTransform {

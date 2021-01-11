@@ -6,7 +6,7 @@
     <mat-icon>navigate_before</mat-icon>
   </button>
   &nbsp;
-  <mat-form-field>
+  <!-- <mat-form-field>
     <input
       matInput
       chrTimeOnly
@@ -19,9 +19,15 @@
     <mat-error *ngIf="startTimeField.invalid">{{
       getErrorStartTimeMessage()
     }}</mat-error>
-  </mat-form-field>
+  </mat-form-field> -->
+  <time-field [(timeValue)]="startTime" [formControl]="startTimeField" (change)="startTimeChanged()"></time-field>
+
   &nbsp;
-  <mat-form-field>
+
+  <time-field [(timeValue)]="endTime" [formControl]="endTimeField" (change)="endTimeChanged()"></time-field>
+
+
+  <!-- <mat-form-field>
     <input
       matInput
       type="text"
@@ -31,7 +37,7 @@
       [ngModelOptions]="{ updateOn: 'blur' }"
       (change)="endTimeChanged()"
     />
-  </mat-form-field>
+  </mat-form-field> -->
   &nbsp;
   <button (click)="increment()" mat-icon-button>
     <mat-icon>navigate_next</mat-icon>

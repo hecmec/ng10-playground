@@ -3,6 +3,7 @@ import { TimeRangeSimpleComponent } from '../time-range-simple/time-range-simple
 import { FormControl } from '@angular/forms';
 import { ChrTimeRange36Hours } from '../time-range-simple/classes/chr-time-range-36hours.class';
 import { ChrTime } from '../time-range-simple/classes/chr-time.class';
+import { ChrTimeExtended } from '../time-range-simple/classes/chr-time-extended.class';
 
 @Component({
   selector: 'app-time-range-playground',
@@ -13,7 +14,8 @@ export class TimeRangePlaygroundComponent implements OnInit {
   public timeTestStr: string;
   public timeTestStr1: string;
   public timeTestStr2: string;
-  public timeTestObj: ChrTime;
+  public timeTestObj: ChrTimeExtended = ChrTimeExtended.createFromHoursMinutes(11, 20);
+  // this.timeTestObj.toHoursMinutesString()
 
   public defaultTimeRange: ChrTimeRange36Hours =  ChrTimeRange36Hours.createFromDateTimeStrings(
     '2020-10-20',

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { ChrTime } from '../time-range-simple/classes/chr-time.class';
+import { ChrTimeExtended } from '../time-range-simple/classes/chr-time-extended.class';
 import { TimeRangeSimpleComponent } from '../time-range-simple/time-range-simple.component';
 import { timeValidator } from  '../time-range-simple/validators/timeValidator';
 
@@ -42,26 +42,26 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
    * This is the time you can set from outside
    * 
    */
-  private _time: ChrTime;
-  @Input('time')
-  public get time() : ChrTime {
-    console.debug('TimeFieldComponent.time get', this._time?.toHoursMinutesString());
-    return this._time;
+  private _timeValue: ChrTimeExtended;
+  @Input('timeValue')
+  public get timeValue(): ChrTimeExtended {
+    console.debug('TimeFieldComponent.time get', this._timeValue?.toHoursMinutesString());
+    return this._timeValue;
   }
-  public set time(val: ChrTime) {
+  public set timeValue(val: ChrTimeExtended) {
     console.debug('TimeFieldComponent.timeText set', val?.toHoursMinutesString());
 
-    this._time = val;
-    this.timeChange.emit(this._time);
+    this._timeValue = val as ChrTimeExtended;
+    this.timeValueChange.emit(this._timeValue);
     this.onChange(val);
     this.onTouched();
     // set field directly
-    if (this._time) {
-      this._timeText = this._time.toHoursMinutesString();
+    if (this._timeValue) {
+      this._timeText = this._timeValue.toHoursMinutesIn24Range();
     }
     
   }
-  @Output() timeChange = new EventEmitter<ChrTime>();
+  @Output() timeValueChange = new EventEmitter<ChrTimeExtended>();
 
 
   /**
@@ -74,21 +74,7 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
   }
   set timeText(val: string) {
     console.debug('TimeFieldComponent.timeText set', this._timeText);
-    if (val != this._timeText) {
-      this._timeText = val;
-      
-      let newTime = null;
-      
-      if(this._timeText){
-        let parsedTime = ChrTime.createFromString(this._timeText);
-        if (parsedTime && parsedTime.isValid) {
-          newTime = parsedTime;
-        }
-      }
-
-      this.time = newTime;
-      
-    }
+    this._timeText = val;
   } 
 
   constructor() { }
@@ -105,6 +91,28 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
         console.debug('TimeFieldComponent.ngOnChanges: time', changes.time);
       }
     }
+  }
+
+  /**
+   * Eval text value to time only on blur
+   */
+  onBlur() {
+    let newTime = null;
+    const isNextDay = !!this.timeValue?.isNextDay;
+
+      if (this._timeText) {
+        let parsedTime = ChrTimeExtended.createFromString24Range(this._timeText, isNextDay);
+        if (parsedTime && parsedTime.isValid) {
+          newTime = parsedTime;
+        }
+      }
+
+      this.timeValue = newTime;
+
+  }
+
+  onFocus() {
+
   }
 
 
@@ -133,7 +141,7 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
   writeValue(obj: any): void {
     console.debug('TimeRangeCmp.writeValue', obj);
     if (obj) {
-      this.time = obj;
+      this.timeValue = obj;
       // this.startTime = this.timeRange.startTime;
       // this.endTime = this.timeRange.endTime;
     }

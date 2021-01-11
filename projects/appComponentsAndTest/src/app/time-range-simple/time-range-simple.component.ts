@@ -46,7 +46,7 @@ import { ChrTimeExtended } from './classes/chr-time-extended.class';
   ],
 })
 export class TimeRangeSimpleComponent
-  implements OnChanges, AfterViewInit, ControlValueAccessor {
+  implements OnChanges, ControlValueAccessor {
   // Both onChange and onTouched are functions used for the ControlValueAccessor Interface
   onChange: any = () => {};
   onTouched: any = () => {};
@@ -90,6 +90,7 @@ export class TimeRangeSimpleComponent
   // used to unsubscribe from event on destroy
   private ngDestroyed$ = new Subject();
 
+
   /**
    * StartTime of this time range with getter and setter
    */
@@ -124,39 +125,6 @@ export class TimeRangeSimpleComponent
     }
   }
 
-  /**
-   * StartTime text property. This parses and formats text
-   */
-  get startTimeText(): string {
-    console.debug('TimeRangeCmp.startTime', this.startTime.toHoursMinutesString());
-    return this.startTime?.toHoursMinutesIn24Range();
-  }
-  set startTimeText(val: string) {
-    this.startTime = ChrTimeExtended.createFromString24Range(
-      val,
-      this.startTime.isNextDay
-    ) as ChrTimeExtended;
-    if (!this.startTime) {
-      this.startTime = ChrTimeExtended.createFromMinutes(0);
-    }
-  }
-
-  /**
-   * EndTime text property
-   */
-  get endTimeText(): string {
-    console.debug('TimeRangeCmp.endTime', this.endTime.toHoursMinutesString());
-    return this.endTime.toHoursMinutesIn24Range();
-  }
-  set endTimeText(val: string) {
-    this.endTime = ChrTimeExtended.createFromString24Range(
-      val,
-      this.endTime.isNextDay
-    ) as ChrTimeExtended;
-    if (!this.startTime) {
-      this.startTime = ChrTimeExtended.createFromMinutes(0);
-    }
-  }
 
   /**
    *
@@ -172,6 +140,7 @@ export class TimeRangeSimpleComponent
 
   // ngOnInit(): void {}
   startTimeField = new FormControl('', [Validators.required]);
+  endTimeField = new FormControl('', [Validators.required]);
 
   getErrorStartTimeMessage() {
     return 'time error';
@@ -179,8 +148,6 @@ export class TimeRangeSimpleComponent
     //     this.email.hasError('email') ? 'Not a valid email' :
     //         '';
   }
-
-  ngAfterViewInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     console.debug('TimeRangeCmp.ngOnChanges', changes);

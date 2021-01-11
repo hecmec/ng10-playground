@@ -141,19 +141,19 @@ export class ChrTimeOnlyDirective implements OnInit, OnChanges {
     // }
   }
 
-  @HostListener('focus', ['$event.target.value'])
-  onFocus(value: string) {
-    console.debug('ChrTimeFormatterDirective.onFocus', value);
-    this.el.value = this.transform(value, true);
-    this.ngModelChange.emit(this.el.value);
-  }
+  // @HostListener('focus', ['$event.target.value'])
+  // onFocus(value: string) {
+  //   console.debug('ChrTimeOnlyDirective.onFocus', value);
+  //   this.el.value = this.transform(value, true);
+  //   this.ngModelChange.emit(this.el.value);
+  // }
 
-  @HostListener('blur', ['$event.target.value'])
-  onBlur(value: string) {
-    console.debug('ChrTimeFormatterDirective.onBlur', value);
-    this.el.value = this.transform(value, false);
-    this.ngModelChange.emit(this.el.value);
-  }
+  // @HostListener('blur', ['$event.target.value'])
+  // onBlur(value: string) {
+  //   console.debug('ChrTimeOnlyDirective.onBlur', value);
+  //   this.el.value = this.transform(value, false);
+  //   this.ngModelChange.emit(this.el.value);
+  // }
 
 
 
