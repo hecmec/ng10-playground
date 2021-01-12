@@ -23,13 +23,8 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -87,13 +82,8 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.scss"],
             "scripts": []
           }
         },
@@ -105,9 +95,7 @@
               "tsconfig.spec.json",
               "e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
@@ -148,9 +136,7 @@
               "projects/appSimplePage/src/favicon.ico",
               "projects/appSimplePage/src/assets"
             ],
-            "styles": [
-              "projects/appSimplePage/src/styles.scss"
-            ],
+            "styles": ["projects/appSimplePage/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -212,9 +198,7 @@
               "projects/appSimplePage/src/favicon.ico",
               "projects/appSimplePage/src/assets"
             ],
-            "styles": [
-              "projects/appSimplePage/src/styles.scss"
-            ],
+            "styles": ["projects/appSimplePage/src/styles.scss"],
             "scripts": []
           }
         },
@@ -226,9 +210,7 @@
               "projects/appSimplePage/tsconfig.spec.json",
               "projects/appSimplePage/e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
@@ -269,9 +251,7 @@
               "projects/appLazyThroughRouting/src/favicon.ico",
               "projects/appLazyThroughRouting/src/assets"
             ],
-            "styles": [
-              "projects/appLazyThroughRouting/src/styles.scss"
-            ],
+            "styles": ["projects/appLazyThroughRouting/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -333,9 +313,7 @@
               "projects/appLazyThroughRouting/src/favicon.ico",
               "projects/appLazyThroughRouting/src/assets"
             ],
-            "styles": [
-              "projects/appLazyThroughRouting/src/styles.scss"
-            ],
+            "styles": ["projects/appLazyThroughRouting/src/styles.scss"],
             "scripts": []
           }
         },
@@ -347,9 +325,7 @@
               "projects/appLazyThroughRouting/tsconfig.spec.json",
               "projects/appLazyThroughRouting/e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
@@ -390,9 +366,7 @@
               "projects/appLazyWithoutRouting/src/favicon.ico",
               "projects/appLazyWithoutRouting/src/assets"
             ],
-            "styles": [
-              "projects/appLazyWithoutRouting/src/styles.scss"
-            ],
+            "styles": ["projects/appLazyWithoutRouting/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -454,9 +428,7 @@
               "projects/appLazyWithoutRouting/src/favicon.ico",
               "projects/appLazyWithoutRouting/src/assets"
             ],
-            "styles": [
-              "projects/appLazyWithoutRouting/src/styles.scss"
-            ],
+            "styles": ["projects/appLazyWithoutRouting/src/styles.scss"],
             "scripts": []
           }
         },
@@ -468,9 +440,7 @@
               "projects/appLazyWithoutRouting/tsconfig.spec.json",
               "projects/appLazyWithoutRouting/e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
@@ -512,6 +482,7 @@
               "projects/appComponentsAndTest/src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "projects/appComponentsAndTest/src/styles.scss"
             ],
             "scripts": []
@@ -575,9 +546,7 @@
               "projects/appComponentsAndTest/src/favicon.ico",
               "projects/appComponentsAndTest/src/assets"
             ],
-            "styles": [
-              "projects/appComponentsAndTest/src/styles.scss"
-            ],
+            "styles": ["projects/appComponentsAndTest/src/styles.scss"],
             "scripts": []
           }
         },
@@ -589,9 +558,7 @@
               "projects/appComponentsAndTest/tsconfig.spec.json",
               "projects/appComponentsAndTest/e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
@@ -628,9 +595,7 @@
               "projects/aaronFrostHeroApp/src/favicon.ico",
               "projects/aaronFrostHeroApp/src/assets"
             ],
-            "styles": [
-              "projects/aaronFrostHeroApp/src/styles.css"
-            ],
+            "styles": ["projects/aaronFrostHeroApp/src/styles.css"],
             "scripts": []
           },
           "configurations": {
@@ -692,9 +657,7 @@
               "projects/aaronFrostHeroApp/src/favicon.ico",
               "projects/aaronFrostHeroApp/src/assets"
             ],
-            "styles": [
-              "projects/aaronFrostHeroApp/src/styles.css"
-            ],
+            "styles": ["projects/aaronFrostHeroApp/src/styles.css"],
             "scripts": []
           }
         },
@@ -706,9 +669,7 @@
               "projects/aaronFrostHeroApp/tsconfig.spec.json",
               "projects/aaronFrostHeroApp/e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
@@ -724,6 +685,7 @@
           }
         }
       }
-    }},
+    }
+  },
   "defaultProject": "ng10-playground"
 }

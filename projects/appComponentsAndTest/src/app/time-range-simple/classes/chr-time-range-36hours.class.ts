@@ -4,8 +4,10 @@ import { ChrTimeExtended } from './chr-time-extended.class';
 import { min, timestamp } from 'rxjs/operators';
 import { getMatFormFieldPlaceholderConflictError } from '@angular/material/form-field';
 
+// lower range limit, is included
 const lowerRangeLimit = ChrTimeExtended.createFromHHmmString('00:00', true);
-const upperRangeLimit = ChrTimeExtended.createFromHHmmString('36:00', true);
+// upper limit, which is excluded
+const upperRangeLimitEx = ChrTimeExtended.createFromHHmmString('36:00', true);
 /**
  * This is a value object that implements the sliding time range on 36 hours and all its rules
  * Start and end time are extended time objects
@@ -77,8 +79,7 @@ export class ChrTimeRange36Hours {
       this.startTime.isValid &&
       this.endTime.isValid &&
       this.startTime.isSmallerThanOrEquals(this.endTime) &&
-      lowerRangeLimit.isSmallerThanOrEquals(this.startTime) &&
-      this.endTime.isSmallerThanOrEquals(upperRangeLimit);
+      lowerRangeLimit.isSmallerThanOrEquals(this.startTime);
 
     // add specific validation here
     return result;
@@ -104,11 +105,11 @@ export class ChrTimeRange36Hours {
   /**
    * Add minutes to startTime and endTime if possible.
    * This will not change the range if start or endtime would become invalid.
-   *
+   * If block on Limit is set, it will go to the limit and stop there
    * @param minutesToChange
-   * @param blockOnLimit: will go until the limmit but not further
+   * @param stopAtLimit: will go until the limmit but not further
    */
-  public addIntervalInMinutes(minutesToChange: number, blockOnLimit?: boolean) {
+  public addIntervalInMinutes(minutesToChange: number, stopAtLimit?: boolean) {
     const originalStartTime = this.startTime.clone() as ChrTimeExtended;
     const originalEndTime = this.endTime.clone() as ChrTimeExtended;
     let startTimeIncremented: ChrTimeExtended; //this.startTime.addMinutes(minutesToChange);
@@ -117,18 +118,21 @@ export class ChrTimeRange36Hours {
     let newRange = this.clone();
     let diffMinutes: number = 0;
     if (minutesToChange >= 0) {
-      startTimeIncremented = this.startTime.addMinutes(minutesToChange);
-      endTimeIncremented = this.endTime.addMinutes(minutesToChange);
+      startTimeIncremented = this.startTime.addMinutes(minutesToChange, true);
+      endTimeIncremented = this.endTime.addMinutes(minutesToChange, true);
 
-      if (blockOnLimit && endTimeIncremented >= upperRangeLimit) {
+      if (
+        stopAtLimit &&
+        upperRangeLimitEx.isSmallerThanOrEquals(endTimeIncremented)
+      ) {
         let originalEndTimeMinutes = originalEndTime.getAsMinutes();
-        let upperLimitAsMinutes = upperRangeLimit.getAsMinutes();
+        let upperLimitAsMinutes = upperRangeLimitEx.getAsMinutes();
         //minus one because upperLimit is not included
         diffMinutes = Math.abs(
           upperLimitAsMinutes - originalEndTimeMinutes - 1
         );
 
-        newRange.startTime = originalStartTime.addMinutes(diffMinutes);
+        newRange.startTime = originalStartTime.addMinutes(diffMinutes, true);
         newRange.endTime = ChrTimeExtended.createFromMinutes(
           upperLimitAsMinutes - 1
         );
@@ -143,9 +147,14 @@ export class ChrTimeRange36Hours {
       // we will not go under lower limit and change both limits by the new minutesToChange
       const adaptedMinutesToChange = Math.min(absMinToChange, diffMinutes);
       newRange.startTime = originalStartTime.addMinutes(
-        -adaptedMinutesToChange
+        -adaptedMinutesToChange,
+        true
       );
       newRange.endTime = originalEndTime.addMinutes(-adaptedMinutesToChange);
+    }
+
+    if (!newRange.isValid) {
+      newRange = this.clone();
     }
 
     return newRange;

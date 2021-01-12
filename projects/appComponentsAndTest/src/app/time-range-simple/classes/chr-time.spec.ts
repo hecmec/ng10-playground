@@ -21,7 +21,7 @@ describe('ChrTime', () => {
     });
     it('should be an invalid time object of 30:20 if you add a day to 6:20', () => {
       chrTime = ChrTime.createFromHHmmString('6:20');
-      chrTime = chrTime.addMinutes(Times.minutesInDay);
+      chrTime = chrTime.addMinutes(Times.minutesInDay, true);
       expect(chrTime.toHoursMinutesString()).toEqual('30:20');
       expect(chrTime.isValid).toBeFalse();
     });
@@ -118,27 +118,27 @@ describe('ChrTime', () => {
       expect(chrTime.isValid).toBeTrue();
     });
 
-    it('should be creatable with negative hours and turn them to positive', () => {
+    it('should be creatable with negative hours and turn them to positive ', () => {
       chrTime = ChrTime.createFromHoursMinutes(-10, 20);
       expect(chrTime.hours).toEqual(10);
       expect(chrTime.isValid).toBeTrue();
     });
 
-    it('should make time invalid if hours exceed 23 hours', () => {
-      chrTime = ChrTime.createFromHoursMinutes(25, 20);
+    it('should make time invalid if hours exceed 23 hours (if permissive)', () => {
+      chrTime = ChrTime.createFromHoursMinutes(25, 20, true);
       expect(chrTime.hours).toEqual(25);
       expect(chrTime.isValid).toBeFalse();
     });
 
-    it('should make time object with changed hours if minutes exceed 59 minutes', () => {
-      chrTime = ChrTime.createFromHoursMinutes(20, 60);
+    it('should make time object with changed hours if minutes exceed 59 minutes (if overflow)', () => {
+      chrTime = ChrTime.createFromHoursMinutes(20, 60, true);
       expect(chrTime.hours).toEqual(21);
       expect(chrTime.minutes).toEqual(0);
       expect(chrTime.isValid).toBeTruthy();
     });
 
     it('should make time object with changed hours if minutes exceed 59 minutes', () => {
-      chrTime = ChrTime.createFromHoursMinutes(0, 99);
+      chrTime = ChrTime.createFromHoursMinutes(0, 99, true);
       expect(chrTime.hours).toEqual(1);
       expect(chrTime.minutes).toEqual(39);
       expect(chrTime.isValid).toBeTruthy();
@@ -340,8 +340,8 @@ describe('ChrTime', () => {
       expect(time.isValid).toBeTrue();
     });
 
-    it('should create a zero time object if the minutes exceed the legal range.', () => {
-      const time = ChrTime.createFromMinutes(1440);
+    it('should create an invalid time object if the minutes exceed the legal range.', () => {
+      const time = ChrTime.createFromMinutes(1440, true);
       expect(time.hours).toEqual(24);
       expect(time.minutes).toEqual(0);
       expect(time.isValid).toBeFalse();

@@ -59,16 +59,17 @@ export class ChrTime implements IChrTime {
   }
 
   /**
-   * Returns a new Time with more minutes or null on error
+   * Returns a new Time with more minutes or the unchanged copy of the original if out of bound
    * @param minutes : number of minutes to add, can be negatif
-   * @param blockOnLimit : returns a clone of the original object if the add action creaes an invalid object.
+   * @param isPermissive : if Permissive it will get even an invalid object,
+   * otherwise returns a clone of the original object if the add action creates an invalid object.
    */
-  public addMinutes(minutes: number, blockOnLimit?: boolean): ChrTime {
+  public addMinutes(minutes: number, isPermissive?: boolean): ChrTime {
     let newMin = this.getAsMinutes() + minutes;
     newMin = Math.max(0, newMin);
-    const newTime = ChrTime.createFromMinutes(newMin);
-    if (blockOnLimit) {
-      return this.clone() as ChrTime;
+    let newTime = ChrTime.createFromMinutes(newMin, isPermissive);
+    if (!isPermissive && (!newTime || !newTime.isValid)) {
+      newTime = this.clone() as ChrTime;
     }
     return newTime;
   }
@@ -138,17 +139,23 @@ export class ChrTime implements IChrTime {
    * @param isPermissive: will create a time object even if it is out of bounds like 25h (in that case it will be invalid)
    * @param failOnMinuteOverflow: normally 10:70 will be mapped to 11:10, if you set this flag overflow will fail
    */
-  static createFromHoursMinutes(hours: number, minutes: number, isPermissive?: boolean, failOnMinuteOverflow?: boolean): ChrTime {
+  static createFromHoursMinutes(
+    hours: number,
+    minutes: number,
+    isPermissive?: boolean,
+    failOnMinuteOverflow?: boolean
+  ): ChrTime {
     let chrTime: ChrTime = null;
 
     if (failOnMinuteOverflow && minutes >= Times.minutesInHour) {
       chrTime = null;
-    }
-    else {
+    } else {
       chrTime = new ChrTime(hours, minutes);
 
-      if (chrTime && !isPermissive) {
-        chrTime = chrTime.isValid ? chrTime : null;
+      if (!isPermissive) {
+        if (chrTime && !chrTime.isValid) {
+          chrTime = null;
+        }
       }
     }
     // Object.freeze(chrTime);
@@ -171,18 +178,22 @@ export class ChrTime implements IChrTime {
    * '123456 => '12:34'
    * ':3' => '00:30'
    * ':' => '00:00'
-   * @param timeString: a time stirng 
+   * @param timeString: a time stirng
    * @param isPermissive: will create a time object even if it is out of bounds like 25h (in that case it will be invalid)
    * @param failOnMinuteOverflow: normally 10:70 will be mapped to 11:10, if you set this flag overflow will fail
    */
-  static createFromString(timeString: string, isPermissive?: boolean, failOnMinuteOverflow?: boolean): ChrTime {
+  static createFromString(
+    timeString: string,
+    isPermissive?: boolean,
+    failOnMinuteOverflow?: boolean
+  ): ChrTime {
     let chrTime: ChrTime = null;
     const normalizedTimeString = ChrTime._getNormalizedTimeString(timeString);
     if (normalizedTimeString) {
       chrTime = ChrTime.createFromHHmmString(
         normalizedTimeString,
         isPermissive,
-        failOnMinuteOverflow,
+        failOnMinuteOverflow
       );
     }
     // Object.freeze(chrTime);
@@ -217,8 +228,12 @@ export class ChrTime implements IChrTime {
         timeString
       );
 
-      chrTime = ChrTime.createFromHoursMinutes(hoursAndMinutes[0], hoursAndMinutes[1], isPermissive, failOnMinuteOverflow);
-
+      chrTime = ChrTime.createFromHoursMinutes(
+        hoursAndMinutes[0],
+        hoursAndMinutes[1],
+        isPermissive,
+        failOnMinuteOverflow
+      );
     }
     // Object.freeze(chrTime);
     return chrTime;
@@ -234,13 +249,13 @@ export class ChrTime implements IChrTime {
     if (Tools.hasValue(minutes)) {
       const hours = Math.floor(minutes / Times.minutesInHour);
       const minutesRest = minutes % Times.minutesInHour;
-      chrTime = ChrTime.createFromHoursMinutes(hours, minutesRest);
+      chrTime = ChrTime.createFromHoursMinutes(
+        hours,
+        minutesRest,
+        isPermissive
+      );
     }
 
-    if (!isPermissive) {
-      chrTime = chrTime.isValid ? chrTime : null;
-    }
-    
     return chrTime;
   }
 
@@ -366,9 +381,9 @@ export class ChrTime implements IChrTime {
       if (args.length >= 1) {
         try {
           let hoursArg = args[0];
-          hoursArg = hoursArg.slice(0, 2);
+          hoursArg = hoursArg ? hoursArg.slice(0, 2) : '';
           let minutesArg = args[1];
-          minutesArg = minutesArg.slice(0, 2);
+          minutesArg = minutesArg ? minutesArg.slice(0, 2) : '';
           // one digit minutes are interpreted as tens of minutes.
           if (minutesArg && minutesArg.length === 1) {
             minutesArg = minutesArg + '0';

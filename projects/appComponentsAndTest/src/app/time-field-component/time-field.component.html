@@ -1,10 +1,18 @@
-
-
-<mat-form-field>
-  <input matInput chrTimeOnly type="text" class="form-control" [formControl]="timeField" 
-  (blur)="onBlur()" (focus)="onFocus()"
-  [(ngModel)]="timeText" (change)="timeChanged()" />
-  <mat-error *ngIf="timeField.invalid">{{
-    getErrorMessageTime()
-    }}</mat-error>
+<!-- <mat-form-field appearance="standard"></mat-form-field> -->
+<mat-form-field appearance="fill">
+  <mat-label ng-if="fieldLabel">{{ fieldLabel }}</mat-label>
+  <input
+    matInput
+    chrTimeOnly
+    type="text"
+    class="form-control"
+    placeholder="--:--"
+    [formControl]="timeField"
+    (blur)="onBlur()"
+    (focus)="onFocus()"
+    [(ngModel)]="timeText"
+    (change)="timeChanged()"
+  />
+  <mat-hint align="end" ng-if="timeValue.isNextDay">j+1</mat-hint>
+  <mat-error *ngIf="timeField.invalid">{{ getErrorMessageTime() }}</mat-error>
 </mat-form-field>

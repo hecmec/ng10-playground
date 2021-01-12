@@ -14,10 +14,13 @@ export class TimeRangePlaygroundComponent implements OnInit {
   public timeTestStr: string;
   public timeTestStr1: string;
   public timeTestStr2: string;
-  public timeTestObj: ChrTimeExtended = ChrTimeExtended.createFromHoursMinutes(11, 20);
+  public timeTestObj: ChrTimeExtended = ChrTimeExtended.createFromHoursMinutes(
+    11,
+    20
+  );
   // this.timeTestObj.toHoursMinutesString()
 
-  public defaultTimeRange: ChrTimeRange36Hours =  ChrTimeRange36Hours.createFromDateTimeStrings(
+  public defaultTimeRange: ChrTimeRange36Hours = ChrTimeRange36Hours.createFromDateTimeStrings(
     '2020-10-20',
     '09:00',
     '10:00'
@@ -28,4 +31,8 @@ export class TimeRangePlaygroundComponent implements OnInit {
   name = new FormControl('');
 
   ngOnInit(): void {}
+
+  makeTestTimeObjInvalid() {
+    this.timeTestObj = ChrTimeExtended.createFromHoursMinutes(40, 30, true);
+  }
 }

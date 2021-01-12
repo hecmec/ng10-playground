@@ -3,26 +3,46 @@ import { Times } from '../../times';
 import { ChrTime, IChrTime } from './chr-time.class';
 import { timestamp } from 'rxjs/operators';
 
-const defaultMaxHoursNextDay = 11;
+// excluded upper limit
+const defaultMaxHoursNextDay = 12;
 
 /**
  * Its like time but allows to work with up to 36 hours
  * In case of exceeding hours, the hours are reset minus 24h and the isNextDay flag is set.
  */
 export class ChrTimeExtended extends ChrTime {
-  private _maxHoursNextDay = defaultMaxHoursNextDay;
+  private readonly _maxHoursNextDayExcluded = defaultMaxHoursNextDay;
   private _isNextDay: boolean;
-  // upper limit of 36 jours expressed in minutes
-  private _upperLimitMinutes = Times.minutesInDay;
+  // upper limit (excluded) of 36 jours expressed in minutes
+  // time is defined in [0, _upperLimitExcluded[
+  private _upperLimitExcludedMinutes =
+    Times.minutesInDay + this._maxHoursNextDayExcluded * Times.minutesInHour;
 
+  public get UpperLimitMinutes(): number {
+    return this._upperLimitExcludedMinutes;
+  }
+
+  /**
+   * checks if this time has its next flag set
+   */
   public get isNextDay(): boolean {
     return this._isNextDay;
   }
 
+  /**
+   * Tests if the time is exceeding (greater than or equal to the upperLimit)
+   */
+  public get isTimeExceeding(): boolean {
+    return this.getAsMinutes() >= this._upperLimitExcludedMinutes;
+  }
+
+  /**
+   * Tests if the object is valid
+   */
   public get isValid(): boolean {
     let isValid: boolean = super.isValid;
 
-    isValid = isValid && this.getAsMinutes() < this._upperLimitMinutes;
+    isValid = isValid && !this.isTimeExceeding;
 
     return isValid;
   }
@@ -37,7 +57,8 @@ export class ChrTimeExtended extends ChrTime {
   protected constructor(hours: number, minutes: number, isNextDay?: boolean) {
     super(hours, minutes);
 
-    this._upperLimitMinutes = Times.minutesInDay + (this._maxHoursNextDay + 1) * Times.minutesInHour;
+    this._upperLimitExcludedMinutes =
+      Times.minutesInDay + this._maxHoursNextDayExcluded * Times.minutesInHour;
 
     // force to boolean
     this._isNextDay = !!isNextDay;
@@ -57,15 +78,12 @@ export class ChrTimeExtended extends ChrTime {
    * @param minutes
    * @returns a new copy
    */
-  public addMinutes(minutes: number, blockOnLimit?: boolean): ChrTimeExtended {
+  public addMinutes(minutes: number, isPermissive?: boolean): ChrTimeExtended {
     let newMin = this.getAsMinutes() + minutes;
-    // take 0 as min value
     newMin = Math.max(0, newMin);
-    let newTime = ChrTimeExtended.createFromMinutes(newMin);
-
-    if (blockOnLimit && newTime.getAsMinutes() >= this._upperLimitMinutes) {
-      newTime = ChrTimeExtended.createFromMinutes(this._upperLimitMinutes - 1);
-      return this.clone() as ChrTimeExtended;
+    let newTime = ChrTimeExtended.createFromMinutes(newMin, isPermissive);
+    if (!isPermissive && (!newTime || !newTime.isValid)) {
+      newTime = this.clone() as ChrTimeExtended;
     }
     return newTime;
   }
@@ -189,22 +207,26 @@ export class ChrTimeExtended extends ChrTime {
    * '1:7' => '01:00' // minutes out of bound
    * '12' => 12:00
    * @param timeString
-   * // TODO: add overflow flag
+   * @param isPermissive: will create a time object even if it is out of bounds like 25h (in that case it will be invalid)
+   * @param failOnMinuteOverflow: normally 10:70 will be mapped to 11:10, if you set this flag overflow will fail
    */
   public static createFromHHmmString(
     timeString: string,
-    isPermissive?: boolean
+    isPermissive?: boolean,
+    failOnMinuteOverflow?: boolean
   ): ChrTimeExtended {
     let chrTime: ChrTimeExtended = null;
     if (timeString) {
       const hoursAndMinutes = ChrTimeExtended._getHoursMinutesFromHHmmString(
         timeString
       );
-      chrTime = ChrTimeExtended.createFromHoursMinutes(...hoursAndMinutes);
 
-      if (!isPermissive) {
-        chrTime = chrTime.isValid ? chrTime : null;
-      }
+      chrTime = ChrTimeExtended.createFromHoursMinutes(
+        hoursAndMinutes[0],
+        hoursAndMinutes[1],
+        isPermissive,
+        failOnMinuteOverflow
+      );
     }
     Object.freeze(chrTime);
     return chrTime;
@@ -215,37 +237,61 @@ export class ChrTimeExtended extends ChrTime {
    * If the hours exteed 24 hours but stay in the under 36, then isNextDAy flag is set
    * @param hours
    * @param minutes
-   * // TODO: add permissive and overflow
+    * @param isPermissive: will create a time object even if it is out of bounds like 25h (in that case it will be invalid)
+   * @param failOnMinuteOverflow: normally 10:70 will be mapped to 11:10, if you set this flag overflow will fail
+
    */
   public static createFromHoursMinutes(
     hours: number,
-    minutes: number
+    minutes: number,
+    isPermissive?: boolean,
+    failOnMinuteOverflow?: boolean
   ): ChrTimeExtended {
-    let isNextDay = false;
-    if (hours >= Times.hoursInDay) {
-      hours = hours - Times.hoursInDay;
-      isNextDay = true;
-    }
-    let chrTime: ChrTimeExtended = new ChrTimeExtended(
-      hours,
-      minutes,
-      isNextDay
-    );
+    let chrTime: ChrTimeExtended = null;
+    //
+    if (failOnMinuteOverflow && minutes >= Times.minutesInHour) {
+      chrTime = null;
+    } else {
+      // minutes overflow is taken care off in constructor
 
-    Object.freeze(chrTime);
+      // set next day
+      let isNextDay = false;
+      if (hours >= Times.hoursInDay) {
+        hours = hours - Times.hoursInDay;
+        isNextDay = true;
+      }
+
+      chrTime = new ChrTimeExtended(hours, minutes, isNextDay);
+
+      if (!isPermissive) {
+        if (chrTime && !chrTime.isValid) {
+          chrTime = null;
+        }
+      }
+    }
+
+    //Object.freeze(chrTime);
     return chrTime;
   }
 
   /**
    * Creates a ChrTime from minutes
    * @param minutes
+   * @param isPermissive: will create a time object even if it is out of bounds like 25h (in that case it will be invalid)
    */
-  public static createFromMinutes(minutes: number): ChrTimeExtended {
+  public static createFromMinutes(
+    minutes: number,
+    isPermissive?: boolean
+  ): ChrTimeExtended {
     let chrTime: ChrTimeExtended = null;
     if (Tools.hasValue(minutes)) {
       const hours = Math.floor(minutes / 60);
       const minutesRest = minutes % 60;
-      chrTime = ChrTimeExtended.createFromHoursMinutes(hours, minutesRest);
+      chrTime = ChrTimeExtended.createFromHoursMinutes(
+        hours,
+        minutesRest,
+        isPermissive
+      );
     }
     return chrTime;
   }

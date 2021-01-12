@@ -116,8 +116,14 @@ describe('ChrTimeRange36Hours', () => {
         '11:00'
       );
       const chrTimeRangeAdded = chrTimeRange.addIntervalInMinutes(10);
+
+      expect(chrTimeRangeAdded.startTime.hours).toEqual(10);
       expect(chrTimeRangeAdded.startTime.minutes).toEqual(10);
+      expect(chrTimeRangeAdded.startTime.isNextDay).toBeFalse();
+
+      expect(chrTimeRangeAdded.endTime.hours).toEqual(11);
       expect(chrTimeRangeAdded.endTime.minutes).toEqual(10);
+      expect(chrTimeRangeAdded.endTime.isNextDay).toBeFalse();
       expect(chrTimeRangeAdded.isValid).toBeTruthy();
     });
 
@@ -130,8 +136,12 @@ describe('ChrTimeRange36Hours', () => {
       const chrTimeRangeAdded = chrTimeRange.addIntervalInMinutes(-10);
       expect(chrTimeRangeAdded.startTime.hours).toEqual(9);
       expect(chrTimeRangeAdded.startTime.minutes).toEqual(50);
+      expect(chrTimeRangeAdded.startTime.isNextDay).toBeFalse();
+
       expect(chrTimeRangeAdded.endTime.hours).toEqual(11);
       expect(chrTimeRangeAdded.endTime.minutes).toEqual(20);
+      expect(chrTimeRangeAdded.endTime.isNextDay).toBeFalse();
+
       expect(chrTimeRangeAdded.isValid).toBeTruthy();
     });
 
@@ -142,14 +152,27 @@ describe('ChrTimeRange36Hours', () => {
         '30:55'
       );
       const chrTimeRangeAdded = chrTimeRange.addIntervalInMinutes(30);
+      expect(chrTimeRangeAdded.startTime.hours).toEqual(10);
       expect(chrTimeRangeAdded.startTime.minutes).toEqual(30);
+      expect(chrTimeRangeAdded.startTime.isNextDay).toBeFalse();
+
       expect(chrTimeRangeAdded.endTime.hours).toEqual(7);
       expect(chrTimeRangeAdded.endTime.minutes).toEqual(25);
       expect(chrTimeRangeAdded.endTime.isNextDay).toBeTruthy();
       expect(chrTimeRangeAdded.isValid).toBeTruthy();
     });
 
-    it('should stop at upper limit if add minutes to go beyond (in bocking mode)', () => {
+    it('should not change the range if the addInterval exits the valid limit', () => {
+      const chrTimeRange = ChrTimeRange36Hours.createFromDateTimeStrings(
+        '2020-10-20',
+        '12:00',
+        '35:30'
+      );
+      const chrTimeRangeAdded = chrTimeRange.addIntervalInMinutes(60);
+      expect(chrTimeRangeAdded.equals(chrTimeRange)).toBeTruthy();
+    });
+
+    it('should stop at upper limit if add minutes to go beyond (in blocking mode)', () => {
       const chrTimeRange = ChrTimeRange36Hours.createFromDateTimeStrings(
         '2020-10-20',
         '10:00',
@@ -169,7 +192,7 @@ describe('ChrTimeRange36Hours', () => {
       expect(chrTimeRangeAdded.isValid).toBeTruthy();
     });
 
-    it('should stop at upper limit if add minutes to go beyond (in bocking mode)', () => {
+    it('should stop at lower limit if substract minutes to go below the zero point (in blocking mode)', () => {
       const chrTimeRange = ChrTimeRange36Hours.createFromDateTimeStrings(
         '2020-10-20',
         '00:10',
@@ -186,6 +209,24 @@ describe('ChrTimeRange36Hours', () => {
       expect(chrTimeRangeAdded.endTime.hours).toEqual(23);
       expect(chrTimeRangeAdded.endTime.minutes).toEqual(55);
       expect(chrTimeRangeAdded.endTime.isNextDay).toBeFalse();
+      expect(chrTimeRangeAdded.isValid).toBeTruthy();
+    });
+
+    it('should switch to isNextDay when the starttime passes midnight', () => {
+      const chrTimeRange = ChrTimeRange36Hours.createFromDateTimeStrings(
+        '2020-10-20',
+        '23:55',
+        '34:00'
+      );
+      const chrTimeRangeAdded = chrTimeRange.addIntervalInMinutes(15);
+      expect(chrTimeRangeAdded.startTime.hours).toEqual(0);
+      expect(chrTimeRangeAdded.startTime.minutes).toEqual(10);
+      expect(chrTimeRangeAdded.startTime.isNextDay).toBeTruthy();
+
+      expect(chrTimeRangeAdded.endTime.hours).toEqual(10);
+      expect(chrTimeRangeAdded.endTime.minutes).toEqual(15);
+      expect(chrTimeRangeAdded.endTime.isNextDay).toBeTruthy();
+
       expect(chrTimeRangeAdded.isValid).toBeTruthy();
     });
   });

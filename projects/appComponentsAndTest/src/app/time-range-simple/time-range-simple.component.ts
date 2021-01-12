@@ -90,7 +90,6 @@ export class TimeRangeSimpleComponent
   // used to unsubscribe from event on destroy
   private ngDestroyed$ = new Subject();
 
-
   /**
    * StartTime of this time range with getter and setter
    */
@@ -125,7 +124,6 @@ export class TimeRangeSimpleComponent
     }
   }
 
-
   /**
    *
    */
@@ -142,13 +140,6 @@ export class TimeRangeSimpleComponent
   startTimeField = new FormControl('', [Validators.required]);
   endTimeField = new FormControl('', [Validators.required]);
 
-  getErrorStartTimeMessage() {
-    return 'time error';
-    // return this.email.hasError('required') ? 'You must enter a value' :
-    //     this.email.hasError('email') ? 'Not a valid email' :
-    //         '';
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
     console.debug('TimeRangeCmp.ngOnChanges', changes);
     if (changes) {
@@ -164,14 +155,21 @@ export class TimeRangeSimpleComponent
     }
   }
 
+  getErrorStartTimeMessage() {
+    return 'time error';
+    // return this.email.hasError('required') ? 'You must enter a value' :
+    //     this.email.hasError('email') ? 'Not a valid email' :
+    //         '';
+  }
+
   increment() {
     console.debug('TimeRangeCmp.increment');
-    this.timeRange = this.timeRange.addIntervalInMinutes(this.interval);
+    this.timeRange = this.timeRange.addIntervalInMinutes(this.interval, true);
   }
 
   decrement() {
     console.debug('TimeRangeCmp.decrement');
-    this.timeRange = this.timeRange.addIntervalInMinutes(-this.interval);
+    this.timeRange = this.timeRange.addIntervalInMinutes(-this.interval, true);
   }
 
   startTimeChanged() {

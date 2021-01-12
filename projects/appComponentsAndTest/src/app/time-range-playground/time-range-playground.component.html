@@ -8,14 +8,15 @@
     <app-time-range-simple timeRange="defaultTimeRange"></app-time-range-simple>
   </mat-form-field> -->
 
-  parsed date is {{ defaultTimeRange.referenceDate | json }}<br />
-  parsed startTime is {{ defaultTimeRange.startTime | json }} <br />
-  parsed endTime is {{ defaultTimeRange.endTime | json }}
-
-  <br /><br />
-  <b>Data</b><br />
-  <!-- <div>startTime: {{ startTimeText }} endTme: {{ endTimeText }}</div>
-  <div>isNextDay: {{ isNextDay }}</div> -->
+  parsed date is {{ defaultTimeRange.referenceDate.toLocalDateString() }}<br />
+  parsed startTime is
+  {{ defaultTimeRange.startTime.toHoursMinutesIn24Range() }}, isNextDay:
+  {{ defaultTimeRange.startTime.isNextDay }}, isValid:
+  {{ defaultTimeRange.startTime.isValid }} <br />
+  parsed ..endTime is {{ defaultTimeRange.endTime.toHoursMinutesIn24Range() }},
+  isNextDay: {{ defaultTimeRange.endTime.isNextDay }}, isValid:
+  {{ defaultTimeRange.endTime.isValid }} <br />
+  TimeRange validity: <b>{{ defaultTimeRange.isValid }}</b>
 </div>
 
 <br />
@@ -24,7 +25,12 @@
 <h3>ChrTimeField component</h3>
 <div>
   <time-field [(timeValue)]="timeTestObj"></time-field> :
-  {{ timeTestObj?.toHoursMinutesString() }}
+  {{ timeTestObj?.toHoursMinutesString() }} __
+  <button mat-flat-button color="warn" (click)="makeTestTimeObjInvalid()">
+    make Invalid
+  </button>
+  <br />
+  isvalid: {{ timeTestObj?.isValid }}
 </div>
 <div>
   <ul>

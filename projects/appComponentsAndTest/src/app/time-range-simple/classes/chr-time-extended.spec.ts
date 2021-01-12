@@ -24,7 +24,7 @@ describe('ChrTimeExtended', () => {
       expect(chrTimeExt.isValid).toBeTrue();
     });
     it('should get minutes even for invalid extended time 37:99', () => {
-      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(37, 99);
+      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(37, 99, true);
       expect(chrTimeExt.getAsMinutes()).toEqual(37 * 60 + 99);
       expect(chrTimeExt.isValid).toBeFalsy();
     });
@@ -73,7 +73,7 @@ describe('ChrTimeExtended', () => {
     });
 
     it('should make extended time invalid for 36:00', () => {
-      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(36, 0);
+      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(36, 0, true);
       expect(chrTimeExt.hours).toEqual(12);
       expect(chrTimeExt.minutes).toEqual(0);
       expect(chrTimeExt.isNextDay).toBeTrue();
@@ -81,7 +81,7 @@ describe('ChrTimeExtended', () => {
     });
 
     it('should make extended time invalid if hours exceed 35 hours', () => {
-      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(36, 20);
+      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(36, 20, true);
       expect(chrTimeExt.hours).toEqual(12);
       expect(chrTimeExt.minutes).toEqual(20);
       expect(chrTimeExt.isNextDay).toBeTrue();
@@ -89,7 +89,7 @@ describe('ChrTimeExtended', () => {
     });
 
     it('should parse extended time  as mod 60', () => {
-      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(20, 60);
+      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(20, 60, true, false);
       expect(chrTimeExt.hours).toEqual(21);
       expect(chrTimeExt.minutes).toEqual(0);
       expect(chrTimeExt.isValid).toBeTruthy();

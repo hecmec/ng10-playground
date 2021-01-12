@@ -1,9 +1,24 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  forwardRef,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  FormControl,
+  NG_VALUE_ACCESSOR,
+  ValidatorFn,
+} from '@angular/forms';
 import { ChrTimeExtended } from '../time-range-simple/classes/chr-time-extended.class';
 import { TimeRangeSimpleComponent } from '../time-range-simple/time-range-simple.component';
-import { timeValidator } from  '../time-range-simple/validators/timeValidator';
-
+import { timeValidator } from '../time-range-simple/validators/timeValidator';
 
 /**
  * This is a custom form control
@@ -28,28 +43,34 @@ import { timeValidator } from  '../time-range-simple/validators/timeValidator';
       multi: true,
     },
   ],
-
 })
-export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccessor {
-
+export class TimeFieldComponent
+  implements OnInit, OnChanges, ControlValueAccessor {
   // Both onChange and onTouched are functions used for the ControlValueAccessor Interface
-  onChange: any = () => { };
-  onTouched: any = () => { };
+  onChange: any = () => {};
+  onTouched: any = () => {};
 
   @Input() public isDisabled: boolean = false;
+  @Input() public fieldLabel: string;
 
   /**
    * This is the time you can set from outside
-   * 
+   *
    */
   private _timeValue: ChrTimeExtended;
   @Input('timeValue')
   public get timeValue(): ChrTimeExtended {
-    console.debug('TimeFieldComponent.time get', this._timeValue?.toHoursMinutesString());
+    console.debug(
+      'TimeFieldComponent.time get',
+      this._timeValue?.toHoursMinutesString()
+    );
     return this._timeValue;
   }
   public set timeValue(val: ChrTimeExtended) {
-    console.debug('TimeFieldComponent.timeText set', val?.toHoursMinutesString());
+    console.debug(
+      'TimeFieldComponent.timeText set',
+      val?.toHoursMinutesString()
+    );
 
     this._timeValue = val as ChrTimeExtended;
     this.timeValueChange.emit(this._timeValue);
@@ -59,10 +80,8 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
     if (this._timeValue) {
       this._timeText = this._timeValue.toHoursMinutesIn24Range();
     }
-    
   }
   @Output() timeValueChange = new EventEmitter<ChrTimeExtended>();
-
 
   /**
    * This is time text for communication with the text field
@@ -75,15 +94,37 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
   set timeText(val: string) {
     console.debug('TimeFieldComponent.timeText set', this._timeText);
     this._timeText = val;
-  } 
-
-  constructor() { }
-
-  timeField = new FormControl('', timeValidator);
-
-
-  ngOnInit(): void {
   }
+
+  constructor() {}
+
+  timeField = new FormControl('', this.getTimeValidator());
+  //https://angular.io/guide/form-validation#validator-functions
+  getTimeValidator(): ValidatorFn {
+    let currentTime = this.timeValue;
+
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      let error = null;
+
+      if (control.value) {
+        if (!currentTime) {
+          error = {
+            error_no_time: 'not a valid time',
+          };
+        } else {
+          if (currentTime.isTimeExceeding) {
+            error = {
+              error_time_exceeding: 'time is exceeding upper limit',
+            };
+          }
+        }
+      }
+
+      return error;
+    };
+  }
+
+  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes) {
@@ -100,35 +141,31 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
     let newTime = null;
     const isNextDay = !!this.timeValue?.isNextDay;
 
-      if (this._timeText) {
-        let parsedTime = ChrTimeExtended.createFromString24Range(this._timeText, isNextDay);
-        if (parsedTime && parsedTime.isValid) {
-          newTime = parsedTime;
-        }
+    if (this._timeText) {
+      let parsedTime = ChrTimeExtended.createFromString24Range(
+        this._timeText,
+        isNextDay
+      );
+      if (parsedTime && parsedTime.isValid) {
+        newTime = parsedTime;
       }
+    }
 
-      this.timeValue = newTime;
-
+    this.timeValue = newTime;
   }
 
-  onFocus() {
-
-  }
-
+  onFocus() {}
 
   timeChanged() {
     console.debug('TimeFieldComponent.timeChanged');
   }
-  
+
   getErrorMessageTime() {
     return 'time error';
     // return this.email.hasError('required') ? 'You must enter a value' :
     //     this.email.hasError('email') ? 'Not a valid email' :
     //         '';
   }
-
-
-
 
   /***************************************
    * controlValueAccessor implementation
