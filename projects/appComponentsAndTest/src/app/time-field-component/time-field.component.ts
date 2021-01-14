@@ -174,7 +174,6 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
       if (this.myInputRef) {
         this.myInputRef.nativeElement.focus();
         this.myInputRef.nativeElement.blur();
-        
       }
       
       // this.matcher = new MyErrorStateMatcher();
