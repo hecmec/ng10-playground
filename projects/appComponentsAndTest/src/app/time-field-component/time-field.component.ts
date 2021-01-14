@@ -25,19 +25,23 @@ import { TimeRangeSimpleComponent } from '../time-range-simple/time-range-simple
 import { timeValidator } from '../time-range-simple/validators/timeValidator';
 import { ErrorStateMatcher } from '@angular/material/core';
 
-/** 
+/**
  * Normally errors are only shown when the user has blured out of the field.
  *   // https://material.angular.io/components/input/overview#changing-when-error-messages-are-shown
  * We wanna change this.
- * Error when invalid control is dirty, touched, or submitted. 
+ * Error when invalid control is dirty, touched, or submitted.
  * */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+  isErrorState(
+    control: FormControl | null,
+    form: FormGroupDirective | NgForm | null
+  ): boolean {
     const isSubmitted = form && form.submitted;
     // return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
-    return !!(control && control.invalid );
+    return !!(control && control.invalid);
   }
 }
+
 /**
  * This is a custom form control
  * Two way databinding on value property (value/valueChange)
@@ -62,14 +66,14 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
     },
   ],
 })
-export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccessor {
-
+export class TimeFieldComponent
+  implements OnInit, OnChanges, ControlValueAccessor {
   @ViewChild('myInputRef') myInputRef: ElementRef;
-  
+
   // Both onChange and onTouched are functions used for the ControlValueAccessor Interface
   onChange: any = () => {};
-  onTouched: any = () => { };
-  
+  onTouched: any = () => {};
+
   // needed to see errors even without user interaction
   matcher = new MyErrorStateMatcher();
 
@@ -113,10 +117,12 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
     this._timeText = val;
   }
 
+  public isGreaterThan36 = false;
+
   constructor() {}
 
   // timeField = new FormControl('', timeValidator());
-  timeField = new FormControl('', []);
+  timeFieldFormControl = new FormControl('', []);
 
   ngOnInit(): void {}
 
@@ -125,11 +131,8 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
       if (changes.timeValue) {
         // console.debug('TimeFieldComponent.ngOnChanges: timeValue', changes.timeValue);
       }
-
       this.validateTime();
-
     }
-
   }
 
   /**
@@ -157,41 +160,50 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
   /**
    * event handler of text field input event
    */
-  timeInput(evt:any) {
+  timeInput(evt: any) {
     console.debug('TimeFieldComponent.timeInput', evt.target.value);
     this.validateTime();
   }
 
   /**
    * Validates current Time and sets error Message on field if invalid
-   * @param currentTime 
+   * @param currentTime
    */
   validateTime() {
+    console.debug('TimeFieldComponent validateTime');
 
     if (this.timeValue.isTimeExceeding) {
       console.debug('TimeFieldComponent.setting error greaterThan36');
+      // this.matcher = new MyErrorStateMatcher();
+      //this.timeFieldFormControl.setErrors({ greaterThan36: true });
+      setTimeout(() =>
+        this.timeFieldFormControl.setErrors({ greaterThan36: true })
+      );
 
-      if (this.myInputRef) {
+      //this.touchInputField();
+    }
+  }
+
+  touchInputField() {
+    console.debug('TimeFieldComponent touchInputField');
+
+    // markAsTouched does not work but should
+    this.timeFieldFormControl.markAsTouched();
+
+    if (this.myInputRef) {
+      setTimeout(() => {
         this.myInputRef.nativeElement.focus();
         this.myInputRef.nativeElement.blur();
-      }
-      
-      // this.matcher = new MyErrorStateMatcher();
-      this.timeField.markAsTouched();
-      this.timeField.setErrors({ greaterThan36: true });
-      setTimeout(() => this.timeField.setErrors({ greaterThan36: true }));
-      
-      console.debug('TimeFieldComponent.timeField.invalid', this.timeField.invalid);
-
-    }    
+      });
+    }
   }
 
-  getErrorMessageTime() {
-    return 'time error';
-    // return this.email.hasError('required') ? 'You must enter a value' :
-    //     this.email.hasError('email') ? 'Not a valid email' :
-    //         '';
-  }
+  // getErrorMessageTime() {
+  //   return 'time error';
+  //   // return this.email.hasError('required') ? 'You must enter a value' :
+  //   //     this.email.hasError('email') ? 'Not a valid email' :
+  //   //         '';
+  // }
 
   /***************************************
    * controlValueAccessor implementation
@@ -205,8 +217,6 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
     console.debug('TimeRangeCmp.writeValue', obj);
     if (obj) {
       this.timeValue = obj;
-      // this.startTime = this.timeRange.startTime;
-      // this.endTime = this.timeRange.endTime;
     }
   }
   /**

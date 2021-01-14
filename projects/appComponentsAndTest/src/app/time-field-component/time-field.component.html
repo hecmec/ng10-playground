@@ -1,22 +1,31 @@
 <!-- <mat-form-field appearance="standard"></mat-form-field> -->
 <mat-form-field appearance="fill">
   <mat-label *ngIf="fieldLabel">{{ fieldLabel }}</mat-label>
-  <input #myInputRef
+  <input
+    #myInputRef
     matInput
     chrTimeOnly
     type="text"
+    [formControl]="timeFieldFormControl"
     class="form-control"
     placeholder="--:--"
-    [formControl]="timeField"
     (blur)="onBlur()"
     (focus)="onFocus()"
     [(ngModel)]="timeText"
     (input)="timeInput($event)"
     [errorStateMatcher]="matcher"
   />
-  <!-- <mat-hint align="end" *ngIf="timeValue.isNextDay">j+1</mat-hint> -->
+  <mat-hint align="end" *ngIf="timeValue.isNextDay">j+1</mat-hint>
+  <mat-error *ngIf="timeFieldFormControl.errors?.greaterThan36"
+    >Le temps ne doit pas dépasser 12 e ledemain.</mat-error
+  >
   <!-- <mat-error *ngIf="timeField.errors?.greaterThan36"> {{ 'Time on next day must me less than 12h. ' }}</mat-error> -->
   <!-- <mat-error *ngIf="timeField.hasError('greaterThan36')"> {{ ' ngif Time on next day must me less than 12h. ' }}
   </mat-error> -->
-  <mat-error > {{ 'Time on next day must me less than 12h. ' }}</mat-error>
 </mat-form-field>
+<!-- place this outside to surround FormFieldControl validator interaction -->
+<!-- <div class="size-sm">
+  <mat-error *ngIf="this.timeValue.isTimeExceeding">{{
+    "Le temps ne doit pas dépasser 12 Le ledemain."
+  }}</mat-error>
+</div> -->

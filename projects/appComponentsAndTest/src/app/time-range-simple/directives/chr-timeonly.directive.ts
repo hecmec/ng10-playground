@@ -13,11 +13,11 @@ import { ChrTime } from '../classes/chr-time.class';
 
 /**
  * This directive only allows input of digits and separators (:,.) until 5 to represent a time.
- * 
+ *
  * Based on https://github.com/changhuixu/ngx-digit-only
  */
 @Directive({
-  selector: 'input[chrTimeOnly]'
+  selector: 'input[chrTimeOnly]',
 })
 export class ChrTimeOnlyDirective implements OnInit, OnChanges {
   private navigationKeys = [
@@ -46,15 +46,14 @@ export class ChrTimeOnlyDirective implements OnInit, OnChanges {
    * This is used to notify the outside of a model change
    */
   @Output() ngModelChange = new EventEmitter();
-  
+
   el: HTMLInputElement;
 
   readonly defaultTimeSeparator = ':';
-  readonly timeSeparators: string[] = [':', '.', ';',','];
+  readonly timeSeparators: string[] = [':', '.', ';', ','];
   readonly timeSeparatorAltRegex = new RegExp('[.;,]', 'ig');
   readonly defaultTimeStringNoFocus: string = '--:--';
   readonly defaultTimeStringFocus: string = '';
-
 
   lowerLimit: ChrTime;
   upperLimit: ChrTime;
@@ -68,7 +67,6 @@ export class ChrTimeOnlyDirective implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-
     if (changes.minTime) {
       const time = ChrTime.createFromString(this.minTime);
       this.lowerLimit = time.isValid ? time : ChrTime.createFromMinutes(0);
@@ -76,9 +74,10 @@ export class ChrTimeOnlyDirective implements OnInit, OnChanges {
 
     if (changes.maxTime) {
       const time = ChrTime.createFromString(this.maxTime);
-      this.upperLimit = time.isValid ? time : ChrTime.createFromHoursMinutes(23, 59);
+      this.upperLimit = time.isValid
+        ? time
+        : ChrTime.createFromHoursMinutes(23, 59);
     }
-
   }
 
   @HostListener('keydown', ['$event'])
@@ -103,7 +102,7 @@ export class ChrTimeOnlyDirective implements OnInit, OnChanges {
     // if key is a separator, check if there is only one
     if (this.timeSeparators.includes(e.key)) {
       newValue = this.forecastValue(e.key);
-      
+
       if (this.hasMoreThanOneSeparator(newValue)) {
         // has two or more decimal points
         e.preventDefault();
@@ -141,31 +140,15 @@ export class ChrTimeOnlyDirective implements OnInit, OnChanges {
     // }
   }
 
-  // @HostListener('focus', ['$event.target.value'])
-  // onFocus(value: string) {
-  //   console.debug('ChrTimeOnlyDirective.onFocus', value);
-  //   this.el.value = this.transform(value, true);
-  //   this.ngModelChange.emit(this.el.value);
-  // }
-
-  // @HostListener('blur', ['$event.target.value'])
-  // onBlur(value: string) {
-  //   console.debug('ChrTimeOnlyDirective.onBlur', value);
-  //   this.el.value = this.transform(value, false);
-  //   this.ngModelChange.emit(this.el.value);
-  // }
-
-
-
   /**
    * Tests if there is more than one time separator
-   * @param txt 
+   * @param txt
    */
   private hasMoreThanOneSeparator(txt: string): boolean {
     let result = false;
     if (txt) {
       txt = txt.replace(this.timeSeparatorAltRegex, this.defaultTimeSeparator);
-      result = (txt.split(this.defaultTimeSeparator).length > 2);
+      result = txt.split(this.defaultTimeSeparator).length > 2;
     }
     return result;
   }
@@ -196,7 +179,6 @@ export class ChrTimeOnlyDirective implements OnInit, OnChanges {
   // for paste and sanitizeInput, forecastValue see
   // https://github.com/changhuixu/ngx-digit-only/blob/master/projects/uiowa/digit-only/src/lib/digit-only.directive.ts
 
-
   private forecastValue(key: string): string {
     const selectionStart = this.el.selectionStart;
     const selectionEnd = this.el.selectionEnd;
@@ -205,18 +187,24 @@ export class ChrTimeOnlyDirective implements OnInit, OnChanges {
     return selection
       ? oldValue.replace(selection, key)
       : oldValue.substring(0, selectionStart) +
-      key +
-      oldValue.substring(selectionStart);
+          key +
+          oldValue.substring(selectionStart);
   }
 
   /**
-   * Takes any time string similar to 'hh:mm' and transforms it to 'hh:mm' or if null to --:-- 
+   * Takes any time string similar to 'hh:mm' and transforms it to 'hh:mm' or if null to --:--
    *  @param timeString
    */
   private transform(timeString: string, hasFocus: boolean): string {
-    let result = hasFocus ? this.defaultTimeStringFocus : this.defaultTimeStringNoFocus;
+    let result = hasFocus
+      ? this.defaultTimeStringFocus
+      : this.defaultTimeStringNoFocus;
     let time: ChrTime = null;
-    if (timeString && timeString !== this.defaultTimeStringNoFocus && timeString !== this.defaultTimeStringFocus) {
+    if (
+      timeString &&
+      timeString !== this.defaultTimeStringNoFocus &&
+      timeString !== this.defaultTimeStringFocus
+    ) {
       time = ChrTime.createFromString(timeString) as ChrTime;
     }
 

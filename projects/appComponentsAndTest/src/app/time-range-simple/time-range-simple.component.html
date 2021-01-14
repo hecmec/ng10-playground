@@ -5,19 +5,29 @@
     <mat-icon>navigate_before</mat-icon>
   </button>
   &nbsp;
-  <time-field
-    [(timeValue)]="startTime"
-    [formControl]="startTimeField"
-    (change)="startTimeChanged()"
-  ></time-field>
-  &nbsp;
-  <time-field
-    [(timeValue)]="endTime"
-    [formControl]="endTimeField"
-    (change)="endTimeChanged()"
-  ></time-field>
+  <div style="display: inline-table">
+    <time-field
+      [(timeValue)]="startTime"
+      [formControl]="startTimeField"
+      (change)="startTimeChanged()"
+    ></time-field>
+    &nbsp;
+    <time-field
+      [(timeValue)]="endTime"
+      [formControl]="endTimeField"
+      (change)="endTimeChanged()"
+    ></time-field>
+    <mat-error *ngIf="timeRange.isStartGreaterThanEnd()">{{
+      "Le début ne doit pas dépasser la fin."
+    }}</mat-error>
+  </div>
+
   &nbsp;
   <button (click)="increment()" mat-icon-button>
     <mat-icon>navigate_next</mat-icon>
   </button>
+  <!-- 
+  <div class="size-sm">
+
+  </div> -->
 </div>

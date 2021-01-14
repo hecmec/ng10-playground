@@ -32,16 +32,24 @@ export class ChrTimeRange36Hours {
   public get startTime(): ChrTimeExtended {
     return this._startTime;
   }
-  public set startTime(v: ChrTimeExtended) {
-    this._startTime = v;
+  // public set startTime(v: ChrTimeExtended) {
+  //   this._startTime = v;
+  // }
+  public setStartTime(val: ChrTimeExtended) {
+    this._startTime = val;
+    return this.clone();
   }
 
   private _endTime: ChrTimeExtended;
   public get endTime(): ChrTimeExtended {
     return this._endTime;
   }
-  public set endTime(v: ChrTimeExtended) {
-    this._endTime = v;
+  // public set endTime(v: ChrTimeExtended) {
+  //   this._endTime = v;
+  // }
+  public setEndTime(val: ChrTimeExtended) {
+    this._endTime = val;
+    return this.clone();
   }
 
   public get isNextDay(): boolean {
@@ -56,11 +64,18 @@ export class ChrTimeRange36Hours {
    * This must be able to fail.
    * If it fails we reset startTime to original
    */
-  public set isNextDay(val: boolean) {
-    console.debug('ChrTimeRange36Hours.isNextDay set', val);
-    // TODO:
-    this.endTime = this.endTime.setIsNextDay(val, true);
-    this.startTime = this.startTime.setIsNextDay(val, true);
+  // public set isNextDay(val: boolean) {
+  //   console.debug('ChrTimeRange36Hours.isNextDay set', val);
+  //   // TODO:
+  //   this.endTime = this.endTime.setIsNextDay(val, true);
+  //   this.startTime = this.startTime.setIsNextDay(val, true);
+  // }
+  public setIsNextDay(val: boolean) {
+    let newRange = this.clone();
+
+    newRange.setStartTime(this.startTime.setIsNextDay(val, true));
+    newRange.setEndTime(this.endTime.setIsNextDay(val, true));
+    return newRange;
   }
 
   /**
@@ -98,8 +113,20 @@ export class ChrTimeRange36Hours {
     endTime: ChrTimeExtended
   ) {
     this.referenceDate = referenceDate.clone();
-    this.startTime = startTime.clone() as ChrTimeExtended;
-    this.endTime = endTime.clone() as ChrTimeExtended;
+    this._startTime = startTime.clone() as ChrTimeExtended;
+    this._endTime = endTime.clone() as ChrTimeExtended;
+  }
+
+  /**
+   * Checks for Error: Start is greater than end
+   * This will return a true error only if there is a startTime and and endTime and the first is greater than the last.
+   */
+  public isStartGreaterThanEnd() {
+    let result = false;
+    if (this.startTime && this.endTime) {
+      result = !this.startTime.isSmallerThanOrEquals(this.endTime);
+    }
+    return result;
   }
 
   /**
@@ -132,11 +159,15 @@ export class ChrTimeRange36Hours {
           upperLimitAsMinutes - originalEndTimeMinutes - 1
         );
 
-        newRange.startTime = originalStartTime.addMinutes(diffMinutes, true);
-        newRange.endTime = ChrTimeExtended.createFromMinutes(upperLimitAsMinutes - 1, true);
+        newRange = newRange.setStartTime(
+          originalStartTime.addMinutes(diffMinutes, true)
+        );
+        newRange = newRange.setEndTime(
+          ChrTimeExtended.createFromMinutes(upperLimitAsMinutes - 1, true)
+        );
       } else {
-        newRange.startTime = startTimeIncremented;
-        newRange.endTime = endTimeIncremented;
+        newRange = newRange.setStartTime(startTimeIncremented);
+        newRange = newRange.setEndTime(endTimeIncremented);
       }
     } else {
       // decrement is hard limited to lower Limit (zero)
@@ -144,8 +175,12 @@ export class ChrTimeRange36Hours {
       const absMinToChange = Math.abs(minutesToChange);
       // we will not go under lower limit and change both limits by the new minutesToChange
       const adaptedMinutesToChange = Math.min(absMinToChange, diffMinutes);
-      newRange.startTime = originalStartTime.addMinutes(-adaptedMinutesToChange, true);
-      newRange.endTime = originalEndTime.addMinutes(-adaptedMinutesToChange, true);
+      newRange = newRange.setStartTime(
+        originalStartTime.addMinutes(-adaptedMinutesToChange, true)
+      );
+      newRange = newRange.setEndTime(
+        originalEndTime.addMinutes(-adaptedMinutesToChange, true)
+      );
     }
 
     // if (!newRange.isValid) {

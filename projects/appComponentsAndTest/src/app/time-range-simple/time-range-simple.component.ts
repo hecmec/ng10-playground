@@ -103,7 +103,7 @@ export class TimeRangeSimpleComponent
   }
   public set startTime(v: ChrTimeExtended) {
     if (this.timeRange) {
-      this.timeRange.startTime = v;
+      this.timeRange = this.timeRange.setStartTime(v);
     }
   }
 
@@ -120,7 +120,7 @@ export class TimeRangeSimpleComponent
   }
   public set endTime(v: ChrTimeExtended) {
     if (this.timeRange) {
-      this.timeRange.endTime = v;
+      this.timeRange = this.timeRange.setEndTime(v);
     }
   }
 
@@ -131,7 +131,7 @@ export class TimeRangeSimpleComponent
     return this.timeRange.isNextDay;
   }
   public set isNextDay(v: boolean) {
-    this.timeRange.isNextDay = v;
+    this.timeRange = this.timeRange.setIsNextDay(v);
   }
 
   constructor() {}
@@ -163,23 +163,29 @@ export class TimeRangeSimpleComponent
   }
 
   increment() {
-    console.debug('TimeRangeCmp.increment');
+    // console.debug('TimeRangeCmp.increment');
     this.timeRange = this.timeRange.addIntervalInMinutes(this.interval, true);
   }
 
   decrement() {
-    console.debug('TimeRangeCmp.decrement');
+    // console.debug('TimeRangeCmp.decrement');
     this.timeRange = this.timeRange.addIntervalInMinutes(-this.interval, true);
   }
 
   startTimeChanged() {
-    console.debug('TimeRangeCmp.startTimeChanged');
+    // console.debug('TimeRangeCmp.startTimeChanged');
   }
 
   endTimeChanged() {
-    console.debug('TimeRangeCmp.endTimeChanged');
+    // console.debug('TimeRangeCmp.endTimeChanged');
   }
 
+  /**
+   *
+   */
+  isStartGreaterThanEnd() {
+    return this.timeRange.isStartGreaterThanEnd();
+  }
   /**
    * Clean up
    */
