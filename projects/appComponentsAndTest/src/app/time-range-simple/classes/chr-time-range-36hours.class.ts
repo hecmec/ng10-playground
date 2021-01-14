@@ -104,7 +104,7 @@ export class ChrTimeRange36Hours {
 
   /**
    * Add minutes to startTime and endTime if possible.
-   * This will not change the range if start or endtime would become invalid.
+   * //This will not change the range if start or endtime would become invalid.
    * If block on Limit is set, it will go to the limit and stop there
    * @param minutesToChange
    * @param stopAtLimit: will go until the limmit but not further
@@ -133,9 +133,7 @@ export class ChrTimeRange36Hours {
         );
 
         newRange.startTime = originalStartTime.addMinutes(diffMinutes, true);
-        newRange.endTime = ChrTimeExtended.createFromMinutes(
-          upperLimitAsMinutes - 1
-        );
+        newRange.endTime = ChrTimeExtended.createFromMinutes(upperLimitAsMinutes - 1, true);
       } else {
         newRange.startTime = startTimeIncremented;
         newRange.endTime = endTimeIncremented;
@@ -146,16 +144,13 @@ export class ChrTimeRange36Hours {
       const absMinToChange = Math.abs(minutesToChange);
       // we will not go under lower limit and change both limits by the new minutesToChange
       const adaptedMinutesToChange = Math.min(absMinToChange, diffMinutes);
-      newRange.startTime = originalStartTime.addMinutes(
-        -adaptedMinutesToChange,
-        true
-      );
-      newRange.endTime = originalEndTime.addMinutes(-adaptedMinutesToChange);
+      newRange.startTime = originalStartTime.addMinutes(-adaptedMinutesToChange, true);
+      newRange.endTime = originalEndTime.addMinutes(-adaptedMinutesToChange, true);
     }
 
-    if (!newRange.isValid) {
-      newRange = this.clone();
-    }
+    // if (!newRange.isValid) {
+    //   newRange = this.clone();
+    // }
 
     return newRange;
   }
@@ -231,11 +226,11 @@ export type ExtendedTimeRangeType = {
     startTime: ChrDateTime;
     endTime: ChrDateTime;
     isNextDay: Boolean;
-  
+
     getStartTimeAs36HourString('.'): string;
     getEndTimeAs36HourString('.'): string;
-  
+
     static createFromStrings('2020-10-15', '26.00', '28.00')
-  
+
   };
 */

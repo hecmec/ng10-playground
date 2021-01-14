@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   forwardRef,
   Input,
@@ -8,18 +9,35 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
   FormControl,
+  FormGroupDirective,
+  NgForm,
   NG_VALUE_ACCESSOR,
   ValidatorFn,
 } from '@angular/forms';
 import { ChrTimeExtended } from '../time-range-simple/classes/chr-time-extended.class';
 import { TimeRangeSimpleComponent } from '../time-range-simple/time-range-simple.component';
 import { timeValidator } from '../time-range-simple/validators/timeValidator';
+import { ErrorStateMatcher } from '@angular/material/core';
 
+/** 
+ * Normally errors are only shown when the user has blured out of the field.
+ *   // https://material.angular.io/components/input/overview#changing-when-error-messages-are-shown
+ * We wanna change this.
+ * Error when invalid control is dirty, touched, or submitted. 
+ * */
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    // return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+    return !!(control && control.invalid );
+  }
+}
 /**
  * This is a custom form control
  * Two way databinding on value property (value/valueChange)
@@ -34,7 +52,7 @@ import { timeValidator } from '../time-range-simple/validators/timeValidator';
   selector: 'time-field',
   templateUrl: './time-field.component.html',
   styleUrls: ['./time-field.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
   // We have to tell Angular about this new form control that we just created.
   providers: [
     {
@@ -44,11 +62,16 @@ import { timeValidator } from '../time-range-simple/validators/timeValidator';
     },
   ],
 })
-export class TimeFieldComponent
-  implements OnInit, OnChanges, ControlValueAccessor {
+export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccessor {
+
+  @ViewChild('myInputRef') myInputRef: ElementRef;
+  
   // Both onChange and onTouched are functions used for the ControlValueAccessor Interface
   onChange: any = () => {};
-  onTouched: any = () => {};
+  onTouched: any = () => { };
+  
+  // needed to see errors even without user interaction
+  matcher = new MyErrorStateMatcher();
 
   @Input() public isDisabled: boolean = false;
   @Input() public fieldLabel: string;
@@ -60,17 +83,11 @@ export class TimeFieldComponent
   private _timeValue: ChrTimeExtended;
   @Input('timeValue')
   public get timeValue(): ChrTimeExtended {
-    console.debug(
-      'TimeFieldComponent.time get',
-      this._timeValue?.toHoursMinutesString()
-    );
+    // console.debug('TimeFieldComponent.time get', this._timeValue?.toHoursMinutesString());
     return this._timeValue;
   }
   public set timeValue(val: ChrTimeExtended) {
-    console.debug(
-      'TimeFieldComponent.timeText set',
-      val?.toHoursMinutesString()
-    );
+    // console.debug('TimeFieldComponent.timeText set',val?.toHoursMinutesString());
 
     this._timeValue = val as ChrTimeExtended;
     this.timeValueChange.emit(this._timeValue);
@@ -88,50 +105,31 @@ export class TimeFieldComponent
    */
   private _timeText: string;
   get timeText(): string {
-    console.debug('TimeFieldComponent.timeText get', this._timeText);
+    // console.debug('TimeFieldComponent.timeText get', this._timeText);
     return this._timeText;
   }
   set timeText(val: string) {
-    console.debug('TimeFieldComponent.timeText set', this._timeText);
+    // console.debug('TimeFieldComponent.timeText set', this._timeText);
     this._timeText = val;
   }
 
   constructor() {}
 
-  timeField = new FormControl('', this.getTimeValidator());
-  //https://angular.io/guide/form-validation#validator-functions
-  getTimeValidator(): ValidatorFn {
-    let currentTime = this.timeValue;
-
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      let error = null;
-
-      if (control.value) {
-        if (!currentTime) {
-          error = {
-            error_no_time: 'not a valid time',
-          };
-        } else {
-          if (currentTime.isTimeExceeding) {
-            error = {
-              error_time_exceeding: 'time is exceeding upper limit',
-            };
-          }
-        }
-      }
-
-      return error;
-    };
-  }
+  // timeField = new FormControl('', timeValidator());
+  timeField = new FormControl('', []);
 
   ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes) {
-      if (changes.time) {
-        console.debug('TimeFieldComponent.ngOnChanges: time', changes.time);
+      if (changes.timeValue) {
+        // console.debug('TimeFieldComponent.ngOnChanges: timeValue', changes.timeValue);
       }
+
+      this.validateTime();
+
     }
+
   }
 
   /**
@@ -156,8 +154,37 @@ export class TimeFieldComponent
 
   onFocus() {}
 
-  timeChanged() {
-    console.debug('TimeFieldComponent.timeChanged');
+  /**
+   * event handler of text field input event
+   */
+  timeInput(evt:any) {
+    console.debug('TimeFieldComponent.timeInput', evt.target.value);
+    this.validateTime();
+  }
+
+  /**
+   * Validates current Time and sets error Message on field if invalid
+   * @param currentTime 
+   */
+  validateTime() {
+
+    if (this.timeValue.isTimeExceeding) {
+      console.debug('TimeFieldComponent.setting error greaterThan36');
+
+      if (this.myInputRef) {
+        this.myInputRef.nativeElement.focus();
+        this.myInputRef.nativeElement.blur();
+        
+      }
+      
+      // this.matcher = new MyErrorStateMatcher();
+      this.timeField.markAsTouched();
+      this.timeField.setErrors({ greaterThan36: true });
+      setTimeout(() => this.timeField.setErrors({ greaterThan36: true }));
+      
+      console.debug('TimeFieldComponent.timeField.invalid', this.timeField.invalid);
+
+    }    
   }
 
   getErrorMessageTime() {

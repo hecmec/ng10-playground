@@ -24,11 +24,18 @@
 <br />
 <h3>ChrTimeField component</h3>
 <div>
-  <time-field [(timeValue)]="timeTestObj"></time-field> :
-  {{ timeTestObj?.toHoursMinutesString() }} __
-  <button mat-flat-button color="warn" (click)="makeTestTimeObjInvalid()">
+  <time-field [fieldLabel]="'test me label'" [(timeValue)]="timeTestObj"></time-field> :
+  {{ timeTestObj?.toHoursMinutesString() }} : j+1: {{timeTestObj?.isNextDay}} __
+  <button mat-flat-button color="warn" (click)="setTestTimeObj(22,40)">
+    make j
+  </button>&nbsp;
+  <button mat-flat-button color="warn" (click)="setTestTimeObj(33,40)">
+    make j+1
+  </button>&nbsp;
+  <button mat-flat-button color="warn" (click)="setTestTimeObj(40, 33)">
     make Invalid
   </button>
+  <!-- <mat-slide-toggle [(ngModel)]="timeTestObj.isNextDay"></mat-slide-toggle> -->
   <br />
   isvalid: {{ timeTestObj?.isValid }}
 </div>

@@ -1,7 +1,7 @@
 <!-- <mat-form-field appearance="standard"></mat-form-field> -->
 <mat-form-field appearance="fill">
-  <mat-label ng-if="fieldLabel">{{ fieldLabel }}</mat-label>
-  <input
+  <mat-label *ngIf="fieldLabel">{{ fieldLabel }}</mat-label>
+  <input #myInputRef
     matInput
     chrTimeOnly
     type="text"
@@ -11,8 +11,12 @@
     (blur)="onBlur()"
     (focus)="onFocus()"
     [(ngModel)]="timeText"
-    (change)="timeChanged()"
+    (input)="timeInput($event)"
+    [errorStateMatcher]="matcher"
   />
-  <mat-hint align="end" ng-if="timeValue.isNextDay">j+1</mat-hint>
-  <mat-error *ngIf="timeField.invalid">{{ getErrorMessageTime() }}</mat-error>
+  <!-- <mat-hint align="end" *ngIf="timeValue.isNextDay">j+1</mat-hint> -->
+  <!-- <mat-error *ngIf="timeField.errors?.greaterThan36"> {{ 'Time on next day must me less than 12h. ' }}</mat-error> -->
+  <!-- <mat-error *ngIf="timeField.hasError('greaterThan36')"> {{ ' ngif Time on next day must me less than 12h. ' }}
+  </mat-error> -->
+  <mat-error > {{ 'Time on next day must me less than 12h. ' }}</mat-error>
 </mat-form-field>

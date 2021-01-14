@@ -32,7 +32,7 @@ export class TimeRangePlaygroundComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  makeTestTimeObjInvalid() {
-    this.timeTestObj = ChrTimeExtended.createFromHoursMinutes(40, 30, true);
+  setTestTimeObj(h: number, m:number) {
+    this.timeTestObj = ChrTimeExtended.createFromHoursMinutes(h, m, true);
   }
 }

@@ -30,6 +30,12 @@ export class ChrTimeExtended extends ChrTime {
   }
 
   /**
+   * Todo: this should be immutable ::
+   */
+  // public set isNextDay(val:boolean) {
+  //   this._isNextDay = val;
+  // }
+  /**
    * Tests if the time is exceeding (greater than or equal to the upperLimit)
    */
   public get isTimeExceeding(): boolean {
