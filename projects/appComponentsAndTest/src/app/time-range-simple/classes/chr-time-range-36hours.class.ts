@@ -7,7 +7,7 @@ import { getMatFormFieldPlaceholderConflictError } from '@angular/material/form-
 // lower range limit, is included
 const lowerRangeLimit = ChrTimeExtended.createFromHHmmString('00:00', true);
 // upper limit, which is excluded
-const upperRangeLimitEx = ChrTimeExtended.createFromHHmmString('36:00', true);
+const upperRangeLimit = ChrTimeExtended.createFromHHmmString('36:00', true);
 /**
  * This is a value object that implements the sliding time range on 36 hours and all its rules
  * Start and end time are extended time objects
@@ -81,20 +81,21 @@ export class ChrTimeRange36Hours {
   /**
    * This range is valid if
    * 1) date and time are valid
-   * 2) starttime <= endtime
+   * 2) starttime < endtime
    * 3) starttime >= 00:00
-   * 4) endtime < 36:00
+   * 4) endtime <= 36:00
    * TODO: improve
    */
   public get isValid(): boolean {
     let result: boolean = true;
 
     result =
-      this.referenceDate.isValid &&
-      this.startTime.isValid &&
-      this.endTime.isValid &&
-      this.startTime.isSmallerThanOrEquals(this.endTime) &&
+      this.referenceDate?.isValid &&
+      this.startTime?.isValid &&
+      this.endTime?.isValid &&
+      this.startTime?.isSmallerThan(this.endTime) &&
       lowerRangeLimit.isSmallerThanOrEquals(this.startTime);
+    upperRangeLimit.isGreaterThanOrEquals(this.endTime);
 
     // add specific validation here
     return result;
@@ -131,12 +132,19 @@ export class ChrTimeRange36Hours {
 
   /**
    * Add minutes to startTime and endTime if possible.
-   * //This will not change the range if start or endtime would become invalid.
+   * By default this will not change the range if start or endtime would become invalid.
    * If block on Limit is set, it will go to the limit and stop there
    * @param minutesToChange
-   * @param stopAtLimit: will go until the limmit but not further
+   * @param overflowBehavior: (optional) determines how to handle upper limit transgression
    */
-  public addIntervalInMinutes(minutesToChange: number, stopAtLimit?: boolean) {
+  public addIntervalInMinutes(
+    minutesToChange: number,
+    overflowBehavior?: ChrTimeRange36Hours.OverflowBehavior
+  ) {
+    // by default invalid time augmenation will result in no change
+    overflowBehavior =
+      overflowBehavior || ChrTimeRange36Hours.OverflowBehavior.Unchanged;
+
     const originalStartTime = this.startTime.clone() as ChrTimeExtended;
     const originalEndTime = this.endTime.clone() as ChrTimeExtended;
     let startTimeIncremented: ChrTimeExtended; //this.startTime.addMinutes(minutesToChange);
@@ -149,25 +157,31 @@ export class ChrTimeRange36Hours {
       endTimeIncremented = this.endTime.addMinutes(minutesToChange, true);
 
       if (
-        stopAtLimit &&
-        upperRangeLimitEx.isSmallerThanOrEquals(endTimeIncremented)
+        endTimeIncremented.isGreaterThan(upperRangeLimit) ||
+        startTimeIncremented.isGreaterThan(upperRangeLimit)
       ) {
-        let originalEndTimeMinutes = originalEndTime.getAsMinutes();
-        let upperLimitAsMinutes = upperRangeLimitEx.getAsMinutes();
-        //minus one because upperLimit is not included
-        diffMinutes = Math.abs(
-          upperLimitAsMinutes - originalEndTimeMinutes - 1
-        );
+        if (
+          overflowBehavior === ChrTimeRange36Hours.OverflowBehavior.StopAtLimit
+        ) {
+          let originalEndTimeMinutes = originalEndTime.getAsMinutes();
+          let upperLimitAsMinutes = upperRangeLimit.getAsMinutes();
+          //minus one because upperLimit is not included
+          diffMinutes = Math.abs(
+            upperLimitAsMinutes - originalEndTimeMinutes - 1
+          );
 
-        newRange = newRange.setStartTime(
-          originalStartTime.addMinutes(diffMinutes, true)
-        );
-        newRange = newRange.setEndTime(
-          ChrTimeExtended.createFromMinutes(upperLimitAsMinutes - 1, true)
-        );
-      } else {
-        newRange = newRange.setStartTime(startTimeIncremented);
-        newRange = newRange.setEndTime(endTimeIncremented);
+          newRange = newRange.setStartTime(
+            originalStartTime.addMinutes(diffMinutes, true)
+          );
+          newRange = newRange.setEndTime(
+            ChrTimeExtended.createFromMinutes(upperLimitAsMinutes - 1, true)
+          );
+        } else if (
+          overflowBehavior === ChrTimeRange36Hours.OverflowBehavior.Overflow
+        ) {
+          newRange = newRange.setStartTime(startTimeIncremented);
+          newRange = newRange.setEndTime(endTimeIncremented);
+        }
       }
     } else {
       // decrement is hard limited to lower Limit (zero)
@@ -182,10 +196,6 @@ export class ChrTimeRange36Hours {
         originalEndTime.addMinutes(-adaptedMinutesToChange, true)
       );
     }
-
-    // if (!newRange.isValid) {
-    //   newRange = this.clone();
-    // }
 
     return newRange;
   }
@@ -251,6 +261,26 @@ export class ChrTimeRange36Hours {
     }
 
     return timeRange;
+  }
+}
+
+export namespace ChrTimeRange36Hours {
+  /**
+   * Different possile behaviors of the time range when addMinutes exceeds the valid limits
+   */
+  export enum OverflowBehavior {
+    /**
+     * Don't change the range on overflow
+     */
+    Unchanged,
+    /**
+     * Go until the limit and stop
+     */
+    StopAtLimit,
+    /**
+     * just add the time even if the range becomes invalid
+     */
+    Overflow,
   }
 }
 

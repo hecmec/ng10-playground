@@ -44,6 +44,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 
 /**
  * This is a custom form control
+ *
  * Two way databinding on value property (value/valueChange)
  *    https://blog.angulartraining.com/tutorial-create-your-own-two-way-data-binding-in-angular-46487650ea82
  * Implements interface ControlValueAccessor
@@ -77,7 +78,13 @@ export class TimeFieldComponent
   // needed to see errors even without user interaction
   matcher = new MyErrorStateMatcher();
 
+  /**
+   * Is this field enabled or not
+   */
   @Input() public isDisabled: boolean = false;
+  /**
+   * A material form field label to set
+   */
   @Input() public fieldLabel: string;
 
   /**

@@ -164,12 +164,18 @@ export class TimeRangeSimpleComponent
 
   increment() {
     // console.debug('TimeRangeCmp.increment');
-    this.timeRange = this.timeRange.addIntervalInMinutes(this.interval, true);
+    this.timeRange = this.timeRange.addIntervalInMinutes(
+      this.interval,
+      ChrTimeRange36Hours.OverflowBehavior.StopAtLimit
+    );
   }
 
   decrement() {
     // console.debug('TimeRangeCmp.decrement');
-    this.timeRange = this.timeRange.addIntervalInMinutes(-this.interval, true);
+    this.timeRange = this.timeRange.addIntervalInMinutes(
+      -this.interval,
+      ChrTimeRange36Hours.OverflowBehavior.StopAtLimit
+    );
   }
 
   startTimeChanged() {

@@ -8,6 +8,7 @@ describe('ChrTimeRange36Hours', () => {
     '10:00',
     '12:00'
   );
+  const blockOnLimit = true;
 
   // beforeEach(() => { chrTime = new chrTime(); });
 
@@ -162,13 +163,16 @@ describe('ChrTimeRange36Hours', () => {
       expect(chrTimeRangeAdded.isValid).toBeTruthy();
     });
 
-    it('should not change the range if the addInterval exits the valid limit', () => {
+    it('should not change the range if the addInterval exceeds the valid limit', () => {
       const chrTimeRange = ChrTimeRange36Hours.createFromDateTimeStrings(
         '2020-10-20',
         '12:00',
         '35:30'
       );
-      const chrTimeRangeAdded = chrTimeRange.addIntervalInMinutes(60);
+      const chrTimeRangeAdded = chrTimeRange.addIntervalInMinutes(
+        60,
+        ChrTimeRange36Hours.OverflowBehavior.Unchanged
+      );
       expect(chrTimeRangeAdded.equals(chrTimeRange)).toBeTruthy();
     });
 
@@ -178,10 +182,10 @@ describe('ChrTimeRange36Hours', () => {
         '10:00',
         '35:55'
       );
-      const blockOnLimit = true;
+
       const chrTimeRangeAdded = chrTimeRange.addIntervalInMinutes(
         15,
-        blockOnLimit
+        ChrTimeRange36Hours.OverflowBehavior.StopAtLimit
       );
       expect(chrTimeRangeAdded.startTime.hours).toEqual(10);
       expect(chrTimeRangeAdded.startTime.minutes).toEqual(4);
@@ -198,11 +202,7 @@ describe('ChrTimeRange36Hours', () => {
         '00:10',
         '24:05'
       );
-      const blockOnLimit = true;
-      const chrTimeRangeAdded = chrTimeRange.addIntervalInMinutes(
-        -15,
-        blockOnLimit
-      );
+      const chrTimeRangeAdded = chrTimeRange.addIntervalInMinutes(-15);
       expect(chrTimeRangeAdded.startTime.hours).toEqual(0);
       expect(chrTimeRangeAdded.startTime.minutes).toEqual(0);
       // we can only decrement by 10

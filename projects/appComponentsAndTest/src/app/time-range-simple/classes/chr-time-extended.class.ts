@@ -3,23 +3,26 @@ import { Times } from '../../times';
 import { ChrTime, IChrTime } from './chr-time.class';
 import { timestamp } from 'rxjs/operators';
 
-// excluded upper limit
+// upper limit
 const defaultMaxHoursNextDay = 12;
+const defaultMinHoursLimit = 0;
 
 /**
+ * Extended Time object (should be immutable)
  * Its like time but allows to work with up to 36 hours
+ * Valid Range is [j:00h00 - j+1:12:00]
  * In case of exceeding hours, the hours are reset minus 24h and the isNextDay flag is set.
  */
 export class ChrTimeExtended extends ChrTime {
-  private readonly _maxHoursNextDayExcluded = defaultMaxHoursNextDay;
+  private readonly _maxHoursNextDay = defaultMaxHoursNextDay;
   private _isNextDay: boolean;
-  // upper limit (excluded) of 36 jours expressed in minutes
-  // time is defined in [0, _upperLimitExcluded[
-  private _upperLimitExcludedMinutes =
-    Times.minutesInDay + this._maxHoursNextDayExcluded * Times.minutesInHour;
+  // upper limit (included) of 36 jours expressed in minutes
+  // time is defined in [0, _upperLimitMinutes]
+  private _upperLimitMinutes =
+    Times.minutesInDay + this._maxHoursNextDay * Times.minutesInHour;
 
   public get UpperLimitMinutes(): number {
-    return this._upperLimitExcludedMinutes;
+    return this._upperLimitMinutes;
   }
 
   /**
@@ -30,16 +33,10 @@ export class ChrTimeExtended extends ChrTime {
   }
 
   /**
-   * Todo: this should be immutable ::
-   */
-  // public set isNextDay(val:boolean) {
-  //   this._isNextDay = val;
-  // }
-  /**
    * Tests if the time is exceeding (greater than or equal to the upperLimit)
    */
   public get isTimeExceeding(): boolean {
-    return this.getAsMinutes() >= this._upperLimitExcludedMinutes;
+    return this.getAsMinutes() > this._upperLimitMinutes;
   }
 
   /**
@@ -63,8 +60,8 @@ export class ChrTimeExtended extends ChrTime {
   protected constructor(hours: number, minutes: number, isNextDay?: boolean) {
     super(hours, minutes);
 
-    this._upperLimitExcludedMinutes =
-      Times.minutesInDay + this._maxHoursNextDayExcluded * Times.minutesInHour;
+    this._upperLimitMinutes =
+      Times.minutesInDay + this._maxHoursNextDay * Times.minutesInHour;
 
     // force to boolean
     this._isNextDay = !!isNextDay;
@@ -81,6 +78,7 @@ export class ChrTimeExtended extends ChrTime {
    * Returns a new Time with more minutes or null on error
    * Use negative minutes to decrement
    * You cannot have negative minutes
+   * this returns an extended time (immutable)
    * @param minutes
    * @returns a new copy
    */
@@ -95,7 +93,7 @@ export class ChrTimeExtended extends ChrTime {
   }
 
   /**
-   * Sets the nextDay property.
+   * Sets the nextDay property on a new copy of this object and returns it
    * If this results in an invalid time object we return a clone of the original object
    * @param nextDay
    */
