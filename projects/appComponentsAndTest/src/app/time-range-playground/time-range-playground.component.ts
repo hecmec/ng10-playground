@@ -11,15 +11,6 @@ import { ChrTimeExtended } from '../time-range-simple/classes/chr-time-extended.
   styleUrls: ['./time-range-playground.component.scss'],
 })
 export class TimeRangePlaygroundComponent implements OnInit {
-  public timeTestStr: string;
-  public timeTestStr1: string;
-  public timeTestStr2: string;
-  public timeTestObj: ChrTimeExtended = ChrTimeExtended.createFromHoursMinutes(
-    11,
-    20
-  );
-  // this.timeTestObj.toHoursMinutesString()
-
   public defaultTimeRange: ChrTimeRange36Hours = ChrTimeRange36Hours.createFromDateTimeStrings(
     '2020-10-20',
     '09:00',
@@ -31,8 +22,4 @@ export class TimeRangePlaygroundComponent implements OnInit {
   name = new FormControl('');
 
   ngOnInit(): void {}
-
-  setTestTimeObj(h: number, m:number) {
-    this.timeTestObj = ChrTimeExtended.createFromHoursMinutes(h, m, true);
-  }
 }

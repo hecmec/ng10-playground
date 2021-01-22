@@ -1,0 +1,72 @@
+<h2>time-field-playground</h2>
+
+<h3>ChrTimeField component</h3>
+<div>
+  <time-field [fieldLabel]="'test me label'" [(timeValue)]="timeTestObj"></time-field> :
+  {{ timeTestObj?.toHoursMinutesString() }} : j+1: {{ timeTestObj?.isNextDay }} __
+  <button mat-flat-button color="warn" (click)="setTestTimeObj(22, 40)">make j</button>&nbsp;
+  <button mat-flat-button color="warn" (click)="setTestTimeObj(33, 40)">make j+1</button>&nbsp;
+  <button mat-flat-button color="warn" (click)="setTestTimeObj(40, 33)">make Invalid</button>
+  <!-- <mat-slide-toggle [(ngModel)]="timeTestObj.isNextDay"></mat-slide-toggle> -->
+  <br />
+  isvalid: {{ timeTestObj?.isValid }}
+</div>
+<div>
+  <ul>
+    <li>takes any number with or without separator that is parsable as a valid time</li>
+    <li>bound value is a time object</li>
+    <li>empty yields null value</li>
+  </ul>
+</div>
+
+<br />
+<hr />
+<br />
+<h3>ChrTimeOnly directive on html text input</h3>
+<div><input chrTimeOnly type="text" [(ngModel)]="timeTestStr2" />{{ timeTestStr2 }}</div>
+
+<!-- <br />
+<hr /><br />
+<h3>chrTimeFormatter directive on html text input </h3>
+<div>
+  <input chrTimeFormatter type="text" value= [(ngModel)]="timeTestStr1"/>{{timeTestStr1}}
+
+</div> -->
+
+<br />
+<hr />
+<br />
+<h3>chrTimeFormatter directive on mat-input with</h3>
+<div>
+  <mat-form-field class="example-form-field">
+    <mat-label>Clearable time input</mat-label>
+    <input matInput chrTimeFormatter type="text" [(ngModel)]="timeTestStr" />
+    <button mat-button *ngIf="timeTestStr" matSuffix mat-icon-button aria-label="Clear" (click)="timeTest1 = '00:00'">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  : parsed time is {{ timeTestStr }}
+</div>
+
+<br />
+<hr />
+<br />
+<h3>Html text input with pattern</h3>
+<div>
+  <input type="text" pattern="[0-9]*" maxlength="5" name="country_code" title="Three digits country code" />
+  this will only test on form submission
+</div>
+
+<!-- <br /><hr /><br />
+<h3>simple html time input: </h3>
+<div>
+  <input type="time" />
+</div> -->
+
+<!-- <br />
+<hr /><br />
+<div>
+  <h3>material html time input: </h3>
+
+  <input type="time" matInput />
+</div> -->

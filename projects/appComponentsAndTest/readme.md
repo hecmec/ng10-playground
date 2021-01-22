@@ -12,7 +12,7 @@ this doc is for appComponentsAndTest
 
 ### create new component
 
-    ng g c MaterialTestComponent --project=appComponentsAndTest --flat=false
+    ng g c MaterialTest --project=appComponentsAndTest --flat=false
 
 ## Material
 

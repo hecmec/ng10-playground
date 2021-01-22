@@ -24,6 +24,7 @@ import { ChrTimeExtended } from '../time-range-simple/classes/chr-time-extended.
 import { TimeRangeSimpleComponent } from '../time-range-simple/time-range-simple.component';
 import { timeValidator } from '../time-range-simple/validators/timeValidator';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { pairwise, startWith } from 'rxjs/operators';
 
 /**
  * This is a custom form control to capture time input.
@@ -91,23 +92,10 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
     this.onTouched();
     // set field directly
     if (this._timeValue) {
-      this._timeText = this._timeValue.toHoursMinutesIn24Range();
+      this.timeFieldFormControl.setValue(this._timeValue.toHoursMinutesIn24Range());
     }
   }
   @Output() timeValueChange = new EventEmitter<ChrTimeExtended>();
-
-  /**
-   * This is time text for communication with the text field
-   */
-  private _timeText: string;
-  get timeText(): string {
-    // console.debug('TimeFieldComponent.timeText get', this._timeText);
-    return this._timeText;
-  }
-  set timeText(val: string) {
-    // console.debug('TimeFieldComponent.timeText set', this._timeText);
-    this._timeText = val;
-  }
 
   public isGreaterThan36 = false;
 
@@ -116,7 +104,16 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
   // timeField = new FormControl('', timeValidator());
   timeFieldFormControl = new FormControl('', []);
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // form field changes
+    this.timeFieldFormControl.valueChanges
+      .pipe(startWith(null), pairwise())
+      .subscribe(([prev, next]: [string, string]) => {
+        if (prev !== next) {
+          //this._timeText = next;
+        }
+      });
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes) {
@@ -133,9 +130,10 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
   onBlur() {
     let newTime = null;
     const isNextDay = !!this.timeValue?.isNextDay;
+    const currentText = this.timeFieldFormControl.value;
 
-    if (this._timeText) {
-      let parsedTime = ChrTimeExtended.createFromString24Range(this._timeText, isNextDay);
+    if (currentText) {
+      let parsedTime = ChrTimeExtended.createFromString24Range(currentText, isNextDay);
       if (parsedTime?.isValid) {
         newTime = parsedTime;
       }

@@ -35,6 +35,7 @@ import { ChrTimeOnlyDirective } from './time-range-simple/directives/chr-timeonl
 
 import { TimeRangePlaygroundComponent } from './time-range-playground/time-range-playground.component';
 import { TimeFieldComponent } from './time-field-component/time-field.component';
+import { TimeFieldPlaygroundComponent } from './time-field-playground/time-field-playground.component';
 
 const myProviders = [];
 
@@ -53,6 +54,7 @@ const myProviders = [];
     ChrTimeOnlyDirective,
     TimeRangePlaygroundComponent,
     TimeFieldComponent,
+    TimeFieldPlaygroundComponent,
   ],
   imports: [
     BrowserModule,
