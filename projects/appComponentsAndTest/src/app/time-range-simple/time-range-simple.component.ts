@@ -15,6 +15,7 @@ import { Subject } from 'rxjs';
 import { ChrTimeRange36Hours } from './classes/chr-time-range-36hours.class';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { ChrTimeExtended } from './classes/chr-time-extended.class';
+import { pairwise, startWith } from 'rxjs/operators';
 
 /**
  * This is a custom form control
@@ -40,7 +41,7 @@ import { ChrTimeExtended } from './classes/chr-time-extended.class';
     },
   ],
 })
-export class TimeRangeSimpleComponent implements OnChanges, ControlValueAccessor {
+export class TimeRangeSimpleComponent implements OnInit, OnChanges, ControlValueAccessor {
   // Both onChange and onTouched are functions used for the ControlValueAccessor Interface
   onChange: any = () => {};
   onTouched: any = () => {};
@@ -67,13 +68,25 @@ export class TimeRangeSimpleComponent implements OnChanges, ControlValueAccessor
    * Two way databinding for timeRange (property and propertyChange EventEmitter)
    */
   _timeRange: ChrTimeRange36Hours;
+  // _isNextDay: boolean;
+  // _startTime: ChrTimeExtended;
+  // _endTime: ChrTimeExtended;
 
   @Input('timeRange')
   public get timeRange(): ChrTimeRange36Hours {
-    return this._timeRange;
+    let result = this._timeRange;
+    // result = result.setStartTime(this.startTime);
+    // result = result.setEndTime(this.endTime);
+    // result = result.setIsNextDay(this.isNextDay);
+    return result;
   }
   public set timeRange(val: ChrTimeRange36Hours) {
-    this._timeRange = val;
+    if (val) {
+      this._timeRange = val;
+      // this._startTime = this._timeRange.startTime;
+      // this._endTime = this._timeRange.endTime;
+      // this._isNextDay = this._timeRange.isNextDay;
+    }
     this.timeRangeChange.emit(this._timeRange);
     this.onChange(val);
     this.onTouched();
@@ -87,29 +100,28 @@ export class TimeRangeSimpleComponent implements OnChanges, ControlValueAccessor
   /**
    * StartTime of this time range with getter and setter
    */
-  //_startTime: ChrTimeExtended = null;
   public get startTime(): ChrTimeExtended {
-    // console.debug('TimeRangeCmp.startTime get', this.timeRange?.startTime?.toHoursMinutesString());
-    return this.timeRange?.startTime;
+    // console.debug('TimeRangeCmp.startTime get', this._startTime?.toHoursMinutesString());
+    //return this._startTime;
+    return this.timeRange.startTime;
   }
-  public set startTime(v: ChrTimeExtended) {
-    if (this.timeRange) {
-      this.timeRange = this.timeRange.setStartTime(v);
-    }
+  public set startTime(val: ChrTimeExtended) {
+    // this._startTime = val;
+    this.timeRange = this.timeRange.setStartTime(val);
   }
 
   /**
    * EndTime of this time range with getter and setter
    */
-  //_endTime: ChrTimeExtended = null;
   public get endTime(): ChrTimeExtended {
-    // console.debug('TimeRangeCmp.endTime get', this.timeRange?.endTime?.toHoursMinutesString());
-    return this.timeRange?.endTime;
+    // console.debug('TimeRangeCmp.endTime get', this._endTime?.toHoursMinutesString());
+    //return this._endTime;
+    return this.timeRange.endTime;
   }
-  public set endTime(v: ChrTimeExtended) {
-    if (this.timeRange) {
-      this.timeRange = this.timeRange.setEndTime(v);
-    }
+
+  public set endTime(val: ChrTimeExtended) {
+    // this._endTime = val;
+    this.timeRange = this.timeRange.setEndTime(val);
   }
 
   /**
@@ -117,29 +129,37 @@ export class TimeRangeSimpleComponent implements OnChanges, ControlValueAccessor
    */
   public get isNextDay(): boolean {
     return this.timeRange.isNextDay;
+    // return this._isNextDay;
   }
-  public set isNextDay(v: boolean) {
-    this.timeRange = this.timeRange.setIsNextDay(v);
+  public set isNextDay(val: boolean) {
+    // this._isNextDay = v;
+    this.timeRange = this.timeRange.setIsNextDay(val);
   }
 
   constructor() {}
 
-  // ngOnInit(): void {}
-  startTimeField = new FormControl('', [Validators.required]);
-  endTimeField = new FormControl('', [Validators.required]);
+  ngOnInit(): void {
+    // this.startTimeField.valueChanges
+    //   .pipe(startWith(null), pairwise())
+    //   .subscribe(([prev, next]: [ChrTimeExtended, ChrTimeExtended]) => {
+    //     this.startTime = next;
+    //     if (prev !== next) {
+    //       console.debug('TimeFieldComponent.valueChanges:', next);
+    //       //this.validateTime();
+    //     }
+    //   });
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes) {
       if (changes.interval) {
         // console.debug('TimeRangeCmp.ngOnChanges: interval', changes);
         this.interval = changes.interval.currentValue;
-        // You can also use nextDay.previousValue and
-        // nextDay.firstChange for comparing old and new values
       }
       if (changes.timeRange) {
         const prev = changes.timeRange.previousValue as ChrTimeExtended;
         const curr = changes.timeRange.currentValue as ChrTimeExtended;
-        console.debug(`TimeRangeCmp.ngOnChanges: prev: ${prev}; curr: ${curr} `);
+        // console.debug(`TimeRangeCmp.ngOnChanges: prev: ${prev}; curr: ${curr} `);
         if (!prev?.equals(curr)) {
           console.debug(`TimeRangeCmp.ngOnChanges: RANGE CHANGED - prev: ${prev}; curr: ${curr} `);
         }
@@ -170,8 +190,8 @@ export class TimeRangeSimpleComponent implements OnChanges, ControlValueAccessor
     );
   }
 
-  startTimeChanged() {
-    // console.debug('TimeRangeCmp.startTimeChanged');
+  startTimeChanged(evt: EventEmitter<ChrTimeExtended>) {
+    console.debug('TimeRangeCmp.startTimeChanged', evt);
   }
 
   endTimeChanged() {
@@ -179,10 +199,10 @@ export class TimeRangeSimpleComponent implements OnChanges, ControlValueAccessor
   }
 
   /**
-   *
+   * valideates that start time is before end time
    */
-  isStartGreaterThanEnd() {
-    return this.timeRange.isStartGreaterThanEnd();
+  isStartNotSmallerThanEnd() {
+    return !this.timeRange.isStartSmallerThanEnd();
   }
   /**
    * Clean up
@@ -203,7 +223,7 @@ export class TimeRangeSimpleComponent implements OnChanges, ControlValueAccessor
   writeValue(obj: any): void {
     console.debug('TimeRangeCmp.writeValue', obj);
     if (obj) {
-      this.timeRange = obj;
+      //this.timeRange = obj;
       // this.startTime = this.timeRange.startTime;
       // this.endTime = this.timeRange.endTime;
     }

@@ -6,12 +6,11 @@
     matInput
     chrTimeOnly
     type="text"
-    [formControl]="timeFieldFormControl"
     class="form-control"
     placeholder="--:--"
+    [formControl]="timeFieldFormControl"
     (blur)="onBlur()"
     (focus)="onFocus()"
-    (input)="timeInput($event)"
     [errorStateMatcher]="matcher"
   />
   <mat-hint align="end" *ngIf="timeValue?.isNextDay">j+1</mat-hint>

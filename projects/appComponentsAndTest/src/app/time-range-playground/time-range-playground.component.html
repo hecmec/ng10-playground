@@ -2,19 +2,20 @@
 
 <h3>Simple Time Range</h3>
 <div>
-  <time-range-simple [(timeRange)]="defaultTimeRange"></time-range-simple>
-  <!-- <mat-form-field class="example-form-field">
-    <mat-label>Time Range Form binding</mat-label>
-    <app-time-range-simple timeRange="defaultTimeRange"></app-time-range-simple>
-  </mat-form-field> -->
+  <time-range-simple [(timeRange)]="currentTimeRange"></time-range-simple>
+  <br />
+  <button mat-flat-button color="warn" (click)="setRange('2020-10-20', '0:30', '10:00')">early</button>&nbsp;
+  <button mat-flat-button color="warn" (click)="setRange('2020-10-20', '10:30', '14:00')">normal</button>&nbsp;
+  <button mat-flat-button color="warn" (click)="setRange('2020-10-20', '22:30', '35:30')">late</button>&nbsp;
+  <br />
 
-  parsed date is {{ defaultTimeRange.referenceDate.toLocalDateString() }}<br />
+  parsed date is {{ currentTimeRange.referenceDate.toLocalDateString() }}<br />
   parsed startTime is
-  {{ defaultTimeRange.startTime.toHoursMinutesIn24Range() }}, isNextDay: {{ defaultTimeRange.startTime.isNextDay }},
-  isValid: {{ defaultTimeRange.startTime.isValid }} <br />
-  parsed ..endTime is {{ defaultTimeRange.endTime.toHoursMinutesIn24Range() }}, isNextDay:
-  {{ defaultTimeRange.endTime.isNextDay }}, isValid: {{ defaultTimeRange.endTime.isValid }} <br />
-  TimeRange validity: <b>{{ defaultTimeRange.isValid }}</b>
+  {{ currentTimeRange.startTime.toHoursMinutesIn24Range() }}, isNextDay: {{ currentTimeRange.startTime.isNextDay }},
+  isValid: {{ currentTimeRange.startTime.isValid }} <br />
+  parsed ..endTime is {{ currentTimeRange.endTime.toHoursMinutesIn24Range() }}, isNextDay:
+  {{ currentTimeRange.endTime.isNextDay }}, isValid: {{ currentTimeRange.endTime.isValid }} <br />
+  TimeRange validity: <b>{{ currentTimeRange.isValid }}</b>
 </div>
 
 <br />

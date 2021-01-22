@@ -97,8 +97,6 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
   }
   @Output() timeValueChange = new EventEmitter<ChrTimeExtended>();
 
-  public isGreaterThan36 = false;
-
   constructor() {}
 
   // timeField = new FormControl('', timeValidator());
@@ -110,7 +108,8 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
       .pipe(startWith(null), pairwise())
       .subscribe(([prev, next]: [string, string]) => {
         if (prev !== next) {
-          //this._timeText = next;
+          console.debug('TimeFieldComponent.valueChanges:', next);
+          //this.validateTime();
         }
       });
   }
@@ -120,7 +119,7 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
       if (changes.timeValue) {
         // console.debug('TimeFieldComponent.ngOnChanges: timeValue', changes.timeValue);
       }
-      this.validateTime();
+      //this.validateTime();
     }
   }
 
@@ -131,6 +130,7 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
     let newTime = null;
     const isNextDay = !!this.timeValue?.isNextDay;
     const currentText = this.timeFieldFormControl.value;
+    console.debug('TimeFieldComponent.onBlur', currentText);
 
     if (currentText) {
       let parsedTime = ChrTimeExtended.createFromString24Range(currentText, isNextDay);
@@ -143,25 +143,20 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
     this.validateTime();
   }
 
-  onFocus() {}
-
   /**
-   * event handler of text field input event
+   * Nothing to do on focus
    */
-  timeInput(evt: any) {
-    console.debug('TimeFieldComponent.timeInput', evt.target.value);
-    this.validateTime();
-  }
+  onFocus() {}
 
   /**
    * Validates current Time and sets error Message on field if invalid
    * @param currentTime
    */
-  validateTime() {
+  private validateTime() {
     // console.debug('TimeFieldComponent validateTime');
 
     if (this.timeValue?.isTimeExceeding) {
-      console.debug('TimeFieldComponent.setting error greaterThan36');
+      // console.debug('TimeFieldComponent.setting error greaterThan36');
       // this.matcher = new MyErrorStateMatcher();
       //this.timeFieldFormControl.setErrors({ greaterThan36: true });
       setTimeout(() => this.timeFieldFormControl.setErrors({ greaterThan36: true }));
@@ -170,7 +165,7 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
     }
   }
 
-  touchInputField() {
+  private touchInputField() {
     console.debug('TimeFieldComponent touchInputField');
 
     // markAsTouched does not work but should

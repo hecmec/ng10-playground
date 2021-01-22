@@ -45,11 +45,19 @@ export class ChrTimeRange36Hours {
   public get endTime(): ChrTimeExtended {
     return this._endTime;
   }
-  // public set endTime(v: ChrTimeExtended) {
-  //   this._endTime = v;
-  // }
-  public setEndTime(val: ChrTimeExtended) {
-    this._endTime = val;
+
+  /**
+   * If you set the end time and it is equal or smaller than start, then set it on next day
+   * @param newEndTime
+   */
+  public setEndTime(newEndTime: ChrTimeExtended) {
+    if (this.startTime && newEndTime) {
+      if (newEndTime.isSmallerThanOrEquals(this.startTime)) {
+        newEndTime = newEndTime.setIsNextDay(true, true);
+      }
+    }
+    this._endTime = newEndTime;
+
     return this.clone();
   }
 
@@ -59,20 +67,24 @@ export class ChrTimeRange36Hours {
   }
 
   /**
-   * This must be able to fail.
-   * If it fails we reset startTime to original
+   * Set IsNext Day.
+   * if val is true, then we set both time.isNextDay to true;
+   * if val is false, then
+   *  1) if both time are on next day -> set them both to false
+   *  2) if startTime is today, don't change endTime
    */
-  // public set isNextDay(val: boolean) {
-  //   console.debug('ChrTimeRange36Hours.isNextDay set', val);
-  //   // TODO:
-  //   this.endTime = this.endTime.setIsNextDay(val, true);
-  //   this.startTime = this.startTime.setIsNextDay(val, true);
-  // }
   public setIsNextDay(val: boolean) {
     let newRange = this.clone();
+    if (val) {
+      const newStartTime = this.startTime.setIsNextDay(true, true);
+      const newEndTime = this.endTime.setIsNextDay(true, true);
+      newRange = newRange.setStartTime(newStartTime).setEndTime(newEndTime);
+    } else if (this.startTime.isNextDay && this.endTime.isNextDay) {
+      const newStartTime = this.startTime.setIsNextDay(false, true);
+      const newEndTime = this.endTime.setIsNextDay(false, true);
+      newRange = newRange.setStartTime(newStartTime).setEndTime(newEndTime);
+    }
 
-    newRange.setStartTime(this.startTime.setIsNextDay(val, true));
-    newRange.setEndTime(this.endTime.setIsNextDay(val, true));
     return newRange;
   }
 
@@ -107,19 +119,20 @@ export class ChrTimeRange36Hours {
    * @param endTime
    */
   private constructor(referenceDate: ChrDate, startTime: ChrTimeExtended, endTime: ChrTimeExtended) {
-    this.referenceDate = referenceDate.clone();
-    this._startTime = startTime.clone() as ChrTimeExtended;
-    this._endTime = endTime.clone() as ChrTimeExtended;
+    this.referenceDate = referenceDate;
+    this._startTime = startTime;
+    this._endTime = endTime;
   }
 
   /**
    * Checks for Error: Start is greater than end
-   * This will return a true error only if there is a startTime and and endTime and the first is greater than the last.
+   * This will return false if
+   * there is a startTime and an endTime and the first is not smaller than the last.
    */
-  public isStartGreaterThanEnd() {
-    let result = false;
+  public isStartSmallerThanEnd() {
+    let result = true;
     if (this.startTime && this.endTime) {
-      result = !this.startTime.isSmallerThanOrEquals(this.endTime);
+      result = this.startTime.isSmallerThan(this.endTime);
     }
     return result;
   }
@@ -203,10 +216,10 @@ export class ChrTimeRange36Hours {
           let originalEndTimeMinutes = originalEndTime.getAsMinutes();
           let upperLimitAsMinutes = upperRangeLimit.getAsMinutes();
           //minus one because upperLimit is not included
-          diffMinutes = Math.abs(upperLimitAsMinutes - originalEndTimeMinutes - 1);
+          diffMinutes = Math.abs(upperLimitAsMinutes - originalEndTimeMinutes);
 
           newRange = newRange.setStartTime(originalStartTime.addMinutes(diffMinutes, true));
-          newRange = newRange.setEndTime(ChrTimeExtended.createFromMinutes(upperLimitAsMinutes - 1, true));
+          newRange = newRange.setEndTime(ChrTimeExtended.createFromMinutes(upperLimitAsMinutes, true));
         } else if (overflowBehavior === ChrTimeRange36Hours.OverflowBehavior.Overflow) {
           newRange = newRange.setStartTime(startTimeIncremented);
           newRange = newRange.setEndTime(endTimeIncremented);

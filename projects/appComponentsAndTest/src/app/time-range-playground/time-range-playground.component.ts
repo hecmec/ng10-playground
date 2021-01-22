@@ -11,7 +11,7 @@ import { ChrTimeExtended } from '../time-range-simple/classes/chr-time-extended.
   styleUrls: ['./time-range-playground.component.scss'],
 })
 export class TimeRangePlaygroundComponent implements OnInit {
-  public defaultTimeRange: ChrTimeRange36Hours = ChrTimeRange36Hours.createFromDateTimeStrings(
+  public currentTimeRange: ChrTimeRange36Hours = ChrTimeRange36Hours.createFromDateTimeStrings(
     '2020-10-20',
     '09:00',
     '10:00'
@@ -22,4 +22,8 @@ export class TimeRangePlaygroundComponent implements OnInit {
   name = new FormControl('');
 
   ngOnInit(): void {}
+
+  setRange(dateString: string, startTimeString: string, endTimeString: string) {
+    this.currentTimeRange = ChrTimeRange36Hours.createFromDateTimeStrings(dateString, startTimeString, endTimeString);
+  }
 }
