@@ -13,12 +13,7 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ChrTimeRange36Hours } from './classes/chr-time-range-36hours.class';
-import {
-  ControlValueAccessor,
-  FormControl,
-  NG_VALUE_ACCESSOR,
-  Validators,
-} from '@angular/forms';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { ChrTimeExtended } from './classes/chr-time-extended.class';
 
 /**
@@ -45,8 +40,7 @@ import { ChrTimeExtended } from './classes/chr-time-extended.class';
     },
   ],
 })
-export class TimeRangeSimpleComponent
-  implements OnChanges, ControlValueAccessor {
+export class TimeRangeSimpleComponent implements OnChanges, ControlValueAccessor {
   // Both onChange and onTouched are functions used for the ControlValueAccessor Interface
   onChange: any = () => {};
   onTouched: any = () => {};
@@ -95,10 +89,7 @@ export class TimeRangeSimpleComponent
    */
   //_startTime: ChrTimeExtended = null;
   public get startTime(): ChrTimeExtended {
-    console.debug(
-      'TimeRangeCmp.startTime get',
-      this.timeRange?.startTime?.toHoursMinutesString()
-    );
+    // console.debug('TimeRangeCmp.startTime get', this.timeRange?.startTime?.toHoursMinutesString());
     return this.timeRange?.startTime;
   }
   public set startTime(v: ChrTimeExtended) {
@@ -112,10 +103,7 @@ export class TimeRangeSimpleComponent
    */
   //_endTime: ChrTimeExtended = null;
   public get endTime(): ChrTimeExtended {
-    console.debug(
-      'TimeRangeCmp.endTime get',
-      this.timeRange?.endTime?.toHoursMinutesString()
-    );
+    // console.debug('TimeRangeCmp.endTime get', this.timeRange?.endTime?.toHoursMinutesString());
     return this.timeRange?.endTime;
   }
   public set endTime(v: ChrTimeExtended) {
@@ -141,16 +129,20 @@ export class TimeRangeSimpleComponent
   endTimeField = new FormControl('', [Validators.required]);
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.debug('TimeRangeCmp.ngOnChanges', changes);
     if (changes) {
       if (changes.interval) {
-        console.debug('TimeRangeCmp.ngOnChanges: interval', changes);
+        // console.debug('TimeRangeCmp.ngOnChanges: interval', changes);
         this.interval = changes.interval.currentValue;
         // You can also use nextDay.previousValue and
         // nextDay.firstChange for comparing old and new values
       }
       if (changes.timeRange) {
-        console.debug('TimeRangeCmp.ngOnChanges: timerange', changes);
+        const prev = changes.timeRange.previousValue as ChrTimeExtended;
+        const curr = changes.timeRange.currentValue as ChrTimeExtended;
+        console.debug(`TimeRangeCmp.ngOnChanges: prev: ${prev}; curr: ${curr} `);
+        if (!prev?.equals(curr)) {
+          console.debug(`TimeRangeCmp.ngOnChanges: RANGE CHANGED - prev: ${prev}; curr: ${curr} `);
+        }
       }
     }
   }

@@ -241,7 +241,7 @@ export class ChrTimeExtended extends ChrTime {
    * If the hours exteed 24 hours but stay in the under 36, then isNextDAy flag is set
    * @param hours
    * @param minutes
-    * @param isPermissive: will create a time object even if it is out of bounds like 25h (in that case it will be invalid)
+  * @param isPermissive: will create a time object even if it is out of bounds like 25h (in that case it will be invalid)
    * @param failOnMinuteOverflow: normally 10:70 will be mapped to 11:10, if you set this flag overflow will fail
 
    */

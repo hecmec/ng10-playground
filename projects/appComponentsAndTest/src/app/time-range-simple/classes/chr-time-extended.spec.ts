@@ -64,7 +64,7 @@ describe('ChrTimeExtended', () => {
       expect(chrTimeExt.isValid).toBeTrue();
     });
 
-    it('should make extended time valid for 35:59 as biggest extended time', () => {
+    it('should make extended time valid for 35:59', () => {
       chrTimeExt = ChrTimeExtended.createFromHoursMinutes(35, 59);
       expect(chrTimeExt.hours).toEqual(11);
       expect(chrTimeExt.minutes).toEqual(59);
@@ -72,15 +72,28 @@ describe('ChrTimeExtended', () => {
       expect(chrTimeExt.isValid).toBeTrue();
     });
 
-    it('should make extended time invalid for 36:00', () => {
+    it('should make extended time valid for 36:00', () => {
       chrTimeExt = ChrTimeExtended.createFromHoursMinutes(36, 0, true);
       expect(chrTimeExt.hours).toEqual(12);
       expect(chrTimeExt.minutes).toEqual(0);
       expect(chrTimeExt.isNextDay).toBeTrue();
+      expect(chrTimeExt.isValid).toBeTrue();
+    });
+
+    it('should make extended time invalid for 36:01', () => {
+      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(36, 1, true);
+      expect(chrTimeExt.hours).toEqual(12);
+      expect(chrTimeExt.minutes).toEqual(1);
+      expect(chrTimeExt.isNextDay).toBeTrue();
       expect(chrTimeExt.isValid).toBeFalse();
     });
 
-    it('should make extended time invalid if hours exceed 35 hours', () => {
+    it('should should fail to create a time object for 36:01, if permisse flag is false', () => {
+      chrTimeExt = ChrTimeExtended.createFromHoursMinutes(36, 1, false);
+      expect(chrTimeExt).toBeNull();
+    });
+
+    it('should make extended time invalid if hours exceed 36 hours', () => {
       chrTimeExt = ChrTimeExtended.createFromHoursMinutes(36, 20, true);
       expect(chrTimeExt.hours).toEqual(12);
       expect(chrTimeExt.minutes).toEqual(20);
@@ -88,7 +101,7 @@ describe('ChrTimeExtended', () => {
       expect(chrTimeExt.isValid).toBeFalse();
     });
 
-    it('should parse extended time  as mod 60', () => {
+    it('should parse extended time as mod 60', () => {
       chrTimeExt = ChrTimeExtended.createFromHoursMinutes(20, 60, true, false);
       expect(chrTimeExt.hours).toEqual(21);
       expect(chrTimeExt.minutes).toEqual(0);

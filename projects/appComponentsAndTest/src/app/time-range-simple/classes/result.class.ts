@@ -32,10 +32,18 @@ export class Result<T> {
     return this._value;
   }
 
+  /**
+   * Creates a success result with the given value
+   * @param value
+   */
   public static ok<U>(value?: U): Result<U> {
     return new Result<U>(true, null, value);
   }
 
+  /**
+   * Creates a failure result with the given error
+   * @param error
+   */
   public static fail<U>(error: string): Result<U> {
     return new Result<U>(false, error);
   }

@@ -26,24 +26,10 @@ import { timeValidator } from '../time-range-simple/validators/timeValidator';
 import { ErrorStateMatcher } from '@angular/material/core';
 
 /**
- * Normally errors are only shown when the user has blured out of the field.
- *   // https://material.angular.io/components/input/overview#changing-when-error-messages-are-shown
- * We wanna change this.
- * Error when invalid control is dirty, touched, or submitted.
- * */
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(
-    control: FormControl | null,
-    form: FormGroupDirective | NgForm | null
-  ): boolean {
-    const isSubmitted = form && form.submitted;
-    // return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
-    return !!(control && control.invalid);
-  }
-}
-
-/**
- * This is a custom form control
+ * This is a custom form control to capture time input.
+ * Allowed input values
+ *
+ * Binding: you bind on timeValue with an ChrTimeExtended type
  *
  * Two way databinding on value property (value/valueChange)
  *    https://blog.angulartraining.com/tutorial-create-your-own-two-way-data-binding-in-angular-46487650ea82
@@ -67,8 +53,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
     },
   ],
 })
-export class TimeFieldComponent
-  implements OnInit, OnChanges, ControlValueAccessor {
+export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccessor {
   @ViewChild('myInputRef') myInputRef: ElementRef;
 
   // Both onChange and onTouched are functions used for the ControlValueAccessor Interface
@@ -76,7 +61,7 @@ export class TimeFieldComponent
   onTouched: any = () => {};
 
   // needed to see errors even without user interaction
-  matcher = new MyErrorStateMatcher();
+  matcher = new ChrTimeFieldErrorStateMatcher();
 
   /**
    * Is this field enabled or not
@@ -150,16 +135,14 @@ export class TimeFieldComponent
     const isNextDay = !!this.timeValue?.isNextDay;
 
     if (this._timeText) {
-      let parsedTime = ChrTimeExtended.createFromString24Range(
-        this._timeText,
-        isNextDay
-      );
-      if (parsedTime && parsedTime.isValid) {
+      let parsedTime = ChrTimeExtended.createFromString24Range(this._timeText, isNextDay);
+      if (parsedTime?.isValid) {
         newTime = parsedTime;
       }
     }
 
     this.timeValue = newTime;
+    this.validateTime();
   }
 
   onFocus() {}
@@ -177,15 +160,13 @@ export class TimeFieldComponent
    * @param currentTime
    */
   validateTime() {
-    console.debug('TimeFieldComponent validateTime');
+    // console.debug('TimeFieldComponent validateTime');
 
-    if (this.timeValue.isTimeExceeding) {
+    if (this.timeValue?.isTimeExceeding) {
       console.debug('TimeFieldComponent.setting error greaterThan36');
       // this.matcher = new MyErrorStateMatcher();
       //this.timeFieldFormControl.setErrors({ greaterThan36: true });
-      setTimeout(() =>
-        this.timeFieldFormControl.setErrors({ greaterThan36: true })
-      );
+      setTimeout(() => this.timeFieldFormControl.setErrors({ greaterThan36: true }));
 
       //this.touchInputField();
     }
@@ -244,5 +225,20 @@ export class TimeFieldComponent
   setDisabledState?(isDisabled: boolean): void {
     console.debug('TimeRangeCmp.setDisabledState');
     this.isDisabled = isDisabled;
+  }
+}
+
+/**
+ * The Error State Matcher allows to customize the detection of an error state by a control
+ * By default errors are only shown on component when the user has blured out of the field, (dirty, touched, or submitted.)
+ *   // https://material.angular.io/components/input/overview#changing-when-error-messages-are-shown
+ * We wanna change this.
+ * Our error state manager
+ * */
+export class ChrTimeFieldErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    // return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+    return !!(control && control.invalid);
   }
 }
