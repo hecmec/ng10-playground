@@ -5,6 +5,8 @@ export interface IChrTime {
   hours: number;
   minutes: number;
   isNextDay?: boolean;
+  equals(otherTime: IChrTime): boolean;
+  clone(): IChrTime;
 }
 /**
  * Immutable Time object for Chronos
@@ -206,19 +208,11 @@ export class ChrTime implements IChrTime {
    * @param isPermissive: will create a time object even if it is out of bounds like 25h (in that case it will be invalid)
    * @param failOnMinuteOverflow: normally 10:70 will be mapped to 11:10, if you set this flag overflow will fail
    */
-  static createFromString(
-    timeString: string,
-    isPermissive?: boolean,
-    failOnMinuteOverflow?: boolean
-  ): ChrTime {
+  static createFromString(timeString: string, isPermissive?: boolean, failOnMinuteOverflow?: boolean): ChrTime {
     let chrTime: ChrTime = null;
     const normalizedTimeString = ChrTime._getNormalizedTimeString(timeString);
     if (normalizedTimeString) {
-      chrTime = ChrTime.createFromHHmmString(
-        normalizedTimeString,
-        isPermissive,
-        failOnMinuteOverflow
-      );
+      chrTime = ChrTime.createFromHHmmString(normalizedTimeString, isPermissive, failOnMinuteOverflow);
     }
     // Object.freeze(chrTime);
     return chrTime;
@@ -241,16 +235,10 @@ export class ChrTime implements IChrTime {
    * @param isPermissive: will create a time object even if it is out of bounds like 25h (in that case it will be invalid)
    * @param failOnMinuteOverflow: normally 10:70 will be mapped to 11:10, if you set this flag overflow will fail
    */
-  static createFromHHmmString(
-    timeString: string,
-    isPermissive?: boolean,
-    failOnMinuteOverflow?: boolean
-  ): ChrTime {
+  static createFromHHmmString(timeString: string, isPermissive?: boolean, failOnMinuteOverflow?: boolean): ChrTime {
     let chrTime: ChrTime = null;
     if (timeString) {
-      const hoursAndMinutes = ChrTime._getHoursMinutesFromHHmmString(
-        timeString
-      );
+      const hoursAndMinutes = ChrTime._getHoursMinutesFromHHmmString(timeString);
 
       chrTime = ChrTime.createFromHoursMinutes(
         hoursAndMinutes[0],
@@ -273,11 +261,7 @@ export class ChrTime implements IChrTime {
     if (Tools.hasValue(minutes)) {
       const hours = Math.floor(minutes / Times.minutesInHour);
       const minutesRest = minutes % Times.minutesInHour;
-      chrTime = ChrTime.createFromHoursMinutes(
-        hours,
-        minutesRest,
-        isPermissive
-      );
+      chrTime = ChrTime.createFromHoursMinutes(hours, minutesRest, isPermissive);
     }
 
     return chrTime;
@@ -365,10 +349,7 @@ export class ChrTime implements IChrTime {
   static _replaceSeparators(timeString: string): string {
     let resultString = '';
     if (timeString) {
-      resultString = timeString
-        .replace(',', ':')
-        .replace('.', ':')
-        .replace(';', ':');
+      resultString = timeString.replace(',', ':').replace('.', ':').replace(';', ':');
     }
     return resultString;
   }
@@ -386,9 +367,7 @@ export class ChrTime implements IChrTime {
       const separatorPart = '([.,;:])';
       // allowed minutes
       const minutesPart = '([0-5]?[0-9])?';
-      const regEx: RegExp = new RegExp(
-        `^${hoursPart}${separatorPart}${minutesPart}$`
-      );
+      const regEx: RegExp = new RegExp(`^${hoursPart}${separatorPart}${minutesPart}$`);
       isParsable = regEx.test(timeString);
     }
     return isParsable;

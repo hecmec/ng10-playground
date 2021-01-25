@@ -193,7 +193,8 @@ export class ChrTimeRange36Hours {
    * By default this will not change the range if start or endtime would become invalid.
    * If block on Limit is set, it will go to the limit and stop there
    * @param minutesToChange
-   * @param overflowBehavior: (optional) determines how to handle upper limit transgression
+   * @param overflowBehavior: (optional) determines how to handle upper limit transgression.
+   *  By default the overflow will cancel the change and the range will stay unchanged.
    */
   public addIntervalInMinutes(minutesToChange: number, overflowBehavior?: ChrTimeRange36Hours.OverflowBehavior) {
     // by default invalid time augmenation will result in no change

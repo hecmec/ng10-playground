@@ -25,6 +25,7 @@ import { TimeRangeSimpleComponent } from '../time-range-simple/time-range-simple
 import { timeValidator } from '../time-range-simple/validators/timeValidator';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { pairwise, startWith } from 'rxjs/operators';
+import { current } from 'immer';
 
 /**
  * This is a custom form control to capture time input.
@@ -83,16 +84,19 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
     // console.debug('TimeFieldComponent.time get', this._timeValue?.toHoursMinutesString());
     return this._timeValue;
   }
-  public set timeValue(val: ChrTimeExtended) {
+  public set timeValue(newValue: ChrTimeExtended) {
     // console.debug('TimeFieldComponent.timeText set',val?.toHoursMinutesString());
-
-    this._timeValue = val as ChrTimeExtended;
-    this.timeValueChange.emit(this._timeValue);
-    this.onChange(val);
-    this.onTouched();
-    // set field directly
-    if (this._timeValue) {
-      this.timeFieldFormControl.setValue(this._timeValue.toHoursMinutesIn24Range());
+    const oldValue = this._timeValue?.clone();
+    if (!oldValue?.equals(newValue)) {
+      this._timeValue = newValue;
+      this.timeValueChange.emit(this._timeValue);
+      this.onChange(newValue);
+      this.onTouched();
+      // set field directly
+      if (this._timeValue) {
+        this.timeFieldFormControl.setValue(this._timeValue.toHoursMinutesIn24Range());
+      }
+      this.validateTime();
     }
   }
   @Output() timeValueChange = new EventEmitter<ChrTimeExtended>();
@@ -118,8 +122,14 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
     if (changes) {
       if (changes.timeValue) {
         // console.debug('TimeFieldComponent.ngOnChanges: timeValue', changes.timeValue);
+        if (changes.timeValue.currentValue && changes.timeValue.previousValue) {
+        }
+        const currentTime = changes.timeValue.currentValue as ChrTimeExtended;
+        const prevTime = changes.timeValue.previousValue as ChrTimeExtended;
+        if (!currentTime.equals(prevTime)) {
+          this.validateTime();
+        }
       }
-      //this.validateTime();
     }
   }
 
@@ -154,28 +164,26 @@ export class TimeFieldComponent implements OnInit, OnChanges, ControlValueAccess
    */
   private validateTime() {
     // console.debug('TimeFieldComponent validateTime');
-
     if (this.timeValue?.isTimeExceeding) {
-      // console.debug('TimeFieldComponent.setting error greaterThan36');
-      // this.matcher = new MyErrorStateMatcher();
-      //this.timeFieldFormControl.setErrors({ greaterThan36: true });
-      setTimeout(() => this.timeFieldFormControl.setErrors({ greaterThan36: true }));
-
-      //this.touchInputField();
+      this.touchInputField();
+      setTimeout(() => this.timeFieldFormControl.setErrors({ greaterThan36: true }), 100);
+      setTimeout(() => this.myInputRef.nativeElement.focus(), 200);
     }
   }
 
   private touchInputField() {
     console.debug('TimeFieldComponent touchInputField');
 
-    // markAsTouched does not work but should
-    this.timeFieldFormControl.markAsTouched();
+    if (this.timeFieldFormControl.untouched) {
+      // markAsTouched does not work but should
+      this.timeFieldFormControl.markAsTouched();
 
-    if (this.myInputRef) {
-      setTimeout(() => {
-        this.myInputRef.nativeElement.focus();
-        this.myInputRef.nativeElement.blur();
-      });
+      if (this.myInputRef) {
+        setTimeout(() => {
+          this.myInputRef.nativeElement.focus();
+          this.myInputRef.nativeElement.blur();
+        }, 100);
+      }
     }
   }
 
