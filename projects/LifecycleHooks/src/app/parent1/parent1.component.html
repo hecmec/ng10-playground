@@ -1,0 +1,13 @@
+<h2>parent1 works!</h2>
+title: {{ title }}<br /><br />
+
+name: {{ name }}<br /><br />
+
+myDataTree.parentName = {{ myDataTree.parentObj.parentName }}<br /><br />
+
+myDataTree.childObj.childName = {{ myDataTree.parentObj.childObj.childName }}<br /><br />
+
+<hr />
+
+here comes: child1:<br />
+<app-child1 [myDataTree]="myDataTree"></app-child1>

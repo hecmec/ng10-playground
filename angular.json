@@ -685,6 +685,123 @@
           }
         }
       }
+    },
+    "LifecycleHooks": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "projects/LifecycleHooks",
+      "sourceRoot": "projects/LifecycleHooks/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/LifecycleHooks",
+            "index": "projects/LifecycleHooks/src/index.html",
+            "main": "projects/LifecycleHooks/src/main.ts",
+            "polyfills": "projects/LifecycleHooks/src/polyfills.ts",
+            "tsConfig": "projects/LifecycleHooks/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/LifecycleHooks/src/favicon.ico",
+              "projects/LifecycleHooks/src/assets"
+            ],
+            "styles": [
+              "projects/LifecycleHooks/src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/LifecycleHooks/src/environments/environment.ts",
+                  "with": "projects/LifecycleHooks/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "LifecycleHooks:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "LifecycleHooks:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "LifecycleHooks:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/LifecycleHooks/src/test.ts",
+            "polyfills": "projects/LifecycleHooks/src/polyfills.ts",
+            "tsConfig": "projects/LifecycleHooks/tsconfig.spec.json",
+            "karmaConfig": "projects/LifecycleHooks/karma.conf.js",
+            "assets": [
+              "projects/LifecycleHooks/src/favicon.ico",
+              "projects/LifecycleHooks/src/assets"
+            ],
+            "styles": [
+              "projects/LifecycleHooks/src/styles.css"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/LifecycleHooks/tsconfig.app.json",
+              "projects/LifecycleHooks/tsconfig.spec.json",
+              "projects/LifecycleHooks/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/LifecycleHooks/e2e/protractor.conf.js",
+            "devServerTarget": "LifecycleHooks:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "LifecycleHooks:serve:production"
+            }
+          }
+        }
+      }
     }
   },
   "defaultProject": "ng10-playground"

@@ -45,6 +45,12 @@
     },
     {
       "path": "./projects/aaronFrostHeroApp/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/LifecycleHooks/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/LifecycleHooks/tsconfig.spec.json"
     }
 ]
 }
