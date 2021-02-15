@@ -51,6 +51,12 @@
     },
     {
       "path": "./projects/LifecycleHooks/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/qaList/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/qaList/tsconfig.spec.json"
     }
 ]
 }
