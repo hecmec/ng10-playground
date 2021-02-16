@@ -22,7 +22,7 @@ export class QuestTableComponent implements OnInit {
   expandedElement: PeriodicElement | null;
 
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    console.debug('QuestTableComponent.ngOnInit');
   }
 }
 
