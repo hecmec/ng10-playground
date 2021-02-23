@@ -42,3 +42,31 @@ fragment itemFields on QaItem {
   asw
   lang
 }
+
+
+query {
+  qaItems(first: 3) {
+    count
+    edges {
+      node {
+        # itemFields
+        id
+        qst
+        asw
+        lang
+        #arrays
+        cats {
+          ... on Element {
+            value
+          }
+        }
+        ansAlt {
+          ... on Element {
+            value
+          }
+        }
+      }
+    }
+  }
+}
+
