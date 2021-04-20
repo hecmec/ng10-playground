@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SchwarzTemplDrivenFormComponent } from './schwarz-templ-driven-form.component';
 
@@ -6,7 +6,7 @@ xdescribe('SchwarzTemplDrivenFormComponent', () => {
   let component: SchwarzTemplDrivenFormComponent;
   let fixture: ComponentFixture<SchwarzTemplDrivenFormComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SchwarzTemplDrivenFormComponent ]
     })
