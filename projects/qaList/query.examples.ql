@@ -1,4 +1,4 @@
-#
+HomeComponent#
 {
   qaItems {  
     edges {
