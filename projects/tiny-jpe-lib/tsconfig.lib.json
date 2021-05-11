@@ -13,9 +13,11 @@
   },
   "angularCompilerOptions": {
     "skipTemplateCodegen": true,
-    "enableResourceInlining": true,
     "strictMetadataEmit": true,
-    "annotationsAs": "decorators"
+    "enableResourceInlining": true,
+    "annotationsAs": "decorators",
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
   },
   "exclude": ["src/test.ts", "**/*.spec.ts"]
 }

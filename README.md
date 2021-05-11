@@ -30,7 +30,11 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Adding Components or other elements to a project
 
+You should not have hyphens in project names.
+
     ng g d HoverChangeColor --project=appComponentsAndTest --flat=false
+
+    ng g c expression --project=appComp --flat=false --change-detection=OnPush
 
 ## Project Reactive Angular WorkShop is aaronFrost
 

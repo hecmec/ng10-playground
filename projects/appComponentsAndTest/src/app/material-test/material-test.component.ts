@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { ChrTimeExtended } from '../time-range-simple/classes/chr-time-extended.class';
 
 @Component({
@@ -9,10 +10,9 @@ import { ChrTimeExtended } from '../time-range-simple/classes/chr-time-extended.
 export class MaterialTestComponent implements OnInit {
   public title: string = 'my Title';
   public timeLabel: string = 'My Start Time';
-  public timeTestObj: ChrTimeExtended = ChrTimeExtended.createFromHoursMinutes(
-    11,
-    20
-  );
+  public timeTestObj: ChrTimeExtended = ChrTimeExtended.createFromHoursMinutes(11, 20);
+
+  dogNameField: FormControl = new FormControl('', [Validators.required]);
 
   constructor() {}
 

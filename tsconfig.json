@@ -15,6 +15,12 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "tiny-jpe-lib": [
+        "dist/tiny-jpe-lib/tiny-jpe-lib",
+        "dist/tiny-jpe-lib"
+      ]
+    }
   }
 }
