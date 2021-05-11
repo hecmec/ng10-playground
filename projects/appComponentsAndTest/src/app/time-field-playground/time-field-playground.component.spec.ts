@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TimeFieldPlaygroundComponent } from './time-field-playground.component';
 
@@ -6,7 +6,7 @@ describe('TimeFieldPlaygroundComponent', () => {
   let component: TimeFieldPlaygroundComponent;
   let fixture: ComponentFixture<TimeFieldPlaygroundComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ TimeFieldPlaygroundComponent ]
     })

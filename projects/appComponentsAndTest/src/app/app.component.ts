@@ -10,6 +10,6 @@ export class AppComponent {
 
   getCoucou() {
     console.debug('getCoucou()');
-    return 'stephane';
+    return 'coucou Ludwig: I am the app component in appComponentsAndTest';
   }
 }

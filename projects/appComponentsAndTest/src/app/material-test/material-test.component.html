@@ -12,6 +12,20 @@
 </p>
 
 <mat-divider></mat-divider>
+<br />
+<h2>TextBox Errors Errors Errors</h2>
+<p>
+  <mat-form-field appearance="standard">
+    <mat-label>Name of your dog</mat-label>
+    <input matInput placeholder="Placeholder" required [formControl]="dogNameField" />
+    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+    <mat-hint matSuffix>Hint from toto</mat-hint>
+    <mat-error *ngIf="dogNameField.invalid">you must have a dog</mat-error>
+  </mat-form-field>
+</p>
+<br />
+
+<mat-divider></mat-divider>
 <h2>Time Field</h2>
 <p>
   <time-field [(timeValue)]="timeTestObj" [fieldLabel]="timeLabel"></time-field>
@@ -33,9 +47,7 @@
     <button mat-stroked-button color="accent">Accent</button>
     <button mat-stroked-button color="warn">Warn</button>
     <button mat-stroked-button disabled>Disabled</button>
-    <a mat-stroked-button href="https://www.google.com/" target="_blank"
-      >Link</a
-    >
+    <a mat-stroked-button href="https://www.google.com/" target="_blank">Link</a>
   </div>
 </section>
 

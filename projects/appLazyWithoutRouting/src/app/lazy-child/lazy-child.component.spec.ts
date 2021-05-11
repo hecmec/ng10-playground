@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { LazyChildComponent } from './lazy-child.component';
 
@@ -6,7 +6,7 @@ xdescribe('LazyChildComponent', () => {
   let component: LazyChildComponent;
   let fixture: ComponentFixture<LazyChildComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [LazyChildComponent],
     }).compileComponents();

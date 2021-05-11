@@ -3,6 +3,110 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
+    "ng10-playground": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/ng10-playground",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.app.json",
+            "aot": true,
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["./node_modules/@angular/material/prebuilt-themes/purple-green.css", "src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "ng10-playground:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "ng10-playground:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "ng10-playground:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["./node_modules/@angular/material/prebuilt-themes/purple-green.css", "src/styles.scss"],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["tsconfig.app.json", "tsconfig.spec.json", "e2e/tsconfig.json"],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "e2e/protractor.conf.js",
+            "devServerTarget": "ng10-playground:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "ng10-playground:serve:production"
+            }
+          }
+        }
+      }
+    },
     "appSimplePage": {
       "projectType": "application",
       "schematics": {
@@ -23,13 +127,8 @@
             "polyfills": "projects/appSimplePage/src/polyfills.ts",
             "tsConfig": "projects/appSimplePage/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "projects/appSimplePage/src/favicon.ico",
-              "projects/appSimplePage/src/assets"
-            ],
-            "styles": [
-              "projects/appSimplePage/src/styles.scss"
-            ],
+            "assets": ["projects/appSimplePage/src/favicon.ico", "projects/appSimplePage/src/assets"],
+            "styles": ["projects/appSimplePage/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -43,7 +142,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -87,13 +185,8 @@
             "polyfills": "projects/appSimplePage/src/polyfills.ts",
             "tsConfig": "projects/appSimplePage/tsconfig.spec.json",
             "karmaConfig": "projects/appSimplePage/karma.conf.js",
-            "assets": [
-              "projects/appSimplePage/src/favicon.ico",
-              "projects/appSimplePage/src/assets"
-            ],
-            "styles": [
-              "projects/appSimplePage/src/styles.scss"
-            ],
+            "assets": ["projects/appSimplePage/src/favicon.ico", "projects/appSimplePage/src/assets"],
+            "styles": ["projects/appSimplePage/src/styles.scss"],
             "scripts": []
           }
         },
@@ -105,9 +198,7 @@
               "projects/appSimplePage/tsconfig.spec.json",
               "projects/appSimplePage/e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
@@ -144,13 +235,8 @@
             "polyfills": "projects/appLazyThroughRouting/src/polyfills.ts",
             "tsConfig": "projects/appLazyThroughRouting/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "projects/appLazyThroughRouting/src/favicon.ico",
-              "projects/appLazyThroughRouting/src/assets"
-            ],
-            "styles": [
-              "projects/appLazyThroughRouting/src/styles.scss"
-            ],
+            "assets": ["projects/appLazyThroughRouting/src/favicon.ico", "projects/appLazyThroughRouting/src/assets"],
+            "styles": ["projects/appLazyThroughRouting/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -164,7 +250,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -208,13 +293,8 @@
             "polyfills": "projects/appLazyThroughRouting/src/polyfills.ts",
             "tsConfig": "projects/appLazyThroughRouting/tsconfig.spec.json",
             "karmaConfig": "projects/appLazyThroughRouting/karma.conf.js",
-            "assets": [
-              "projects/appLazyThroughRouting/src/favicon.ico",
-              "projects/appLazyThroughRouting/src/assets"
-            ],
-            "styles": [
-              "projects/appLazyThroughRouting/src/styles.scss"
-            ],
+            "assets": ["projects/appLazyThroughRouting/src/favicon.ico", "projects/appLazyThroughRouting/src/assets"],
+            "styles": ["projects/appLazyThroughRouting/src/styles.scss"],
             "scripts": []
           }
         },
@@ -226,9 +306,7 @@
               "projects/appLazyThroughRouting/tsconfig.spec.json",
               "projects/appLazyThroughRouting/e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
@@ -265,13 +343,8 @@
             "polyfills": "projects/appLazyWithoutRouting/src/polyfills.ts",
             "tsConfig": "projects/appLazyWithoutRouting/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "projects/appLazyWithoutRouting/src/favicon.ico",
-              "projects/appLazyWithoutRouting/src/assets"
-            ],
-            "styles": [
-              "projects/appLazyWithoutRouting/src/styles.scss"
-            ],
+            "assets": ["projects/appLazyWithoutRouting/src/favicon.ico", "projects/appLazyWithoutRouting/src/assets"],
+            "styles": ["projects/appLazyWithoutRouting/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -285,7 +358,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -329,13 +401,8 @@
             "polyfills": "projects/appLazyWithoutRouting/src/polyfills.ts",
             "tsConfig": "projects/appLazyWithoutRouting/tsconfig.spec.json",
             "karmaConfig": "projects/appLazyWithoutRouting/karma.conf.js",
-            "assets": [
-              "projects/appLazyWithoutRouting/src/favicon.ico",
-              "projects/appLazyWithoutRouting/src/assets"
-            ],
-            "styles": [
-              "projects/appLazyWithoutRouting/src/styles.scss"
-            ],
+            "assets": ["projects/appLazyWithoutRouting/src/favicon.ico", "projects/appLazyWithoutRouting/src/assets"],
+            "styles": ["projects/appLazyWithoutRouting/src/styles.scss"],
             "scripts": []
           }
         },
@@ -347,9 +414,7 @@
               "projects/appLazyWithoutRouting/tsconfig.spec.json",
               "projects/appLazyWithoutRouting/e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
@@ -386,10 +451,7 @@
             "polyfills": "projects/appComponentsAndTest/src/polyfills.ts",
             "tsConfig": "projects/appComponentsAndTest/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "projects/appComponentsAndTest/src/favicon.ico",
-              "projects/appComponentsAndTest/src/assets"
-            ],
+            "assets": ["projects/appComponentsAndTest/src/favicon.ico", "projects/appComponentsAndTest/src/assets"],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "projects/appComponentsAndTest/src/styles.scss"
@@ -407,7 +469,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -451,13 +512,8 @@
             "polyfills": "projects/appComponentsAndTest/src/polyfills.ts",
             "tsConfig": "projects/appComponentsAndTest/tsconfig.spec.json",
             "karmaConfig": "projects/appComponentsAndTest/karma.conf.js",
-            "assets": [
-              "projects/appComponentsAndTest/src/favicon.ico",
-              "projects/appComponentsAndTest/src/assets"
-            ],
-            "styles": [
-              "projects/appComponentsAndTest/src/styles.scss"
-            ],
+            "assets": ["projects/appComponentsAndTest/src/favicon.ico", "projects/appComponentsAndTest/src/assets"],
+            "styles": ["projects/appComponentsAndTest/src/styles.scss"],
             "scripts": []
           }
         },
@@ -469,9 +525,7 @@
               "projects/appComponentsAndTest/tsconfig.spec.json",
               "projects/appComponentsAndTest/e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
@@ -504,13 +558,8 @@
             "polyfills": "projects/aaronFrostHeroApp/src/polyfills.ts",
             "tsConfig": "projects/aaronFrostHeroApp/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "projects/aaronFrostHeroApp/src/favicon.ico",
-              "projects/aaronFrostHeroApp/src/assets"
-            ],
-            "styles": [
-              "projects/aaronFrostHeroApp/src/styles.css"
-            ],
+            "assets": ["projects/aaronFrostHeroApp/src/favicon.ico", "projects/aaronFrostHeroApp/src/assets"],
+            "styles": ["projects/aaronFrostHeroApp/src/styles.css"],
             "scripts": []
           },
           "configurations": {
@@ -524,7 +573,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -568,13 +616,8 @@
             "polyfills": "projects/aaronFrostHeroApp/src/polyfills.ts",
             "tsConfig": "projects/aaronFrostHeroApp/tsconfig.spec.json",
             "karmaConfig": "projects/aaronFrostHeroApp/karma.conf.js",
-            "assets": [
-              "projects/aaronFrostHeroApp/src/favicon.ico",
-              "projects/aaronFrostHeroApp/src/assets"
-            ],
-            "styles": [
-              "projects/aaronFrostHeroApp/src/styles.css"
-            ],
+            "assets": ["projects/aaronFrostHeroApp/src/favicon.ico", "projects/aaronFrostHeroApp/src/assets"],
+            "styles": ["projects/aaronFrostHeroApp/src/styles.css"],
             "scripts": []
           }
         },
@@ -586,9 +629,7 @@
               "projects/aaronFrostHeroApp/tsconfig.spec.json",
               "projects/aaronFrostHeroApp/e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
@@ -600,6 +641,110 @@
           "configurations": {
             "production": {
               "devServerTarget": "aaronFrostHeroApp:serve:production"
+            }
+          }
+        }
+      }
+    },
+    "LifecycleHooks": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "projects/LifecycleHooks",
+      "sourceRoot": "projects/LifecycleHooks/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/LifecycleHooks",
+            "index": "projects/LifecycleHooks/src/index.html",
+            "main": "projects/LifecycleHooks/src/main.ts",
+            "polyfills": "projects/LifecycleHooks/src/polyfills.ts",
+            "tsConfig": "projects/LifecycleHooks/tsconfig.app.json",
+            "aot": true,
+            "assets": ["projects/LifecycleHooks/src/favicon.ico", "projects/LifecycleHooks/src/assets"],
+            "styles": ["projects/LifecycleHooks/src/styles.css"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/LifecycleHooks/src/environments/environment.ts",
+                  "with": "projects/LifecycleHooks/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "LifecycleHooks:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "LifecycleHooks:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "LifecycleHooks:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/LifecycleHooks/src/test.ts",
+            "polyfills": "projects/LifecycleHooks/src/polyfills.ts",
+            "tsConfig": "projects/LifecycleHooks/tsconfig.spec.json",
+            "karmaConfig": "projects/LifecycleHooks/karma.conf.js",
+            "assets": ["projects/LifecycleHooks/src/favicon.ico", "projects/LifecycleHooks/src/assets"],
+            "styles": ["projects/LifecycleHooks/src/styles.css"],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/LifecycleHooks/tsconfig.app.json",
+              "projects/LifecycleHooks/tsconfig.spec.json",
+              "projects/LifecycleHooks/e2e/tsconfig.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/LifecycleHooks/e2e/protractor.conf.js",
+            "devServerTarget": "LifecycleHooks:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "LifecycleHooks:serve:production"
             }
           }
         }
@@ -625,13 +770,8 @@
             "polyfills": "projects/qaList/src/polyfills.ts",
             "tsConfig": "projects/qaList/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "projects/qaList/src/favicon.ico",
-              "projects/qaList/src/assets"
-            ],
-            "styles": [
-              "projects/qaList/src/styles.scss"
-            ],
+            "assets": ["projects/qaList/src/favicon.ico", "projects/qaList/src/assets"],
+            "styles": ["projects/qaList/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -645,7 +785,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -689,13 +828,8 @@
             "polyfills": "projects/qaList/src/polyfills.ts",
             "tsConfig": "projects/qaList/tsconfig.spec.json",
             "karmaConfig": "projects/qaList/karma.conf.js",
-            "assets": [
-              "projects/qaList/src/favicon.ico",
-              "projects/qaList/src/assets"
-            ],
-            "styles": [
-              "projects/qaList/src/styles.scss"
-            ],
+            "assets": ["projects/qaList/src/favicon.ico", "projects/qaList/src/assets"],
+            "styles": ["projects/qaList/src/styles.scss"],
             "scripts": []
           }
         },
@@ -707,9 +841,7 @@
               "projects/qaList/tsconfig.spec.json",
               "projects/qaList/e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
@@ -721,6 +853,149 @@
           "configurations": {
             "production": {
               "devServerTarget": "qaList:serve:production"
+            }
+          }
+        }
+      }
+    },
+    "tiny-jpe-lib": {
+      "projectType": "library",
+      "root": "projects/tiny-jpe-lib",
+      "sourceRoot": "projects/tiny-jpe-lib/src",
+      "prefix": "jpe",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/tiny-jpe-lib/tsconfig.lib.json",
+            "project": "projects/tiny-jpe-lib/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/tiny-jpe-lib/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/tiny-jpe-lib/src/test.ts",
+            "tsConfig": "projects/tiny-jpe-lib/tsconfig.spec.json",
+            "karmaConfig": "projects/tiny-jpe-lib/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["projects/tiny-jpe-lib/tsconfig.lib.json", "projects/tiny-jpe-lib/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    },
+    "qzWorte": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/qzWorte",
+      "sourceRoot": "projects/qzWorte/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/qzWorte",
+            "index": "projects/qzWorte/src/index.html",
+            "main": "projects/qzWorte/src/main.ts",
+            "polyfills": "projects/qzWorte/src/polyfills.ts",
+            "tsConfig": "projects/qzWorte/tsconfig.app.json",
+            "aot": true,
+            "assets": ["projects/qzWorte/src/favicon.ico", "projects/qzWorte/src/assets"],
+            "styles": ["projects/qzWorte/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/qzWorte/src/environments/environment.ts",
+                  "with": "projects/qzWorte/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "qzWorte:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "qzWorte:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "qzWorte:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/qzWorte/src/test.ts",
+            "polyfills": "projects/qzWorte/src/polyfills.ts",
+            "tsConfig": "projects/qzWorte/tsconfig.spec.json",
+            "karmaConfig": "projects/qzWorte/karma.conf.js",
+            "assets": ["projects/qzWorte/src/favicon.ico", "projects/qzWorte/src/assets"],
+            "styles": ["projects/qzWorte/src/styles.scss"],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/qzWorte/tsconfig.app.json",
+              "projects/qzWorte/tsconfig.spec.json",
+              "projects/qzWorte/e2e/tsconfig.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/qzWorte/e2e/protractor.conf.js",
+            "devServerTarget": "qzWorte:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "qzWorte:serve:production"
             }
           }
         }
