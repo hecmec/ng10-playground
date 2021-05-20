@@ -1,0 +1,28 @@
+<div class="login-container" fxLayout="row" fxLayoutAlign="center center">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <mat-card class="box">
+      <mat-card-header>
+        <mat-card-title>Log in</mat-card-title>
+      </mat-card-header>
+
+      <form class="example-form">
+        <mat-card-content>
+          <mat-form-field hintLabel="Max 10 characters" appearance="fill">
+            <mat-label>Username</mat-label>
+            <input matInput placeholder="Username" formControlName="username" required>
+            <mat-error *ngIf="loginFromControls.username.invalid">Username is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field  appearance="fill">
+            <mat-label>Password</mat-label>
+            <input matInput placeholder="Password" formControlName="password">
+            <mat-error *ngIf="loginFromControls.password.invalid">Password is required</mat-error>
+          </mat-form-field>
+        </mat-card-content>
+
+        <button mat-stroked-button color="accent" [disabled]="loading" class="btn-block">Log in</button>
+        <!-- <a routerLink="/register" class="btn btn-link">Register</a> -->
+      </form>
+    </mat-card>
+  </form>
+</div>
