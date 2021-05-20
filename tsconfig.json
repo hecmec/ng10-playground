@@ -38,6 +38,12 @@
     },
     {
       "path": "./projects/qaList/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/qzWorte/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/qzWorte/tsconfig.spec.json"
     }
   ]
 }
