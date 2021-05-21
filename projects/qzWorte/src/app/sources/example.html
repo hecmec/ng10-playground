@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WunderQuiz</title>
+    <link rel="stylesheet" type="text/css" href="../css/wunderQuiz.css" />
+    <link rel="stylesheet" href="///fonts.googleapis.com/css?family=Dosis:400,600,700" />
+    <link rel="stylesheet" type="text/css" href="lib/highlight/docco.min.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <body class="if-body">
+    <div id="quizArea" class="rounded-top-container" style="max-width: 600px"></div>
+  </body>
+
+  <script language="javascript">
+    window.quizContent = {
+      userLang: "fr",
+      imgSrc: "2020011/hands-460865__340-1583335392641.jpg",
+      options: {
+        showPlayerPosition: false,
+        showMcHints: true,
+        canGoBack: false,
+        showExplain: true,
+        showAnswers: true,
+        randomize: false,
+        mode: "quiz",
+        text: {
+          title: "Alles über Wunderquiz",
+          intro: "<h3>Kennst Du wirklich Wunderquiz ?</h3><p>Lorem ipsum dolor sit ameth, consectetur </p>",
+          help: "<h3>Aide pour le quiz</h3><p>Das ist ein Spiel mit den Zeichen.</p>",
+        },
+      },
+      questList: [],
+      id: "583237fb0d85bc57e54b984d",
+    };
+
+    var txt1 = {
+      type: "Text",
+      ans: ["12", "zwölf"],
+      options: {
+        ignoreCase: false,
+        ignoreAccents: false,
+        maxWrongLetters: 1,
+      },
+      qst_tmplName: "textLeftImageRight",
+      qst_elements: {
+        imgUrl: "2020011/network-4321832_960_720-1583322678923.jpg",
+        imgUrl2: "2020011/literature-3033196__340-1583336956011.jpg",
+        quest: "Wieviele Monate hat ein Jahr ?",
+      },
+      questClass: "split-1-1",
+      weight: 10,
+      expl: "Ein Jahr hat zwölf Monate und das weiss ja nun wirklich jedes Kind.<br>Ausserdem hat es 365 Tage und manchmal auch 366.",
+      infoLink: "https://fr.wikipedia.org/wiki/Tigre_de_Sib%C3%A9rie",
+    };
+
+    var txt2 = {
+      type: "Text",
+      options: {
+        ignoreCase: false,
+        ignoreAccents: true,
+        maxWrongLetters: 0,
+      },
+      qst_elements: {
+        imgUrl: "2020011/learn-3968765__340-1583322641686.jpg",
+        quest: "Grün in Englisch ?",
+      },
+      questClass: "split-1-2",
+      qst_tmplName: "textLeftImageRight",
+      ans: "green",
+      weight: 14,
+      expl: "ähnlich wie in Deutsch",
+    };
+
+    var txt3 = {
+      type: "Text",
+      options: {
+        ignoreCase: true,
+        ignoreAccents: false,
+        maxWrongLetters: 0,
+      },
+      qst_elements: {
+        imgUrl: "2020011/portrait-de-herodote-historien-grec-be2929-1024-1583337018564.jpg",
+        quest: "Wie heisst der Elefant der fliegen kann ?",
+      },
+      questClass: "split-2-1",
+      qst_tmplName: "textLeftImageRight",
+      weight: 16,
+      expl: "Guck mehr Trickfilme",
+      ans: ["Dumbo", "Toto"],
+      type: "Text",
+    };
+
+    var txtNum1 = {
+      type: "Text",
+      ans: ["aaa", "Aaa"],
+      qst_elements: {
+        quest: "aaa",
+      },
+      options: {
+        ignoreCase: true,
+        ignoreAccents: true,
+        maxWrongLetters: 1,
+      },
+    };
+
+    var txtNum2 = {
+      type: "Text",
+      ans: "z",
+      qst_elements: {
+        quest: "z",
+      },
+    };
+
+    var txtNum3 = {
+      type: "Text",
+      ans: "q",
+      qst_elements: {
+        quest: "q",
+      },
+    };
+
+    var mc1 = {
+      type: "MultipleChoice",
+      qst_tmplName: "simple",
+      qst: "<h3>What is Hare</h3>",
+      ansList: [
+        {
+          ans: "Hase",
+          is: true,
+        },
+        {
+          ans: "Taube",
+          is: false,
+          fbko: "ha ha",
+        },
+        {
+          ans: "Feldhase",
+          is: true,
+          fbko: "You forgot 'Feldhase'",
+        },
+        {
+          ans: "Haare",
+          is: false,
+          fbko: "Komische Idee, wie kommst du denn darauf?",
+        },
+      ],
+      expl: "Das ist eine Erklärung",
+      weight: 10,
+      questClass: "",
+    };
+
+    var mc2 = {
+      type: "MultipleChoice",
+      qst_tmplName: "simple",
+      qst: "<h3>What is <i>the answer</i> to the big question?</h3>",
+      ansList: [
+        {
+          fbko: "ccc",
+          ans: "13: Freitag der dreizehnte ist der schönste Tag im",
+          is: false,
+        },
+        {
+          ans: "18: Volljähring",
+          is: false,
+          fbko: "aaaa",
+        },
+        {
+          ans: "42: Deept-Thought",
+          is: true,
+          fbko: "You forgot deep thouth",
+        },
+        {
+          ans: "666: das grosse tier",
+          is: false,
+          fbko: "Komische Idee, wie kommst du denn darauf?",
+        },
+      ],
+      expl: "Read Douglas Adams ! Und geh spazieren oder sie noch mal den Film und geh feiern.<br>Danach lsdkfj ldkfjqmlsdkfj sqmldfjk qmlsdjkfqm lsdkfjlkql sldk lq lq dkl qqsd.",
+      weight: 10,
+      questClass: "",
+    };
+
+    var yn1 = {
+      type: "YesNo",
+      qst_tmplName: "simple",
+      qst: "Ist eine ACID transaction atomar ?",
+      weight: 10,
+      ans: true,
+      expl: "Das A steht für 'atomar'.",
+    };
+
+    var yn2 = {
+      type: "YesNo",
+      qst_tmplName: "simple",
+      qst: "Ist der König ist kahl ?",
+      ans: false,
+      expl: "Er hat doch noch Haare auf dem Kopf.",
+      weight: 6,
+    };
+
+    var asbl1 = {
+      type: "Assemble",
+      qst: "one two three",
+      ansParts: ["eins ", "zwei ", "drei "],
+      // spareParts are added as false alternatives
+      spareParts: ["vier", "fünf"],
+    };
+
+    var cloze1 = {
+      type: "Cloze",
+      qst_elements: {
+        quest: "[[Die]] Katze isst [[den]] Hund",
+        imgUrl: "2020011/hands-460865__340-1583335392641.jpg",
+      },
+      qst_tmplName: "imageLeftTextRight",
+      instruction: "custom instruction",
+    };
+
+    var cloze1_2 = {
+      type: "Cloze",
+      qst_elements: {
+        quest: "[[Die|Der|Das]] Katze isst [[den|dem|des|der]] Hund",
+        imgUrl: "2020011/hands-460865__340-1583335392641.jpg",
+      },
+      qst_tmplName: "imageLeftTextRight",
+    };
+
+    var cloze1_3 = {
+      type: "Cloze",
+      qst_elements: {
+        quest: "<p><h2>Überschrift</h2> Was sagt [[die|der|das]] Katze,<br>wenn sie [[den|dem|des]] Hund sieht?",
+      },
+      instruction: "Was sind die fehlenden Wörter?",
+    };
+
+    var cloze2 = {
+      type: "Cloze",
+      qst_elements: {
+        quest: "[[0]] Katze isst [[1]] Hund",
+      },
+      ans: "Die Katze isst den Hund",
+      inputList: [
+        {
+          type: "Text",
+          ans: "die",
+        },
+        {
+          type: "Text",
+          ans: "den",
+        },
+      ],
+      weight: 10,
+    };
+
+    var cloze3 = {
+      type: "Cloze",
+      qst_elements: {
+        quest: "[[0]] Katze [[1]] [[2]]",
+      },
+      ans: "die Katze isst den Hund",
+      inputList: [
+        {
+          type: "Text",
+          ans: "die",
+          // optional
+          fbKo: "die Katze ist weiblich",
+        },
+        {
+          type: "MultipleChoice",
+          ansList: [
+            { ans: "ist", is: false },
+            { ans: "esst", is: false, fbko: "Man sagt: 'ihr esst' aber 'sie isst' " },
+            { ans: "isst", is: true },
+            { ans: "essen", is: false, fbko: "Das ist der Infinitif" },
+          ],
+        },
+        {
+          type: "MultipleChoice",
+          ansList: [
+            { ans: "der Hund", is: false },
+            { ans: "das Hund", is: false, fbko: "Akkusativ von 'der Hund' => 'den Hund'" },
+            { ans: "den Hund", is: true },
+            { ans: "dem Hund", is: false, fbko: "Das ist Dative von 'Hund' : 'Der Knochen gehört dem Hund' " },
+          ],
+        },
+      ],
+    };
+
+    var textSamples = [txt1, txt2, txt3, txtNum1, txtNum2, txtNum3];
+
+    var mcSamples = [mc1, mc2];
+
+    var ynSamples = [yn1, yn2];
+
+    var asmSamples = [asbl1];
+
+    var clozeSamples = [cloze1, cloze1_2, cloze1_3, cloze2, cloze3];
+
+    var allSamples = textSamples.concat(mcSamples).concat(ynSamples).concat(asmSamples).concat(clozeSamples);
+
+    window.quizContent.questList = allSamples;
+  </script>
+
+  <script language="javascript" data-main="wquiz-main-test" src="../lib/require/require-2.0.4.js"></script>
+</html>
