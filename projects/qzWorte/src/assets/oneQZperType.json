@@ -1,0 +1,124 @@
+{
+  "id": "59bbc8bfa9d48f0ae8397100",
+  "options": {
+    "maxWrongLetters": 0,
+    "ignoreAccents": true,
+    "ignoreCase": true,
+    "showExplain": true,
+    "showMcHints": true,
+    "canGoBack": false,
+    "showAnswers": true,
+    "randomize": true,
+    "text": {
+      "intro": null,
+      "help": null,
+      "title": "example one quiz per type"
+    }
+  },
+  "questList": [
+    {
+      "type": "Text",
+      "qst_tmplName": "simple",
+      "ans": "green",
+      "questClass": "split-1-1",
+      "weight": 10,
+      "expl": "wie in deutsch",
+      "options": {
+        "maxWrongLetters": 0,
+        "ignoreAccents": false,
+        "ignoreCase": true
+      },
+      "qst_elements": {
+        "quest": "Was ist grün?"
+      },
+      "wordCount": 8
+    },
+    {
+      "type": "MultipleChoice",
+      "expl": "is not green",
+      "weight": 12,
+      "questClass": "split-1-1",
+      "ans": "",
+      "qst_tmplName": "simple",
+      "ansList": [
+        {
+          "ans": "red",
+          "is": true,
+          "fbko": "",
+          "fbok": ""
+        },
+        {
+          "ans": "blue",
+          "is": false,
+          "fbko": "",
+          "fbok": ""
+        },
+        {
+          "ans": "green",
+          "is": false,
+          "fbko": "",
+          "fbok": ""
+        },
+        {
+          "ans": "yellow",
+          "is": false,
+          "fbko": "",
+          "fbok": ""
+        }
+      ],
+      "qst_elements": {
+        "quest": "Was ist rot?"
+      },
+      "wordCount": 6
+    },
+    {
+      "type": "Assemble",
+      "expl": "did of do",
+      "weight": 10,
+      "questClass": "split-1-2",
+      "qst_tmplName": "simple",
+      "ansParts": ["what ", "did ", "they ", "eat ", "yesterday ?"],
+      "spareParts": ["do", "she", "ate"],
+      "qst_elements": {
+        "quest": "Was haben sie gestern gegessen?"
+      },
+      "wordCount": 18
+    },
+    {
+      "type": "Cloze",
+      "qst_elements": {
+        "quest": "Chat est [[cat|kit|kat|cut]] en anglais."
+      },
+      "expl": "",
+      "questClass": "split-1-1",
+      "weight": 12,
+      "ans": "",
+      "qst_tmplName": "simple",
+      "instruction": "Chat est pas facile :)",
+      "wordCount": 8
+    },
+    {
+      "type": "YesNo",
+      "qst_elements": {
+        "quest": "Sind Tiger Katzen ?"
+      },
+      "expl": "Tiger, wie auch Löwen sind Katzen.",
+      "questClass": "split-1-1",
+      "weight": 8,
+      "ans": true,
+      "qst_tmplName": "simple",
+      "infoLink": "www.example.com/tiger",
+      "wordCount": 10
+    },
+    {
+      "type": "Display",
+      "expl": "Das ist eine Erklärung.",
+      "qst_elements": {
+        "quest": ""
+      },
+      "wordCount": 5
+    }
+  ],
+  "userLang": "fr",
+  "imgSrc": "2018111/cube-1780775__340-1507114431673.png"
+}
