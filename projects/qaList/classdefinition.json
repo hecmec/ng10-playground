@@ -1,0 +1,20 @@
+{
+  "QAItem": {
+    "lang": "A string",
+    "qst": "A string",
+    "asw": "A string",
+    "type": "A string",
+    "state": "A string",
+    "cats": [1, "a string"],
+    "ansAlt": [1, "a string"],
+    "aswList": [1, "a string"],
+    "infoLink": "A string",
+    "expl": "A string",
+    "creator": { "__type": "Pointer", "className": "_User", "objectId": "<THE_REFERENCED_OBJECT_ID>" }
+  },
+  "QAList": {
+    "owner": { "__type": "Pointer", "className": "_User", "objectId": "<THE_REFERENCED_OBJECT_ID>" },
+    "items": { "__type": "Relation", "className": "QaItem" },
+    "name": "A string"
+  }
+}

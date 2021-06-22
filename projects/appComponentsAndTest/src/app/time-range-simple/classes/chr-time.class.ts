@@ -87,7 +87,7 @@ export class ChrTime implements IChrTime {
    * Tests whether this time is smaller than another time (by simply comparing hours and minutes)
    * @param otherTime
    */
-  public isSmallerThan(otherTime: IChrTime): boolean {
+  public isBefore(otherTime: IChrTime): boolean {
     let result = false;
     if (otherTime) {
       result = ChrTime.compare(this, otherTime) < 0;
@@ -99,7 +99,7 @@ export class ChrTime implements IChrTime {
    * Tests whether this time is smaller than or equal to another time (by simply comparing hours and minutes)
    * @param otherTime
    */
-  public isSmallerThanOrEquals(otherTime: IChrTime): boolean {
+  public isSameOrBefore(otherTime: IChrTime): boolean {
     let result = false;
     if (otherTime) {
       result = ChrTime.compare(this, otherTime) <= 0;
@@ -111,7 +111,7 @@ export class ChrTime implements IChrTime {
    * Tests whether this time is greater than another time (by simply comparing hours and minutes)
    * @param otherTime
    */
-  public isGreaterThan(otherTime: IChrTime): boolean {
+  public isAfter(otherTime: IChrTime): boolean {
     let result = false;
     if (otherTime) {
       result = ChrTime.compare(this, otherTime) > 0;
@@ -123,12 +123,21 @@ export class ChrTime implements IChrTime {
    * Tests whether this time is greater than another time (by simply comparing hours and minutes)
    * @param otherTime
    */
-  public isGreaterThanOrEquals(otherTime: IChrTime): boolean {
+  public isSameOrAfter(otherTime: IChrTime): boolean {
     let result = false;
     if (otherTime) {
-      // result = ChrTime.compare(this, otherTime) >= 0;
+      result = ChrTime.compare(this, otherTime) >= 0;
     }
     return result;
+  }
+
+  /**
+   * Alisas for equals
+   * @param othertime
+   * @returns
+   */
+  public isSame(othertime: IChrTime): boolean {
+    return this.equals(othertime);
   }
 
   /**

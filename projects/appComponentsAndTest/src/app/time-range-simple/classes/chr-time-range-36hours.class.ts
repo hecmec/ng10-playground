@@ -52,7 +52,7 @@ export class ChrTimeRange36Hours {
    */
   public setEndTime(newEndTime: ChrTimeExtended) {
     if (this.startTime && newEndTime) {
-      if (newEndTime.isSmallerThanOrEquals(this.startTime)) {
+      if (newEndTime.isSameOrBefore(this.startTime)) {
         newEndTime = newEndTime.setIsNextDay(true, true);
       }
     }
@@ -103,9 +103,9 @@ export class ChrTimeRange36Hours {
       this.referenceDate?.isValid &&
       this.startTime?.isValid &&
       this.endTime?.isValid &&
-      this.startTime?.isSmallerThan(this.endTime) &&
-      lowerRangeLimit.isSmallerThanOrEquals(this.startTime);
-    upperRangeLimit.isGreaterThanOrEquals(this.endTime);
+      this.startTime?.isBefore(this.endTime) &&
+      lowerRangeLimit.isSameOrBefore(this.startTime);
+    upperRangeLimit.isSameOrAfter(this.endTime);
 
     // add specific validation here
     return result;
@@ -132,7 +132,7 @@ export class ChrTimeRange36Hours {
   public isStartSmallerThanEnd() {
     let result = true;
     if (this.startTime && this.endTime) {
-      result = this.startTime.isSmallerThan(this.endTime);
+      result = this.startTime.isBefore(this.endTime);
     }
     return result;
   }
@@ -161,21 +161,21 @@ export class ChrTimeRange36Hours {
       : ChrValidationResult.fail<ChrTimeRange36Hours>([ChrTimeRange36Hours.ValidationErrors.EndTimeIsNotValid]);
     validationResults.push(endTimeValidationResult);
 
-    const startTimeBeforeEndTimeValidationResult = this.startTime?.isSmallerThan(this.endTime)
+    const startTimeBeforeEndTimeValidationResult = this.startTime?.isBefore(this.endTime)
       ? ChrValidationResult.ok<ChrTimeRange36Hours>()
       : ChrValidationResult.fail<ChrTimeRange36Hours>([
           ChrTimeRange36Hours.ValidationErrors.StartTimeIsNotBeforeEndTime,
         ]);
     validationResults.push(startTimeBeforeEndTimeValidationResult);
 
-    const lowerTimeLimitValidationResult = lowerRangeLimit.isSmallerThanOrEquals(this.startTime)
+    const lowerTimeLimitValidationResult = lowerRangeLimit.isSameOrBefore(this.startTime)
       ? ChrValidationResult.ok<ChrTimeRange36Hours>()
       : ChrValidationResult.fail<ChrTimeRange36Hours>([
           ChrTimeRange36Hours.ValidationErrors.StartTimeIsNotAfterLowerLimit,
         ]);
     validationResults.push(lowerTimeLimitValidationResult);
 
-    const upperTimeLimitValidationResult = upperRangeLimit.isGreaterThanOrEquals(this.endTime)
+    const upperTimeLimitValidationResult = upperRangeLimit.isSameOrAfter(this.endTime)
       ? ChrValidationResult.ok<ChrTimeRange36Hours>()
       : ChrValidationResult.fail<ChrTimeRange36Hours>([
           ChrTimeRange36Hours.ValidationErrors.StartTimeIsNotBeforeEndTime,
@@ -211,7 +211,7 @@ export class ChrTimeRange36Hours {
       startTimeIncremented = this.startTime.addMinutes(minutesToChange, true);
       endTimeIncremented = this.endTime.addMinutes(minutesToChange, true);
 
-      if (endTimeIncremented.isGreaterThan(upperRangeLimit) || startTimeIncremented.isGreaterThan(upperRangeLimit)) {
+      if (endTimeIncremented.isAfter(upperRangeLimit) || startTimeIncremented.isAfter(upperRangeLimit)) {
         // new time range exeeds limit
         if (overflowBehavior === ChrTimeRange36Hours.OverflowBehavior.StopAtLimit) {
           let originalEndTimeMinutes = originalEndTime.getAsMinutes();
@@ -282,7 +282,7 @@ export class ChrTimeRange36Hours {
   ): ChrTimeRange36Hours {
     let timeRange: ChrTimeRange36Hours = null;
 
-    const referenceDate = ChrDate.createFromIsoString(isoDateString, isPermissive);
+    const referenceDate = ChrDate.createFromIsoString(isoDateString);
     const startTime = ChrTimeExtended.createFromString(startTimeString, isPermissive);
     const endTime = ChrTimeExtended.createFromString(endTimeString, isPermissive);
 

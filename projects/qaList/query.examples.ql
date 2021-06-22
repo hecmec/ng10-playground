@@ -6,7 +6,7 @@ HomeComponent#
         qst 
         asw
         lang
-		type
+		    type
       }
     }
   }

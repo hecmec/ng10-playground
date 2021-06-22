@@ -27,21 +27,21 @@ describe('ChrTime', () => {
     });
   });
 
-  describe('isSmallerThan', () => {
+  describe('isBefore', () => {
     it('should tell us that "6:00" is smaller than "7:00"', () => {
       const chrTime1 = ChrTime.createFromHHmmString('6:00');
       const chrTime2 = ChrTime.createFromHHmmString('7:00');
-      expect(chrTime1.isSmallerThan(chrTime2)).toBeTruthy();
+      expect(chrTime1.isBefore(chrTime2)).toBeTruthy();
     });
     it('should tell us that "12:00" is not smaller than "12:00"', () => {
       const chrTime1 = ChrTime.createFromHHmmString('12:00');
       const chrTime2 = ChrTime.createFromHHmmString('12:00');
-      expect(chrTime1.isSmallerThan(chrTime2)).toBeFalsy();
+      expect(chrTime1.isBefore(chrTime2)).toBeFalsy();
     });
     it('should tell us that "00:10" is not smaller than "00:08"', () => {
       const chrTime1 = ChrTime.createFromHHmmString('00:10');
       const chrTime2 = ChrTime.createFromHHmmString('00:08');
-      expect(chrTime1.isSmallerThan(chrTime2)).toBeFalsy();
+      expect(chrTime1.isBefore(chrTime2)).toBeFalsy();
     });
   });
 
@@ -98,7 +98,7 @@ describe('ChrTime', () => {
     });
   });
 
-  // isSmallerThanOrEquals
+  // isSameOrBefore
 
   /**********************************
    * statics
@@ -147,12 +147,8 @@ describe('ChrTime', () => {
 
   describe('removeNonTimeChars', () => {
     it('should remove everything but numbers and separators', () => {
-      expect(ChrTime._removeNonTimeChars('abcdefg1233456789')).toEqual(
-        '1233456789'
-      );
-      expect(ChrTime._removeNonTimeChars('123abc.,;:(°456%&+')).toEqual(
-        '123.,;:456'
-      );
+      expect(ChrTime._removeNonTimeChars('abcdefg1233456789')).toEqual('1233456789');
+      expect(ChrTime._removeNonTimeChars('123abc.,;:(°456%&+')).toEqual('123.,;:456');
       expect(ChrTime._removeNonTimeChars('a,b,e,r,')).toEqual(',,,,');
     });
     it('should return empty for null or similar', () => {
@@ -189,9 +185,7 @@ describe('ChrTime', () => {
     });
     it('should remove everything but numbers and separators', () => {
       expect(ChrTime._getNormalizedTimeString('ab1b2.c8d8')).toEqual('12:88');
-      expect(ChrTime._getNormalizedTimeString('123abc.,;:(°456%&+')).toEqual(
-        '123::::456'
-      );
+      expect(ChrTime._getNormalizedTimeString('123abc.,;:(°456%&+')).toEqual('123::::456');
     });
   });
 

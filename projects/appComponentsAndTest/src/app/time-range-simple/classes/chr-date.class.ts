@@ -25,7 +25,7 @@ export class ChrDate {
    * gets a standard js date object with time to zero.
    * Attention: this will have your local timezone and might not give the intended iso date. (iso is GMT)
    */
-  public get standardJsDate() {
+  public getStandardJsDate(): Date {
     return new Date(this.year, this.month - 1, this.day);
   }
   /**
@@ -55,24 +55,51 @@ export class ChrDate {
     //Object.freeze(this);
   }
 
+  public isBefore(otherDate: ChrDate): boolean {
+    let result = false;
+    if (otherDate) {
+      return ChrDate.compare(this, otherDate) < 0;
+    }
+  }
+
+  public isSameOrBefore(otherDate: ChrDate): boolean {
+    let result = false;
+    if (otherDate) {
+      return ChrDate.compare(this, otherDate) <= 0;
+    }
+  }
+  public isSame(otherDate: ChrDate): boolean {
+    let result = false;
+    if (otherDate) {
+      return ChrDate.compare(this, otherDate) === 0;
+    }
+  }
+  public isAfter(otherDate: ChrDate): boolean {
+    throw new Error('Not yet implemented ...');
+  }
+  public isSameOrAfter(otherDate: ChrDate): boolean {
+    throw new Error('Not yet implemented ...');
+  }
+
   /**
    * Returns a Local date string of this dateTime with 2 digits for days, two digits for month and 4 digits for year:
    * dd/mm/yyyy or mm/dd/yyyy or dd.mm.yyyy depending on the local
    * @param locale: local stirng like 'fr', 'fr-FR', 'en-GB' etc
    */
-  public toLocalDateString(locale?: string) {
+  public toLocalDateString(locale?: string): string {
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return this.standardJsDate.toLocaleDateString(locale);
+    return this.getStandardJsDate().toLocaleDateString(locale);
   }
 
   /**
    * Returns a french date string in the format dd/mm/yyyy.
    * @param format
    */
-  public toFrenchDateString(format: string = 'fr-FR') {
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return this.standardJsDate.toLocaleDateString();
+  public toFrenchDateString(): string {
+    const format: string = 'fr-FR';
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    return this.getStandardJsDate().toLocaleDateString(format, options);
   }
 
   /**
@@ -80,9 +107,7 @@ export class ChrDate {
    * This will ignore any time zone offset.
    */
   public toIsoDateString(): string {
-    return `${Tools.padTwo(this.year)}-${Tools.padTwo(
-      this.month
-    )}-${Tools.padTwo(this.day)}`;
+    return `${Tools.padTwo(this.year)}-${Tools.padTwo(this.month)}-${Tools.padTwo(this.day)}`;
   }
 
   /**
@@ -93,10 +118,7 @@ export class ChrDate {
   public equals(otherDate: ChrDate): boolean {
     let result: boolean = false;
     if (otherDate) {
-      result =
-        this.year === otherDate.year &&
-        this.month === otherDate.month &&
-        this.day === otherDate.day;
+      result = this.year === otherDate.year && this.month === otherDate.month && this.day === otherDate.day;
     }
 
     return result;
@@ -130,19 +152,12 @@ export class ChrDate {
    * @param isoDateString
    * @returns ChrDate object. Is null creation is impossbile
    */
-  public static createFromIsoString(
-    isoDateString: string,
-    isPermissive?: boolean
-  ): ChrDate {
+  public static createFromIsoString(isoDateString: string): ChrDate {
     let date: ChrDate = null;
     if (isoDateString) {
       try {
         let jsDate = new Date(isoDateString);
-        date = ChrDate.createFromDayMonthYear(
-          jsDate.getDate(),
-          jsDate.getMonth() + 1,
-          jsDate.getFullYear()
-        );
+        date = ChrDate.createFromDayMonthYear(jsDate.getDate(), jsDate.getMonth() + 1, jsDate.getFullYear());
       } catch (err) {
         // FIXME log to logger when dispo
         console.error(err);
@@ -166,20 +181,35 @@ export class ChrDate {
    * @param month number of month (1 based not 0 like in js)
    * @param day number of day
    */
-  public static createFromDayMonthYear(
-    day: number,
-    month: number,
-    year: number
-  ): ChrDate {
+  public static createFromDayMonthYear(day: number, month: number, year: number): ChrDate {
     let date: ChrDate = null;
-    if (
-      ChrDate._yearIsValid(year) &&
-      ChrDate._monthIsValid(month) &&
-      ChrDate._dayIsValid(day, month, year)
-    ) {
+    if (ChrDate._yearIsValid(year) && ChrDate._monthIsValid(month) && ChrDate._dayIsValid(day, month, year)) {
       date = new ChrDate(day, month, year);
     }
     return date;
+  }
+
+  /**
+   * compares two dates
+   * @param aDate
+   * @param bDate
+   * @returns
+   */
+  public static compare(aDate: ChrDate, bDate: ChrDate): number {
+    let result: number = 0;
+
+    if (aDate && bDate) {
+      const aDateIso = aDate.toIsoDateString();
+      const bDateIso = bDate.toIsoDateString();
+      if (aDateIso < bDateIso) {
+        result = -1;
+      } else if (aDateIso === bDateIso) {
+        result = 0;
+      } else {
+        result = 1;
+      }
+    }
+    return result;
   }
 
   /**
@@ -227,11 +257,7 @@ export class ChrDate {
    * @param month
    * @param year
    */
-  private static _dayIsValid(
-    day: number,
-    month: number,
-    year: number
-  ): boolean {
+  private static _dayIsValid(day: number, month: number, year: number): boolean {
     const maxDays = ChrDate._getMaxDaysOfMonthInYear(month, year);
     return 0 < day && day <= maxDays;
   }
