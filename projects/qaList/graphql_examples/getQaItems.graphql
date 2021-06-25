@@ -1,0 +1,12 @@
+{
+  qaItems {  
+    edges {
+      node {
+        qst 
+        asw
+        lang
+		    type
+      }
+    }
+  }
+}

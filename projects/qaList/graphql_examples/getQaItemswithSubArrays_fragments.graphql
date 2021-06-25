@@ -1,0 +1,27 @@
+query {
+  qaItems(first: 3) {
+    count
+    edges {
+      node {
+        ...itemFields
+      }
+    }
+  }
+}
+
+fragment itemFields on QaItem {
+  id
+  qst
+  asw
+  lang
+  cats {
+    ...arrValue
+  }
+  ansAlt {
+    ...arrValue
+  }
+}
+# an array value
+fragment arrValue on Element {
+  value
+}

@@ -1,0 +1,31 @@
+mutation CreateObject {
+  createQaItem(
+    input: {
+      fields: {
+        creator: { link: "huA6iHlujx" }
+        lang: "fr"
+        qst: "was ist test?"
+        asw: "das ist ein test"
+        type: "text"
+        state: "created"
+        expl: "erklärung"
+        cats: ["testi", "tata"]
+      }
+    }
+  ) {
+    qaItem {
+      creator {
+        id
+      }
+      lang
+      qst
+      asw
+      type
+      state
+      expl
+      cats {
+        __typename
+      }
+    }
+  }
+}

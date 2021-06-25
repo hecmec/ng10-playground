@@ -1,0 +1,13 @@
+{
+  qaList(id: "aAlgEZC6sT") {
+    name
+    items {
+      edges {
+        node {
+          qst
+          asw
+        }
+      }
+    }
+  }
+}

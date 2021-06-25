@@ -1,6 +1,10 @@
-import { timestamp } from 'rxjs/operators';
+import * as dayjs from 'dayjs';
+import 'dayjs/locale/fr';
+import * as customParseFormat from 'dayjs/plugin/customParseFormat';
 import { Times } from '../../times';
 import { Tools } from '../../tools';
+
+dayjs.extend(customParseFormat);
 
 /**
  * Immutable Date only oject for Chronos
@@ -11,6 +15,10 @@ export class ChrDate {
     return this._year;
   }
 
+  /**
+   * Month as a 1 based month enumeration. January is 1 and December is 12
+   * As opposed to the zero based version of js
+   */
   private _month: number;
   public get month(): number {
     return this._month;
@@ -134,7 +142,7 @@ export class ChrDate {
   /**
    * TODO: define what is a valid date
    */
-  public get isValid(): boolean {
+  public isValid(): boolean {
     let isValid: boolean =
       ChrDate._yearIsValid(this.year) &&
       ChrDate._monthIsValid(this.month) &&
@@ -150,7 +158,7 @@ export class ChrDate {
   /**
    * Parse string from iso date String 'yyyy-mm-dd'
    * @param isoDateString
-   * @returns ChrDate object. Is null creation is impossbile
+   * @returns ChrDate object. Is null if creation impossbile
    */
   public static createFromIsoString(isoDateString: string): ChrDate {
     let date: ChrDate = null;
@@ -172,7 +180,22 @@ export class ChrDate {
    * @param isoDateString
    */
   public static createFromFrenchDateString(dateString: string): ChrDate {
-    throw new Error('Not yet implemented ...');
+    let date: ChrDate = null;
+    if (dateString) {
+      try {
+        dayjs.locale('fr');
+        const parseStrict = true;
+        const djsDate = dayjs(dateString, ['DD/MM/YYYY', 'D/M/YYYY', 'D/M/YY'], 'fr', parseStrict);
+        if (djsDate.isValid()) {
+          date = ChrDate.createFromDayMonthYear(djsDate.date(), djsDate.month() + 1, djsDate.year());
+        }
+      } catch (err) {
+        // FIXME log to logger when dispo
+        console.error(err);
+        date = null;
+      }
+    }
+    return date;
   }
 
   /**

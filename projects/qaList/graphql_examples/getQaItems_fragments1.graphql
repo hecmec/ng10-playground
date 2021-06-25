@@ -1,0 +1,17 @@
+
+query {
+  qaItems {
+    edges {
+      node {
+        ... itemFields
+      }
+    }
+  }
+}
+
+fragment itemFields on QaItem {
+  id
+  qst
+  asw
+  lang
+}
