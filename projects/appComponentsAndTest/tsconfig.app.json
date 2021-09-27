@@ -3,8 +3,10 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/app",
-    "types": ["jasmine", "jasminewd2"],
-    "emitDecoratorMetadata": true,
+    "types": [
+      "jasmine",
+      "jasminewd2"
+    ],
     "experimentalDecorators": true,
     "importHelpers": true
   },
