@@ -1,5 +1,8 @@
 #qzWorte
 
+ng build qzWorte
+ng serve qzWorte
+
 Kleiner Test für reaktive Fromulare und Komponenten
 
 - qz in NG11
