@@ -1,13 +1,30 @@
-type QuestionTemplateType =
-  | 'none'
+type QuestionTemplateType = 'none'
   | 'simple'
   | 'textLeftImageRight'
   | 'imageLeftTextRight'
   | 'TextOverImage'
   | 'textAudio';
 
+type QuestionType = 'Text'
+  | 'MultipleChoice'
+  | 'YesNo'
+  | 'Assemble'
+  | 'Cloze'
+  | 'Display'
+  | 'MatchPairs'
+  | 'PointToPart'
+  | 'Match'
+  | 'Sort'
+
 export interface IQuestionBase {
-  type: string;
+  /**
+   * Question type
+   */
+  type: QuestionType;
+
+  /**
+   * 
+   */
   options: IQuestionOptions;
   /**
    * legacy qestion
@@ -38,9 +55,12 @@ export interface IQuestionBase {
    * A link for more information. This is behind a "more info" text shown on quest evaluation
    */
   infoLink: string;
+
   wortCount: number;
 }
-
+/**
+ * 
+ */
 export interface IQuestionOptions {
   ignoreCase: boolean;
   ignoreAccents: boolean;
