@@ -66,8 +66,7 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-          },
+          "options": {},
           "configurations": {
             "production": {
               "browserTarget": "ng10-playground:build:production"
@@ -183,8 +182,7 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-          },
+          "options": {},
           "configurations": {
             "production": {
               "browserTarget": "appSimplePage:build:production"
@@ -304,8 +302,7 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-          },
+          "options": {},
           "configurations": {
             "production": {
               "browserTarget": "appLazyThroughRouting:build:production"
@@ -425,8 +422,7 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-          },
+          "options": {},
           "configurations": {
             "production": {
               "browserTarget": "appLazyWithoutRouting:build:production"
@@ -549,8 +545,7 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-          },
+          "options": {},
           "configurations": {
             "production": {
               "browserTarget": "appComponentsAndTest:build:production"
@@ -666,8 +661,7 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-          },
+          "options": {},
           "configurations": {
             "production": {
               "browserTarget": "aaronFrostHeroApp:build:production"
@@ -783,8 +777,7 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-          },
+          "options": {},
           "configurations": {
             "production": {
               "browserTarget": "LifecycleHooks:build:production"
@@ -904,8 +897,7 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-          },
+          "options": {},
           "configurations": {
             "production": {
               "browserTarget": "qaList:build:production"
@@ -1063,6 +1055,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
+            "port": 4203
           },
           "configurations": {
             "production": {
@@ -1139,13 +1132,8 @@
             "main": "projects/test1/src/main.ts",
             "polyfills": "projects/test1/src/polyfills.ts",
             "tsConfig": "projects/test1/tsconfig.app.json",
-            "assets": [
-              "projects/test1/src/favicon.ico",
-              "projects/test1/src/assets"
-            ],
-            "styles": [
-              "projects/test1/src/styles.scss"
-            ],
+            "assets": ["projects/test1/src/favicon.ico", "projects/test1/src/assets"],
+            "styles": ["projects/test1/src/styles.scss"],
             "scripts": [],
             "vendorChunk": true,
             "extractLicenses": false,
@@ -1188,8 +1176,7 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-          },
+          "options": {},
           "configurations": {
             "production": {
               "browserTarget": "test1:build:production"
@@ -1213,13 +1200,8 @@
             "polyfills": "projects/test1/src/polyfills.ts",
             "tsConfig": "projects/test1/tsconfig.spec.json",
             "karmaConfig": "projects/test1/karma.conf.js",
-            "assets": [
-              "projects/test1/src/favicon.ico",
-              "projects/test1/src/assets"
-            ],
-            "styles": [
-              "projects/test1/src/styles.scss"
-            ],
+            "assets": ["projects/test1/src/favicon.ico", "projects/test1/src/assets"],
+            "styles": ["projects/test1/src/styles.scss"],
             "scripts": []
           }
         },
@@ -1231,9 +1213,7 @@
               "projects/test1/tsconfig.spec.json",
               "projects/test1/e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {

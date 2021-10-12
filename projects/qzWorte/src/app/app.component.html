@@ -39,17 +39,17 @@
   <div id="topics">
     <h2>Topics</h2>
     <p>Other stuff you might want to explore</p>
-
+    <div class="sort-header">
+      <span>Sort by:</span>
+      <button (click)="sortList('level')">Level</button>
+      <button (click)="sortList('name')">Name</button>
+      <button (click)="sortList('default')">Default</button>
+    </div>
     <div class="card-container">
-      <a
-        class="card card-small"
-        target="_blank"
-        rel="noopener"
-        href="https://angular.io/cli"
-        *ngFor="let topic of topicList"
-      >
-        {{ topic.iconSvg }}
+      <a class="card card-small" ref="" *ngFor="let topic of topicExtendedList">
+        <span class="topic-icon" [innerHtml]="topic.safeIconSvg"></span>
         <span>{{ topic.name }}</span>
+        <small>({{ topic.level }})</small>
       </a>
     </div>
 
