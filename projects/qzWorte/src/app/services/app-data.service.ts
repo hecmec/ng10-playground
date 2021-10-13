@@ -8,8 +8,10 @@ enum TopicLevel {
 
 export interface Topic {
   name: string;
+  nameFr: string;
   iconSvg: string;
   level: TopicLevel;
+  order: number;
 }
 
 @Injectable({
@@ -18,48 +20,59 @@ export interface Topic {
 export class AppDataService {
   private readonly _topicList: Topic[] = [
     {
-      name: 'Banking',
+      name: 'Animals',
+      nameFr: 'Les animaux',
       level: TopicLevel.essential,
-      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
-      <path
-        fill="currentColor"
-        d="M6.5,10H4.5V17H6.5V10M12.5,10H10.5V17H12.5V10M21,19H2V21H21V19M18.5,10H16.5V17H18.5V10M11.5,3.26L16.71,6H6.29L11.5,3.26M11.5,1L2,6V8H21V6L11.5,1Z"
-      />
-    </svg>`,
+      order: 10,
+      iconSvg: ``,
     },
     {
-      name: 'Automotive',
-      level: TopicLevel.special,
-      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
-      <path
-        fill="currentColor"
-        d="M6,11L7,7H17L18,11M18.92,6C18.71,5.4 18.14,5 17.5,5H6.5C5.86,5 5.29,5.4 5.08,6L3,12V20A1,1 0 0,0 4,21H5A1,1 0 0,0 6,20V18H18V20A1,1 0 0,0 19,21H20A1,1 0 0,0 21,20V12L18.92,6M7,16H5V14H7V16M19,16H17V14H19V16M14,16H10V14H14V16Z"
-      />
-    </svg>`,
+      name: 'Calendar',
+      nameFr: 'Le calendrier',
+      level: TopicLevel.essential,
+      order: 10,
+      iconSvg: ``,
     },
     {
-      name: 'Telephone',
-      level: TopicLevel.special,
-      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
-      <path
-        fill="currentColor"
-        d="M15,2A1,1 0 0,0 14,3V6H10C8.89,6 8,6.89 8,8V20C8,21.11 8.89,22 10,22H15C16.11,22 17,21.11 17,20V8C17,7.26 16.6,6.62 16,6.28V3A1,1 0 0,0 15,2M10,8H15V13H10V8M10,15H11V16H10V15M12,15H13V16H12V15M14,15H15V16H14V15M10,17H11V18H10V17M12,17H13V18H12V17M14,17H15V18H14V17M10,19H11V20H10V19M12,19H13V20H12V19M14,19H15V20H14V19Z"
-      />
-    </svg>`,
+      name: 'Cooking',
+      nameFr: 'Cuisiner',
+      level: TopicLevel.essential,
+      order: 10,
+      iconSvg: ``,
     },
     {
-      name: 'Agriculture',
-      level: TopicLevel.special,
-      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
-      <path
-        fill="currentColor"
-        d="M11,12H8.82C9.62,12.5 10.35,13.07 11,13.68V12M7,11C7.27,5.88 9.37,2 12,2C14.66,2 16.77,5.94 17,11.12C18.5,10.43 20.17,10 22,10C16.25,12.57 18.25,22 12,22C6,22 7.93,12.57 2,10C3.82,10 5.5,10.4 7,11M11,11V9H8.24L8.03,11H11M11,8V6H9.05C8.8,6.6 8.6,7.27 8.43,8H11M11,5V3.3C10.45,3.63 9.95,4.22 9.5,5H11M12,3V5H13V6H12V8H14V9H12V11H15V12H12V14H14V15H12.23C13.42,16.45 14.15,18 14.32,19.23C15.31,17.56 15.96,14.84 16,11.76C15.94,7 14.13,3 12,3Z"
-      />
-    </svg>`,
+      name: 'Quantities and mesures',
+      nameFr: 'Quantités et mesures',
+      level: TopicLevel.essential,
+      order: 10,
+      iconSvg: ``,
+    },
+    {
+      name: 'Introduce oneself',
+      nameFr: 'Se présenter',
+      level: TopicLevel.essential,
+      order: 1,
+      iconSvg: ``,
+    },
+    {
+      name: 'Qualities',
+      nameFr: 'Les qualités',
+      level: TopicLevel.essential,
+      order: 10,
+      iconSvg: ``,
+    },
+    {
+      name: 'Greetings and Politeness',
+      nameFr: 'Salutation et politesse',
+      level: TopicLevel.essential,
+      order: 10,
+      iconSvg: ``,
     },
     {
       name: 'Clothing',
-      level: TopicLevel.medium,
+      nameFr: '',
+      level: TopicLevel.essential,
+      order: 10,
       iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -68,18 +81,10 @@ export class AppDataService {
     </svg>`,
     },
     {
-      name: 'Currencies',
-      level: TopicLevel.special,
-      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
-      <path
-        fill="currentColor"
-        d="M6,4H8V2H10V4H12V2H14V4.03C16.25,4.28 18,6.18 18,8.5C18,9.8 17.45,11 16.56,11.8C17.73,12.61 18.5,13.97 18.5,15.5C18.5,18 16.5,20 14,20V22H12V20H10V22H8V20H6L6.5,18H8V6H6V4M10,13V18H14A2.5,2.5 0 0,0 16.5,15.5A2.5,2.5 0 0,0 14,13H10M10,6V11H13.5A2.5,2.5 0 0,0 16,8.5A2.5,2.5 0 0,0 13.5,6H13.5L10,6Z"
-      />
-    </svg>`,
-    },
-    {
       name: 'Time',
+      nameFr: '',
       level: TopicLevel.essential,
+      order: 10,
       iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -89,7 +94,9 @@ export class AppDataService {
     },
     {
       name: 'Date',
+      nameFr: '',
       level: TopicLevel.essential,
+      order: 10,
       iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -98,18 +105,10 @@ export class AppDataService {
     </svg>`,
     },
     {
-      name: 'Art',
-      level: TopicLevel.medium,
-      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
-      <path
-        fill="currentColor"
-        d="M12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2C17.5,2 22,6 22,11A6,6 0 0,1 16,17H14.2C13.9,17 13.7,17.2 13.7,17.5C13.7,17.6 13.8,17.7 13.8,17.8C14.2,18.3 14.4,18.9 14.4,19.5C14.5,20.9 13.4,22 12,22M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C12.3,20 12.5,19.8 12.5,19.5C12.5,19.3 12.4,19.2 12.4,19.1C12,18.6 11.8,18.1 11.8,17.5C11.8,16.1 12.9,15 14.3,15H16A4,4 0 0,0 20,11C20,7.1 16.4,4 12,4M6.5,10C7.3,10 8,10.7 8,11.5C8,12.3 7.3,13 6.5,13C5.7,13 5,12.3 5,11.5C5,10.7 5.7,10 6.5,10M9.5,6C10.3,6 11,6.7 11,7.5C11,8.3 10.3,9 9.5,9C8.7,9 8,8.3 8,7.5C8,6.7 8.7,6 9.5,6M14.5,6C15.3,6 16,6.7 16,7.5C16,8.3 15.3,9 14.5,9C13.7,9 13,8.3 13,7.5C13,6.7 13.7,6 14.5,6M17.5,10C18.3,10 19,10.7 19,11.5C19,12.3 18.3,13 17.5,13C16.7,13 16,12.3 16,11.5C16,10.7 16.7,10 17.5,10Z"
-      />
-    </svg>`,
-    },
-    {
       name: 'Eating',
+      nameFr: '',
       level: TopicLevel.essential,
+      order: 10,
       iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -119,7 +118,9 @@ export class AppDataService {
     },
     {
       name: 'Drinking',
+      nameFr: '',
       level: TopicLevel.essential,
+      order: 10,
       iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -129,7 +130,9 @@ export class AppDataService {
     },
     {
       name: 'Breakfast',
+      nameFr: '',
       level: TopicLevel.essential,
+      order: 10,
       iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -138,67 +141,10 @@ export class AppDataService {
     </svg>`,
     },
     {
-      name: 'Gaming',
-      level: TopicLevel.medium,
-      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
-      <path
-        fill="currentColor"
-        d="M11 17C11 17 11.3 19 9 22H15C12.7 19 13 17 13 17S14 18 16 18 20 16 20 14C20 9 15 7 12 2C9 7 4 9 4 14C4 16 6 18 8 18S11 17 11 17M13 14H11C11 14 10 16 8 16C7.1 16 6 14.9 6 14C5.8 11 9.9 8.2 12 5.4C14.1 8.1 18.2 10.9 18 14C18 14.9 16.9 16 16 16C14 16 13 14 13 14Z"
-      />
-    </svg>`,
-    },
-    {
-      name: 'Chemistry',
-      level: TopicLevel.medium,
-      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
-      <path
-        fill="currentColor"
-        d="M5,19A1,1 0 0,0 6,20H18A1,1 0 0,0 19,19C19,18.79 18.93,18.59 18.82,18.43L13,8.35V4H11V8.35L5.18,18.43C5.07,18.59 5,18.79 5,19M6,22A3,3 0 0,1 3,19C3,18.4 3.18,17.84 3.5,17.37L9,7.81V6A1,1 0 0,1 8,5V4A2,2 0 0,1 10,2H14A2,2 0 0,1 16,4V5A1,1 0 0,1 15,6V7.81L20.5,17.37C20.82,17.84 21,18.4 21,19A3,3 0 0,1 18,22H6Z"
-      />
-    </svg>`,
-    },
-    {
-      name: 'Geography',
-      level: TopicLevel.medium,
-      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
-      <path
-        fill="currentColor"
-        d="M17.9,17.39C17.64,16.59 16.89,16 16,16H15V13A1,1 0 0,0 14,12H8V10H10A1,1 0 0,0 11,9V7H13A2,2 0 0,0 15,5V4.59C17.93,5.77 20,8.64 20,12C20,14.08 19.2,15.97 17.9,17.39M11,19.93C7.05,19.44 4,16.08 4,12C4,11.38 4.08,10.78 4.21,10.21L9,15V16A2,2 0 0,0 11,18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
-      />
-    </svg>`,
-    },
-    {
-      name: 'Tools',
-      level: TopicLevel.medium,
-      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
-      <path
-        fill="currentColor"
-        d="M13.78 15.3L19.78 21.3L21.89 19.14L15.89 13.14L13.78 15.3M17.5 10.1C17.11 10.1 16.69 10.05 16.36 9.91L4.97 21.25L2.86 19.14L10.27 11.74L8.5 9.96L7.78 10.66L6.33 9.25V12.11L5.63 12.81L2.11 9.25L2.81 8.55H5.62L4.22 7.14L7.78 3.58C8.95 2.41 10.83 2.41 12 3.58L9.89 5.74L11.3 7.14L10.59 7.85L12.38 9.63L14.2 7.75C14.06 7.42 14 7 14 6.63C14 4.66 15.56 3.11 17.5 3.11C18.09 3.11 18.61 3.25 19.08 3.53L16.41 6.2L17.91 7.7L20.58 5.03C20.86 5.5 21 6 21 6.63C21 8.55 19.45 10.1 17.5 10.1Z"
-      />
-    </svg>`,
-    },
-    {
-      name: 'Gardening',
-      level: TopicLevel.medium,
-      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
-      <path
-        fill="currentColor"
-        d="M18.5 14C17.55 14 16.69 14.38 16.06 15H9.39L5.74 3H2V5H4.26L7 14.05C6.85 14.03 6.68 14 6.5 14C4.57 14 3 15.57 3 17.5S4.57 21 6.5 21C7.89 21 9.09 20.18 9.65 19H15.35C15.91 20.18 17.11 21 18.5 21C20.43 21 22 19.43 22 17.5S20.43 14 18.5 14M6.5 19C5.67 19 5 18.33 5 17.5S5.67 16 6.5 16 8 16.67 8 17.5 7.33 19 6.5 19M18.5 19C17.67 19 17 18.33 17 17.5S17.67 16 18.5 16 20 16.67 20 17.5 19.33 19 18.5 19M10.13 14L9.53 12H12.76C13.5 12 14.21 12.43 14.55 13.11L15 14H10.13Z"
-      />`,
-    },
-    {
-      name: 'Beauty',
-      level: TopicLevel.medium,
-      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
-      <path
-        fill="currentColor"
-        d="M19.5 1L18.41 3.41L16 4.5L18.41 5.59L19.5 8L20.6 5.59L23 4.5L20.6 3.41L19.5 1M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 10.53 21.67 9.13 21.1 7.87L19.86 10.57C19.95 11.04 20 11.5 20 12C20 16.43 16.43 20 12 20C7.57 20 4 16.43 4 12C4 11.95 4 11.91 4 11.86A10 10 0 0 0 9.74 6.31C11.61 8.61 14.44 10 17.5 10C17.94 10 18.39 9.97 18.83 9.91L17.96 8C17.81 8 17.65 8 17.5 8C14.68 8 12.1 6.5 10.66 4.12C11.1 4.05 11.54 4 12 4C12.5 4 12.96 4.05 13.42 4.13L16.13 2.91C14.87 2.33 13.47 2 12 2M8.09 5A8 8 0 0 1 4.41 9.5C5.04 7.57 6.37 6 8.09 5M9 11.75A1.25 1.25 0 0 0 7.75 13A1.25 1.25 0 0 0 9 14.25A1.25 1.25 0 0 0 10.25 13A1.25 1.25 0 0 0 9 11.75M15 11.75A1.25 1.25 0 0 0 13.75 13A1.25 1.25 0 0 0 15 14.25A1.25 1.25 0 0 0 16.25 13A1.25 1.25 0 0 0 15 11.75Z"
-      />
-    </svg>`,
-    },
-    {
       name: 'Furniture',
+      nameFr: 'Fourniture',
       level: TopicLevel.essential,
+      order: 10,
       iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -208,7 +154,9 @@ export class AppDataService {
     },
     {
       name: 'Holiday',
+      nameFr: 'Vacances',
       level: TopicLevel.essential,
+      order: 10,
       iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -218,7 +166,9 @@ export class AppDataService {
     },
     {
       name: 'Kitchen',
+      nameFr: 'Cuisine',
       level: TopicLevel.essential,
+      order: 10,
       iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -228,7 +178,9 @@ export class AppDataService {
     },
     {
       name: 'Home',
+      nameFr: 'La maison',
       level: TopicLevel.essential,
+      order: 10,
       iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -238,7 +190,9 @@ export class AppDataService {
     },
     {
       name: 'Health',
+      nameFr: '',
       level: TopicLevel.essential,
+      order: 10,
       iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -247,18 +201,10 @@ export class AppDataService {
     </svg>`,
     },
     {
-      name: 'Musik',
-      level: TopicLevel.medium,
-      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
-      <path
-        fill="currentColor"
-        d="M21,3V15.5A3.5,3.5 0 0,1 17.5,19A3.5,3.5 0 0,1 14,15.5A3.5,3.5 0 0,1 17.5,12C18.04,12 18.55,12.12 19,12.34V6.47L9,8.6V17.5A3.5,3.5 0 0,1 5.5,21A3.5,3.5 0 0,1 2,17.5A3.5,3.5 0 0,1 5.5,14C6.04,14 6.55,14.12 7,14.34V6L21,3Z"
-      />
-    </svg>`,
-    },
-    {
       name: 'Plants',
+      nameFr: '',
       level: TopicLevel.essential,
+      order: 10,
       iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -268,7 +214,9 @@ export class AppDataService {
     },
     {
       name: 'Familly',
+      nameFr: 'Famille et amis',
       level: TopicLevel.essential,
+      order: 10,
       iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -278,7 +226,9 @@ export class AppDataService {
     },
     {
       name: 'Shopping',
+      nameFr: 'Le shopping',
       level: TopicLevel.essential,
+      order: 10,
       iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -288,7 +238,9 @@ export class AppDataService {
     },
     {
       name: 'Sport',
+      nameFr: 'Sport et fitness',
       level: TopicLevel.essential,
+      order: 100,
       iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -297,27 +249,10 @@ export class AppDataService {
     </svg>`,
     },
     {
-      name: 'Horseriding',
-      level: TopicLevel.special,
-      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
-      <path
-        fill="currentColor"
-        d="M19,4H20V1H16V4C16,4 18,8 18,12C18,16 16,19 12,19C8,19 6,16 6,12C6,8 8,4 8,4V1H4V4H5C5,4 2,8 2,14C2,19 7,23 12,23C17,23 22,19 22,14C22,8 19,4 19,4M4,13C3.4,13 3,12.6 3,12C3,11.4 3.4,11 4,11C4.6,11 5,11.4 5,12C5,12.6 4.6,13 4,13M6,19C5.4,19 5,18.6 5,18C5,17.4 5.4,17 6,17C6.6,17 7,17.4 7,18C7,18.6 6.6,19 6,19M12,22C11.4,22 11,21.6 11,21C11,20.4 11.4,20 12,20C12.6,20 13,20.4 13,21C13,21.6 12.6,22 12,22M18,19C17.4,19 17,18.6 17,18C17,17.4 17.4,17 18,17C18.6,17 19,17.4 19,18C19,18.6 18.6,19 18,19M20,13C19.4,13 19,12.6 19,12C19,11.4 19.4,11 20,11C20.6,11 21,11.4 21,12C21,12.6 20.6,13 20,13Z"
-      />
-    </svg>`,
-    },
-    {
-      name: 'Language',
-      level: TopicLevel.special,
-      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
-      <path
-        fill="currentColor"
-        d="M12.87,15.07L10.33,12.56L10.36,12.53C12.1,10.59 13.34,8.36 14.07,6H17V4H10V2H8V4H1V6H12.17C11.5,7.92 10.44,9.75 9,11.35C8.07,10.32 7.3,9.19 6.69,8H4.69C5.42,9.63 6.42,11.17 7.67,12.56L2.58,17.58L4,19L9,14L12.11,17.11L12.87,15.07M18.5,10H16.5L12,22H14L15.12,19H19.87L21,22H23L18.5,10M15.88,17L17.5,12.67L19.12,17H15.88Z"
-      />`,
-    },
-    {
       name: 'Education',
+      nameFr: 'Education et école',
       level: TopicLevel.essential,
+      order: 100,
       iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -327,7 +262,9 @@ export class AppDataService {
     },
     {
       name: 'Weather',
+      nameFr: 'La météo, le climat',
       level: TopicLevel.essential,
+      order: 100,
       iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -337,7 +274,9 @@ export class AppDataService {
     },
     {
       name: 'Jobs/Work',
+      nameFr: '',
       level: TopicLevel.essential,
+      order: 100,
       iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -347,7 +286,9 @@ export class AppDataService {
     },
     {
       name: 'Pastimes',
+      nameFr: 'Les loisirs',
       level: TopicLevel.essential,
+      order: 100,
       iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
       <path
         fill="currentColor"
@@ -356,46 +297,376 @@ export class AppDataService {
     </svg>`,
     },
     {
-      name: 'Society and Government',
+      name: 'Physical Description',
+      nameFr: 'Description physique',
+      level: TopicLevel.essential,
+      order: 100,
+      iconSvg: ``,
+    },
+    {
+      name: 'Humain body',
+      nameFr: 'Le corps humain',
+      level: TopicLevel.essential,
+      order: 100,
+      iconSvg: ``,
+    },
+    {
+      name: 'Corors and Forms',
+      nameFr: 'Couleurs et formes',
+      level: TopicLevel.essential,
+      order: 100,
+      iconSvg: ``,
+    },
+    {
+      name: 'Fruits',
+      nameFr: 'Les fruits',
+      level: TopicLevel.essential,
+      order: 100,
+      iconSvg: ``,
+    },
+    {
+      name: 'Vegetables',
+      nameFr: 'Les légumes',
+      level: TopicLevel.essential,
+      order: 100,
+      iconSvg: ``,
+    },
+
+    // medium
+    {
+      name: 'Art',
+      nameFr: '',
+      level: TopicLevel.medium,
+      order: 100,
+      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2C17.5,2 22,6 22,11A6,6 0 0,1 16,17H14.2C13.9,17 13.7,17.2 13.7,17.5C13.7,17.6 13.8,17.7 13.8,17.8C14.2,18.3 14.4,18.9 14.4,19.5C14.5,20.9 13.4,22 12,22M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C12.3,20 12.5,19.8 12.5,19.5C12.5,19.3 12.4,19.2 12.4,19.1C12,18.6 11.8,18.1 11.8,17.5C11.8,16.1 12.9,15 14.3,15H16A4,4 0 0,0 20,11C20,7.1 16.4,4 12,4M6.5,10C7.3,10 8,10.7 8,11.5C8,12.3 7.3,13 6.5,13C5.7,13 5,12.3 5,11.5C5,10.7 5.7,10 6.5,10M9.5,6C10.3,6 11,6.7 11,7.5C11,8.3 10.3,9 9.5,9C8.7,9 8,8.3 8,7.5C8,6.7 8.7,6 9.5,6M14.5,6C15.3,6 16,6.7 16,7.5C16,8.3 15.3,9 14.5,9C13.7,9 13,8.3 13,7.5C13,6.7 13.7,6 14.5,6M17.5,10C18.3,10 19,10.7 19,11.5C19,12.3 18.3,13 17.5,13C16.7,13 16,12.3 16,11.5C16,10.7 16.7,10 17.5,10Z"
+      />
+    </svg>`,
+    },
+    {
+      name: 'Gaming',
+      nameFr: 'Jeux',
+      level: TopicLevel.medium,
+      order: 100,
+      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M11 17C11 17 11.3 19 9 22H15C12.7 19 13 17 13 17S14 18 16 18 20 16 20 14C20 9 15 7 12 2C9 7 4 9 4 14C4 16 6 18 8 18S11 17 11 17M13 14H11C11 14 10 16 8 16C7.1 16 6 14.9 6 14C5.8 11 9.9 8.2 12 5.4C14.1 8.1 18.2 10.9 18 14C18 14.9 16.9 16 16 16C14 16 13 14 13 14Z"
+      />
+    </svg>`,
+    },
+    {
+      name: 'Tools',
+      nameFr: 'Outils et bricolage',
+      level: TopicLevel.medium,
+      order: 100,
+      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M13.78 15.3L19.78 21.3L21.89 19.14L15.89 13.14L13.78 15.3M17.5 10.1C17.11 10.1 16.69 10.05 16.36 9.91L4.97 21.25L2.86 19.14L10.27 11.74L8.5 9.96L7.78 10.66L6.33 9.25V12.11L5.63 12.81L2.11 9.25L2.81 8.55H5.62L4.22 7.14L7.78 3.58C8.95 2.41 10.83 2.41 12 3.58L9.89 5.74L11.3 7.14L10.59 7.85L12.38 9.63L14.2 7.75C14.06 7.42 14 7 14 6.63C14 4.66 15.56 3.11 17.5 3.11C18.09 3.11 18.61 3.25 19.08 3.53L16.41 6.2L17.91 7.7L20.58 5.03C20.86 5.5 21 6 21 6.63C21 8.55 19.45 10.1 17.5 10.1Z"
+      />
+    </svg>`,
+    },
+    {
+      name: 'Gardening',
+      nameFr: 'Jardinage',
+      level: TopicLevel.medium,
+      order: 100,
+      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M18.5 14C17.55 14 16.69 14.38 16.06 15H9.39L5.74 3H2V5H4.26L7 14.05C6.85 14.03 6.68 14 6.5 14C4.57 14 3 15.57 3 17.5S4.57 21 6.5 21C7.89 21 9.09 20.18 9.65 19H15.35C15.91 20.18 17.11 21 18.5 21C20.43 21 22 19.43 22 17.5S20.43 14 18.5 14M6.5 19C5.67 19 5 18.33 5 17.5S5.67 16 6.5 16 8 16.67 8 17.5 7.33 19 6.5 19M18.5 19C17.67 19 17 18.33 17 17.5S17.67 16 18.5 16 20 16.67 20 17.5 19.33 19 18.5 19M10.13 14L9.53 12H12.76C13.5 12 14.21 12.43 14.55 13.11L15 14H10.13Z"
+      />`,
+    },
+    {
+      name: 'Beauty',
+      nameFr: 'Beauté',
+      level: TopicLevel.medium,
+      order: 100,
+      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M19.5 1L18.41 3.41L16 4.5L18.41 5.59L19.5 8L20.6 5.59L23 4.5L20.6 3.41L19.5 1M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 10.53 21.67 9.13 21.1 7.87L19.86 10.57C19.95 11.04 20 11.5 20 12C20 16.43 16.43 20 12 20C7.57 20 4 16.43 4 12C4 11.95 4 11.91 4 11.86A10 10 0 0 0 9.74 6.31C11.61 8.61 14.44 10 17.5 10C17.94 10 18.39 9.97 18.83 9.91L17.96 8C17.81 8 17.65 8 17.5 8C14.68 8 12.1 6.5 10.66 4.12C11.1 4.05 11.54 4 12 4C12.5 4 12.96 4.05 13.42 4.13L16.13 2.91C14.87 2.33 13.47 2 12 2M8.09 5A8 8 0 0 1 4.41 9.5C5.04 7.57 6.37 6 8.09 5M9 11.75A1.25 1.25 0 0 0 7.75 13A1.25 1.25 0 0 0 9 14.25A1.25 1.25 0 0 0 10.25 13A1.25 1.25 0 0 0 9 11.75M15 11.75A1.25 1.25 0 0 0 13.75 13A1.25 1.25 0 0 0 15 14.25A1.25 1.25 0 0 0 16.25 13A1.25 1.25 0 0 0 15 11.75Z"
+      />
+    </svg>`,
+    },
+    {
+      name: 'Geography',
+      nameFr: 'Géographie',
+      level: TopicLevel.medium,
+      order: 100,
+      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M17.9,17.39C17.64,16.59 16.89,16 16,16H15V13A1,1 0 0,0 14,12H8V10H10A1,1 0 0,0 11,9V7H13A2,2 0 0,0 15,5V4.59C17.93,5.77 20,8.64 20,12C20,14.08 19.2,15.97 17.9,17.39M11,19.93C7.05,19.44 4,16.08 4,12C4,11.38 4.08,10.78 4.21,10.21L9,15V16A2,2 0 0,0 11,18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
+      />
+    </svg>`,
+    },
+    {
+      name: 'Musik',
+      nameFr: 'La musique et les instruments de musique',
+      level: TopicLevel.medium,
+      order: 100,
+      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M21,3V15.5A3.5,3.5 0 0,1 17.5,19A3.5,3.5 0 0,1 14,15.5A3.5,3.5 0 0,1 17.5,12C18.04,12 18.55,12.12 19,12.34V6.47L9,8.6V17.5A3.5,3.5 0 0,1 5.5,21A3.5,3.5 0 0,1 2,17.5A3.5,3.5 0 0,1 5.5,14C6.04,14 6.55,14.12 7,14.34V6L21,3Z"
+      />
+    </svg>`,
+    },
+    {
+      name: 'Bathroom',
+      nameFr: 'La salle de bain',
+      level: TopicLevel.medium,
+      order: 100,
+      iconSvg: ``,
+    },
+    {
+      name: 'Law and Justice',
+      nameFr: 'Loi et justice',
+      level: TopicLevel.medium,
+      order: 100,
+      iconSvg: ``,
+    },
+    {
+      name: 'Town and places',
+      nameFr: 'Ville et lieux',
+      level: TopicLevel.medium,
+      order: 100,
+      iconSvg: ``,
+    },
+    {
+      name: 'Tourism',
+      nameFr: 'Voyage et tourisme',
+      level: TopicLevel.medium,
+      order: 100,
+      iconSvg: ``,
+    },
+    {
+      name: 'Professions',
+      nameFr: 'Métiers et professions',
+      level: TopicLevel.medium,
+      order: 30,
+      iconSvg: ``,
+    },
+    {
+      name: 'Countries and Continents',
+      nameFr: 'Les pays et continents',
+      level: TopicLevel.medium,
+      order: 30,
+      iconSvg: ``,
+    },
+    {
+      name: 'Insects',
+      nameFr: 'Les insectes',
+      level: TopicLevel.medium,
+      order: 30,
+      iconSvg: ``,
+    },
+    {
+      name: 'Nationalities',
+      nameFr: 'Les nationalités',
+      level: TopicLevel.medium,
+      order: 30,
+      iconSvg: ``,
+    },
+    {
+      name: 'IT',
+      nameFr: 'L’informatique',
+      level: TopicLevel.medium,
+      order: 30,
+      iconSvg: ``,
+    },
+    {
+      name: 'Utensils',
+      nameFr: 'Les ustensiles',
+      level: TopicLevel.medium,
+      order: 30,
+      iconSvg: ``,
+    },
+    {
+      name: 'Business',
+      nameFr: 'Les affaires',
+      level: TopicLevel.medium,
+      order: 30,
+      iconSvg: ``,
+    },
+
+    // special
+    {
+      name: 'Money, Banking, Finance',
+      nameFr: 'L’argent, la banque, la finance',
       level: TopicLevel.special,
+      order: 100,
+      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M6.5,10H4.5V17H6.5V10M12.5,10H10.5V17H12.5V10M21,19H2V21H21V19M18.5,10H16.5V17H18.5V10M11.5,3.26L16.71,6H6.29L11.5,3.26M11.5,1L2,6V8H21V6L11.5,1Z"
+      />
+    </svg>`,
+    },
+    {
+      name: 'Automotive',
+      nameFr: '',
+      level: TopicLevel.special,
+      order: 100,
+      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M6,11L7,7H17L18,11M18.92,6C18.71,5.4 18.14,5 17.5,5H6.5C5.86,5 5.29,5.4 5.08,6L3,12V20A1,1 0 0,0 4,21H5A1,1 0 0,0 6,20V18H18V20A1,1 0 0,0 19,21H20A1,1 0 0,0 21,20V12L18.92,6M7,16H5V14H7V16M19,16H17V14H19V16M14,16H10V14H14V16Z"
+      />
+    </svg>`,
+    },
+    {
+      name: 'Telephone',
+      nameFr: '',
+      level: TopicLevel.special,
+      order: 100,
+      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M15,2A1,1 0 0,0 14,3V6H10C8.89,6 8,6.89 8,8V20C8,21.11 8.89,22 10,22H15C16.11,22 17,21.11 17,20V8C17,7.26 16.6,6.62 16,6.28V3A1,1 0 0,0 15,2M10,8H15V13H10V8M10,15H11V16H10V15M12,15H13V16H12V15M14,15H15V16H14V15M10,17H11V18H10V17M12,17H13V18H12V17M14,17H15V18H14V17M10,19H11V20H10V19M12,19H13V20H12V19M14,19H15V20H14V19Z"
+      />
+    </svg>`,
+    },
+    {
+      name: 'Agriculture',
+      nameFr: '',
+      level: TopicLevel.special,
+      order: 100,
+      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M11,12H8.82C9.62,12.5 10.35,13.07 11,13.68V12M7,11C7.27,5.88 9.37,2 12,2C14.66,2 16.77,5.94 17,11.12C18.5,10.43 20.17,10 22,10C16.25,12.57 18.25,22 12,22C6,22 7.93,12.57 2,10C3.82,10 5.5,10.4 7,11M11,11V9H8.24L8.03,11H11M11,8V6H9.05C8.8,6.6 8.6,7.27 8.43,8H11M11,5V3.3C10.45,3.63 9.95,4.22 9.5,5H11M12,3V5H13V6H12V8H14V9H12V11H15V12H12V14H14V15H12.23C13.42,16.45 14.15,18 14.32,19.23C15.31,17.56 15.96,14.84 16,11.76C15.94,7 14.13,3 12,3Z"
+      />
+    </svg>`,
+    },
+    {
+      name: 'Currencies',
+      nameFr: '',
+      level: TopicLevel.special,
+      order: 100,
+      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M6,4H8V2H10V4H12V2H14V4.03C16.25,4.28 18,6.18 18,8.5C18,9.8 17.45,11 16.56,11.8C17.73,12.61 18.5,13.97 18.5,15.5C18.5,18 16.5,20 14,20V22H12V20H10V22H8V20H6L6.5,18H8V6H6V4M10,13V18H14A2.5,2.5 0 0,0 16.5,15.5A2.5,2.5 0 0,0 14,13H10M10,6V11H13.5A2.5,2.5 0 0,0 16,8.5A2.5,2.5 0 0,0 13.5,6H13.5L10,6Z"
+      />
+    </svg>`,
+    },
+    {
+      name: 'Chemistry',
+      nameFr: 'Chemie',
+      level: TopicLevel.special,
+      order: 100,
+      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M5,19A1,1 0 0,0 6,20H18A1,1 0 0,0 19,19C19,18.79 18.93,18.59 18.82,18.43L13,8.35V4H11V8.35L5.18,18.43C5.07,18.59 5,18.79 5,19M6,22A3,3 0 0,1 3,19C3,18.4 3.18,17.84 3.5,17.37L9,7.81V6A1,1 0 0,1 8,5V4A2,2 0 0,1 10,2H14A2,2 0 0,1 16,4V5A1,1 0 0,1 15,6V7.81L20.5,17.37C20.82,17.84 21,18.4 21,19A3,3 0 0,1 18,22H6Z"
+      />
+    </svg>`,
+    },
+    {
+      name: 'Horseriding',
+      nameFr: '',
+      level: TopicLevel.special,
+      order: 100,
+      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M19,4H20V1H16V4C16,4 18,8 18,12C18,16 16,19 12,19C8,19 6,16 6,12C6,8 8,4 8,4V1H4V4H5C5,4 2,8 2,14C2,19 7,23 12,23C17,23 22,19 22,14C22,8 19,4 19,4M4,13C3.4,13 3,12.6 3,12C3,11.4 3.4,11 4,11C4.6,11 5,11.4 5,12C5,12.6 4.6,13 4,13M6,19C5.4,19 5,18.6 5,18C5,17.4 5.4,17 6,17C6.6,17 7,17.4 7,18C7,18.6 6.6,19 6,19M12,22C11.4,22 11,21.6 11,21C11,20.4 11.4,20 12,20C12.6,20 13,20.4 13,21C13,21.6 12.6,22 12,22M18,19C17.4,19 17,18.6 17,18C17,17.4 17.4,17 18,17C18.6,17 19,17.4 19,18C19,18.6 18.6,19 18,19M20,13C19.4,13 19,12.6 19,12C19,11.4 19.4,11 20,11C20.6,11 21,11.4 21,12C21,12.6 20.6,13 20,13Z"
+      />
+    </svg>`,
+    },
+    {
+      name: 'Language',
+      nameFr: '',
+      level: TopicLevel.special,
+      order: 100,
+      iconSvg: `<svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M12.87,15.07L10.33,12.56L10.36,12.53C12.1,10.59 13.34,8.36 14.07,6H17V4H10V2H8V4H1V6H12.17C11.5,7.92 10.44,9.75 9,11.35C8.07,10.32 7.3,9.19 6.69,8H4.69C5.42,9.63 6.42,11.17 7.67,12.56L2.58,17.58L4,19L9,14L12.11,17.11L12.87,15.07M18.5,10H16.5L12,22H14L15.12,19H19.87L21,22H23L18.5,10M15.88,17L17.5,12.67L19.12,17H15.88Z"
+      />`,
+    },
+    {
+      name: 'Society and Government',
+      nameFr: 'Société et gouvernement',
+      level: TopicLevel.special,
+      order: 100,
+      iconSvg: ``,
+    },
+    {
+      name: 'Politics',
+      nameFr: 'Politique',
+      level: TopicLevel.special,
+      order: 100,
       iconSvg: ``,
     },
     {
       name: 'Economics',
+      nameFr: 'Economie',
       level: TopicLevel.special,
+      order: 100,
       iconSvg: ``,
     },
     {
       name: 'Daily Schedule',
+      nameFr: '',
       level: TopicLevel.special,
+      order: 100,
       iconSvg: ``,
     },
     {
       name: 'Personal Style',
+      nameFr: '',
       level: TopicLevel.special,
+      order: 100,
       iconSvg: ``,
     },
     {
       name: 'Hobbies',
+      nameFr: '',
       level: TopicLevel.special,
+      order: 100,
       iconSvg: ``,
     },
     {
       name: 'Computer Usage',
+      nameFr: '',
       level: TopicLevel.special,
+      order: 100,
       iconSvg: ``,
     },
     {
       name: 'Tech Gadgets',
+      nameFr: '',
       level: TopicLevel.special,
+      order: 100,
       iconSvg: ``,
     },
-    // {
-    //   name: '',
-    //   level: TopicLevel.special,
-    //   iconSvg: ``,
-    // },
+    {
+      name: 'Geography',
+      nameFr: 'Géographie',
+      level: TopicLevel.special,
+      order: 100,
+      iconSvg: ``,
+    },
+    {
+      name: 'Environment and Ecology',
+      nameFr: 'Environnement et écologie',
+      level: TopicLevel.special,
+      order: 100,
+      iconSvg: ``,
+    },
+    {
+      name: 'Religions',
+      nameFr: 'Religions et croyances',
+      level: TopicLevel.special,
+      order: 100,
+      iconSvg: ``,
+    },
   ];
+
   public get topicList(): Topic[] {
     return this._topicList;
   }

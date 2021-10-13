@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppDataService, Topic } from './services/app-data.service';
+import { Constants } from './services/constants';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 export interface TopicExtended extends Topic {
@@ -38,6 +39,11 @@ export class AppComponent implements OnInit {
 
     this.topicExtendedList = this.topicList.map((topic) => {
       topicExt = topic as unknown as TopicExtended;
+      // set default icon
+      if (!topic.iconSvg) {
+        topic.iconSvg = Constants.defaultIcon;
+      }
+
       topicExt.safeIconSvg = this.getSanitizedHtml(topic.iconSvg);
       return topicExt;
     });
