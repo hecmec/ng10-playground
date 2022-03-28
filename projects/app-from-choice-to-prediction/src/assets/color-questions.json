@@ -1,0 +1,134 @@
+{
+  "categories": [
+    {
+      "name": "Red",
+      "comment": "Red comment to illustrate this choice",
+      "prediction": "Reds are known for ... they like ... and they dislike ... ",
+      "code": "c1"
+    },
+    {
+      "name": "Green",
+      "comment": "Green comment to illustrate this choice",
+      "prediction": "Greens are known for ... they like ... and they dislike ... ",
+      "code": "c2"
+    },
+    {
+      "name": "Blue",
+      "comment": "Blue comment to illustrate this choice",
+      "prediction": "Blues are known for ... they like ... and they dislike ... ",
+      "code": "c3"
+    },
+    {
+      "name": "Yellow",
+      "comment": "Yellow comment to illustrate this choice",
+      "prediction": "Yellows are known for ... they like ... and they dislike ... ",
+      "code": "c4"
+    }
+  ],
+  "questions": [
+    {
+      "id": "quest1",
+      "multiple": false,
+      "question": "Is it red?",
+      "answers": [{ "ans1": "Ja", "c1": 10, "c2": 0, "c3": 0, "c4": 0 }, { "ans2": "Nein" }]
+    },
+    {
+      "id": "quest2",
+      "multiple": false,
+      "question": "Is it green?",
+      "answers": [{ "ans1": "Ja", "c2": 10 }, { "ans2": "Nein" }]
+    },
+    {
+      "id": "quest3",
+      "multiple": false,
+      "question": "Is it blue?",
+      "answers": [{ "ans1": "Ja", "c3": 10 }, { "ans2": "Nein" }]
+    },
+    {
+      "id": "quest4",
+      "multiple": false,
+      "question": "Is it yellow?",
+      "answers": [{ "ans1": "Ja", "c4": 10 }, { "ans2": "Nein" }]
+    },
+    {
+      "id": "quest5",
+      "multiple": true,
+      "question": "Who would you describe it ?",
+      "answers": [
+        { "ans1": "He looks purple", "c1": 5, "c2": 0, "c3": 5, "c4": 0 },
+        { "ans2": "He looks green", "c1": 0, "c2": 10, "c3": 3, "c4": 3 },
+        { "ans3": "He looks brown", "c1": 5, "c2": 5, "c3": 2, "c4": 0 },
+        { "ans4": "He looks orange", "c1": 8, "c2": 0, "c3": 0, "c4": 8 }
+      ]
+    },
+
+    {
+      "id": "quest6",
+      "question": "Does it look like blue-red ?",
+      "answers": [
+        { "ans1": "Not at all", "c1": -5, "c2": 0, "c3": -5, "c4": 0 },
+        { "ans2": "A bit", "c1": 3, "c2": 0, "c3": 3, "c4": 0 },
+        { "ans": "Quit so", "c1": 7, "c2": 0, "c3": 7, "c4": 0 },
+        { "ans": "Very much indeed", "c1": 10, "c2": 0, "c3": 10, "c4": 0 }
+      ]
+    },
+    {
+      "id": "quest7",
+      "question": "Does it look like red-green ?",
+      "answers": [
+        { "ans1": "Not at all", "c1": -10, "c2": -10, "c3": 0, "c4": 0 },
+        { "ans2": "A bit", "c1": 2, "c2": 2, "c3": 0, "c4": 0 },
+        { "ans": "Quit so", "c1": 5, "c2": 5, "c3": 0, "c4": 0 },
+        { "ans": "Very much indeed", "c1": 8, "c2": 8, "c3": 0, "c4": 0 }
+      ]
+    },
+    {
+      "id": "quest8",
+      "question": "Does it look like red-yellow ?",
+      "answers": [
+        { "ans1": "Not at all", "c1": -10, "c2": 0, "c3": 0, "c4": -10 },
+        { "ans2": "A bit", "c1": 2, "c2": 0, "c3": 0, "c4": 2 },
+        { "ans": "Quit so", "c1": 5, "c2": 0, "c3": 0, "c4": 5 },
+        { "ans": "Very much indeed", "c1": 8, "c2": 0, "c3": 0, "c4": 8 }
+      ]
+    },
+    {
+      "id": "quest9",
+      "question": "Does it look like blue-green ?",
+      "answers": [
+        { "ans1": "Not at all", "c1": 0, "c2": -10, "c3": -10, "c4": 0 },
+        { "ans2": "A bit", "c1": 0, "c2": 2, "c3": 2, "c4": 0 },
+        { "ans": "Quit so", "c1": 0, "c2": 5, "c3": 5, "c4": 0 },
+        { "ans": "Very much indeed", "c1": 0, "c2": 8, "c3": 8, "c4": 0 }
+      ]
+    },
+
+    {
+      "id": "quest10",
+      "question": "Does it look like green-yellow ?",
+      "answers": [
+        { "ans1": "Not at all", "c1": 0, "c2": -10, "c3": 0, "c4": -10 },
+        { "ans2": "A bit", "c1": 0, "c2": 2, "c3": 0, "c4": 2 },
+        { "ans": "Quit so", "c1": 0, "c2": 5, "c3": 0, "c4": 5 },
+        { "ans": "Very much indeed", "c1": 0, "c2": 10, "c3": 0, "c4": 10 }
+      ]
+    },
+    {
+      "id": "quest11",
+      "question": "Does it ... ?",
+      "answers": [
+        { "ans1": "Not at all", "c1": 0, "c2": 0, "c3": 0, "c4": 0 },
+        { "ans2": "A bit", "c1": 0, "c2": 0, "c3": 0, "c4": 0 },
+        { "ans": "Quit so", "c1": 0, "c2": 0, "c3": 0, "c4": 0 },
+        { "ans": "Very much indeed", "c1": 0, "c2": 0, "c3": 0, "c4": 0 }
+      ]
+    }
+  ],
+  "texts": {
+    "thereIsNoDoubt": "There is no doubt! You are a ${s1}.",
+    "youAreProbably": "You are probably a  ${s1}.",
+    "youAreNot": "You are clearly not a ${s1}.",
+    "youAreOneOfTwo": "That is tricky. Your are either a ${s1} or a ${s2}.",
+    "matchScore": "How much do you match the different choices:"
+  }
+}

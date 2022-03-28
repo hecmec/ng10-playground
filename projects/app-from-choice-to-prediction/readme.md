@@ -13,12 +13,19 @@ If you had to choose, would you rather have…
 
 ## serve projects
 
-ng serve appFromChoiceToPrediction
+    ng serve appFromChoiceToPrediction
 
 ## Tech stuff
 
 There is one json file for the data
 
-There are some categories and n questions with answers that have each an affinity to categories
+There are some categories and n questions with answers that have each an affinity to categories.
 
+{
+categories: [
+{
+"name":"green"
+"affinities"
+}
+]
 }
