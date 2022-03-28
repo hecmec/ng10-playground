@@ -48,8 +48,8 @@
     <div class="card-container">
       <a class="card card-small" ref="" *ngFor="let topic of topicExtendedList">
         <span class="topic-icon" [innerHtml]="topic.safeIconSvg"></span>
-        <span>{{ topic.name }}</span>
-        <small>({{ topic.level }})</small>
+        <span class="topic-text">{{ topic.name }}</span>
+        <small class="topic-level">({{ topic.level }})</small>
       </a>
     </div>
 

@@ -8,17 +8,9 @@ import { CapsuleListComponent } from './components/capsule-list/capsule-list.com
 import { CapsuleListItemComponent } from './components/capsule-list-item/capsule-list-item.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ExpressionComponent,
-    CapsuleListComponent,
-    CapsuleListItemComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+  declarations: [AppComponent, ExpressionComponent, CapsuleListComponent, CapsuleListItemComponent],
+  imports: [BrowserModule, AppRoutingModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
