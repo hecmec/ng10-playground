@@ -10,7 +10,7 @@ import { ResultPageComponent } from './result-page/result-page.component';
 import { AboutPageComponent } from './about-page/about-page.component';
 
 @NgModule({
-  declarations: [AppComponent, DataHelperService, HomePageComponent, QuestionsPageComponent, ResultPageComponent, AboutPageComponent],
+  declarations: [AppComponent, HomePageComponent, QuestionsPageComponent, ResultPageComponent, AboutPageComponent],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],
   bootstrap: [AppComponent],

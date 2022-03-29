@@ -11,11 +11,17 @@ If you had to choose, would you rather have…
 - A smaller government providing fewer services
 - A bigger government providing more services
 
-## serve projects
+## build serve test projects
+
+    npm run build appFromChoiceToPrediction
 
     ng serve appFromChoiceToPrediction
 
-## Tech stuff
+## cli stuff
+
+    ng g c expression --project=appFromChoiceToPrediction --flat=false --change-detection=OnPush
+
+# Tech stuff
 
 There is one json file for the data
 

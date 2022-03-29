@@ -44,6 +44,12 @@
     },
     {
       "path": "./projects/qzWorte/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/app-from-choice-to-prediction/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/app-from-choice-to-prediction/tsconfig.spec.json"
     }
   ]
 }
