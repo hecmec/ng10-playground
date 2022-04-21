@@ -36,7 +36,7 @@ export class ChrTimeOnlyDirective implements OnInit, OnChanges {
   ];
 
   @Input() minTime: string = '00:00';
-  @Input() maxTime: string = '23:59';
+  @Input() maxTime: string = '24:00';
   /**
    * max number of chars digits and separator included
    */
@@ -74,9 +74,7 @@ export class ChrTimeOnlyDirective implements OnInit, OnChanges {
 
     if (changes.maxTime) {
       const time = ChrTime.createFromString(this.maxTime);
-      this.upperLimit = time.isValid
-        ? time
-        : ChrTime.createFromHoursMinutes(23, 59);
+      this.upperLimit = time.isValid ? time : ChrTime.createFromHoursMinutes(23, 59);
     }
   }
 
@@ -186,9 +184,7 @@ export class ChrTimeOnlyDirective implements OnInit, OnChanges {
     const selection = oldValue.substring(selectionStart, selectionEnd);
     return selection
       ? oldValue.replace(selection, key)
-      : oldValue.substring(0, selectionStart) +
-          key +
-          oldValue.substring(selectionStart);
+      : oldValue.substring(0, selectionStart) + key + oldValue.substring(selectionStart);
   }
 
   /**
@@ -196,15 +192,9 @@ export class ChrTimeOnlyDirective implements OnInit, OnChanges {
    *  @param timeString
    */
   private transform(timeString: string, hasFocus: boolean): string {
-    let result = hasFocus
-      ? this.defaultTimeStringFocus
-      : this.defaultTimeStringNoFocus;
+    let result = hasFocus ? this.defaultTimeStringFocus : this.defaultTimeStringNoFocus;
     let time: ChrTime = null;
-    if (
-      timeString &&
-      timeString !== this.defaultTimeStringNoFocus &&
-      timeString !== this.defaultTimeStringFocus
-    ) {
+    if (timeString && timeString !== this.defaultTimeStringNoFocus && timeString !== this.defaultTimeStringFocus) {
       time = ChrTime.createFromString(timeString) as ChrTime;
     }
 

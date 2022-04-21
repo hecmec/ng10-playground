@@ -16,3 +16,5 @@ ng serve qaList
 
 ng g c Login --project=qaList --flat=false
 simple project to build lists and edit components with back4app test backend
+
+## Deploy
