@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User as ParseUser } from 'parse';
+import { QuestServiceService } from '../services/quest-service.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
@@ -16,13 +17,15 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+    private router: Router,
+    private parseService: QuestServiceService
+  ) {}
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
     });
 
     // get return url from route parameters or default to '/'
@@ -30,7 +33,9 @@ export class LoginComponent implements OnInit {
   }
 
   // convenience getter for easy access to form fields
-  get loginFromControls() { return this.loginForm.controls; }
+  get loginFromControls() {
+    return this.loginForm.controls;
+  }
 
   clearButton() {
     this.loading = false;
@@ -44,13 +49,14 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    try {
-      await ParseUser.logIn(this.loginFromControls.username.value, this.loginFromControls.password.value);
-      alert("Logged in!");
-    } catch (e) {
-      alert(e.message);
+    const user = await this.parseService.loginUser(
+      this.loginFromControls.username.value,
+      this.loginFromControls.password.value
+    );
+    if (user) {
+      console.log('LoginComponent.login SUCCESS');
+
+      this.router.navigate([this.returnUrl]);
     }
-
   }
-
 }

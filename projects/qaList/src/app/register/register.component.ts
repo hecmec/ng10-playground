@@ -6,7 +6,7 @@ import { User as ParseUser } from 'parse';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
   loginForm: FormGroup;
@@ -14,17 +14,13 @@ export class RegisterComponent implements OnInit {
   submitted = false;
   returnUrl: string;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router
-  ) { }
+  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
-      email: ['', Validators.required]
+      email: ['', Validators.required],
     });
 
     // get return url from route parameters or default to '/'
@@ -32,7 +28,9 @@ export class RegisterComponent implements OnInit {
   }
 
   // convenience getter for easy access to form fields
-  get f() { return this.loginForm.controls; }
+  get f() {
+    return this.loginForm.controls;
+  }
 
   clearButton() {
     this.loading = false;
@@ -47,17 +45,17 @@ export class RegisterComponent implements OnInit {
     }
 
     let user = new ParseUser();
-    user.set("username", this.f.username.value);
-    user.set("password", this.f.password.value);
-    user.set("email", this.f.email.value);
+    user.set('username', this.f.username.value);
+    user.set('password', this.f.password.value);
+    user.set('email', this.f.email.value);
 
     try {
       await user.signUp();
-      alert("User created!");
+      alert('User created!');
       this.router.navigate(['/']);
     } catch (error) {
       // Show the error message somewhere and let the user try again.
-      alert("Error: " + error.code + " " + error.message);
+      alert('Error: ' + error.code + ' ' + error.message);
     }
   }
 }

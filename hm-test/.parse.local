@@ -1,0 +1,10 @@
+{
+  "applications": {
+    "_default": {
+      "link": "hm-test"
+    },
+    "hm-test": {
+      "applicationId": "a7Ks26xEic6sbrcqW0QQTdDwnnRyLF27rJBykcpv"
+    }
+  }
+}

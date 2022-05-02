@@ -897,7 +897,9 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {},
+          "options": {
+            "port": 4203
+          },
           "configurations": {
             "production": {
               "browserTarget": "qaList:build:production"
@@ -973,6 +975,11 @@
             "development": {}
           },
           "defaultConfiguration": "production"
+        },
+        "serve": {
+          "options": {
+            "port": 4203
+          }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -1260,9 +1267,7 @@
               "projects/app-from-choice-to-prediction/src/favicon.ico",
               "projects/app-from-choice-to-prediction/src/assets"
             ],
-            "styles": [
-              "projects/app-from-choice-to-prediction/src/styles.scss"
-            ],
+            "styles": ["projects/app-from-choice-to-prediction/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -1328,9 +1333,7 @@
               "projects/app-from-choice-to-prediction/src/favicon.ico",
               "projects/app-from-choice-to-prediction/src/assets"
             ],
-            "styles": [
-              "projects/app-from-choice-to-prediction/src/styles.scss"
-            ],
+            "styles": ["projects/app-from-choice-to-prediction/src/styles.scss"],
             "scripts": []
           }
         }
